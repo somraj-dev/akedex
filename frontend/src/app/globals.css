@@ -1,0 +1,278 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import "tailwindcss";
+
+/*
+ * =====================================================
+ * ACADEx — Design System
+ * Bloomberg Terminal-Grade Education Operating Environment
+ * =====================================================
+ */
+
+:root {
+  /* Core Palette — Clean, light slate/blue command-center feel */
+  --bg-primary: #f8fafc;
+  --bg-secondary: #ffffff;
+  --bg-tertiary: #f1f5f9;
+  --bg-surface: #ffffff;
+  --bg-elevated: #ffffff;
+  --bg-hover: #eff6ff; /* Soft blue hover fill */
+  --bg-active: #dbeafe;
+
+  /* Accent Colors */
+  --accent-blue: #2563eb;
+  --accent-blue-dim: #eff6ff;
+  --accent-green: #10b981;
+  --accent-green-dim: #ecfdf5;
+  --accent-amber: #f59e0b;
+  --accent-amber-dim: #fffbeb;
+  --accent-red: #ef4444;
+  --accent-red-dim: #fef2f2;
+  --accent-purple: #8b5cf6;
+  --accent-cyan: #06b6d4;
+  --accent-orange: #f97316;
+
+  /* Text Hierarchy */
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-tertiary: #64748b;
+  --text-muted: #94a3b8;
+  --text-accent: #2563eb;
+
+  /* Borders */
+  --border-primary: #e2e8f0;
+  --border-secondary: #f1f5f9;
+  --border-accent: #2563eb20;
+
+  /* Status Colors */
+  --status-active: #10b981;
+  --status-warning: #f59e0b;
+  --status-critical: #ef4444;
+  --status-info: #2563eb;
+  --status-pending: #8b5cf6;
+
+  /* Spacing */
+  --sidebar-width: 240px;
+  --sidebar-collapsed: 56px;
+  --topbar-height: 56px; /* Increased for spacing */
+  --tab-height: 40px;
+
+  /* Typography */
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+
+  /* Typography Scale */
+  --font-display-size: 20px;
+  --font-display-weight: 700;
+  --font-display-lh: 1.2;
+  --font-display-ls: -0.02em;
+
+  --font-card-size: 13px;
+  --font-card-weight: 700;
+  --font-card-lh: 1.2;
+
+  --font-metric-lbl-size: 11px;
+  --font-metric-lbl-weight: 500;
+  --font-metric-size: 22px;
+  --font-metric-weight: 700;
+  --font-metric-lh: 1.2;
+
+  --font-nav-size: 12px;
+  --font-nav-weight: 500;
+  --font-nav-lh: 1.5;
+
+  --font-tbl-hdr-size: 10px;
+  --font-tbl-hdr-ls: 0.05em;
+  --font-tbl-cell-size: 12px;
+
+  --font-input-size: 12px;
+  --font-btn-secondary-size: 11px;
+  --font-secondary-size: 11px;
+  --font-secondary-lh: 1.4;
+
+  /* Transitions */
+  --transition-fast: 120ms ease;
+  --transition-normal: 200ms ease;
+  --transition-slow: 300ms ease;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  font-family: var(--font-sans);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-primary);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border-primary);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-sans);
+  font-weight: 500;
+  border-radius: 4px;
+  transition: all var(--transition-fast);
+  cursor: pointer;
+  border: 1px solid transparent;
+  outline: none;
+}
+.btn-primary {
+  background: var(--accent-blue);
+  color: #ffffff;
+}
+.btn-primary:hover {
+  background: #1d4ed8;
+}
+.btn-secondary {
+  background: var(--bg-secondary);
+  border-color: var(--border-primary);
+  color: var(--text-primary);
+}
+.btn-secondary:hover {
+  background: var(--bg-hover);
+}
+.btn-ghost {
+  background: transparent;
+  color: var(--text-secondary);
+}
+.btn-ghost:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+.btn-sm {
+  padding: 4px 8px;
+  font-size: 11px;
+}
+.btn-xs {
+  padding: 2px 6px;
+  font-size: 10px;
+}
+
+/* Input Fields */
+.input-field {
+  width: 100%;
+  height: 32px;
+  background: var(--bg-primary);
+  border: 1px solid var(--border-primary);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: 12px;
+  padding: 6px 12px;
+  border-radius: 4px;
+  outline: none;
+  transition: all var(--transition-fast);
+}
+.input-field:focus {
+  border-color: var(--accent-blue);
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
+}
+
+/* Data Table */
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+.data-table th {
+  padding: 8px 12px;
+  background: var(--bg-secondary);
+  border-bottom: 2px solid var(--border-primary);
+  color: var(--text-tertiary);
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.data-table td {
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--border-primary);
+  font-size: 12px;
+  color: var(--text-primary);
+  vertical-align: middle;
+}
+.data-table tr {
+  transition: background var(--transition-fast);
+}
+.data-table tr:hover {
+  background: var(--bg-hover);
+}
+.data-table tr.selected {
+  background: var(--bg-active);
+}
+
+/* Badges */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 6px;
+  border-radius: 9999px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+.badge-active {
+  background: rgba(16, 185, 129, 0.1);
+  color: #10b981;
+}
+.badge-warning {
+  background: rgba(245, 158, 11, 0.1);
+  color: #d97706;
+}
+.badge-info {
+  background: rgba(37, 99, 235, 0.1);
+  color: #2563eb;
+}
+
+/* Blink Dot */
+.blink-dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--status-active);
+  animation: blink 1.5s infinite;
+}
+@keyframes blink {
+  0%, 100% {
+    opacity: 0.4;
+    transform: scale(0.9);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+}
+
+/* Role Card */
+.role-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-primary);
+  border-radius: 6px;
+  padding: 12px;
+  transition: all var(--transition-fast);
+}
+.role-card:hover {
+  border-color: var(--accent-blue);
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.04);
+}

@@ -1,0 +1,235 @@
+'use client';
+
+import React from 'react';
+import { useAppStore } from '@/lib/store';
+import { X } from 'lucide-react';
+import ActivationScreen from '@/components/ActivationScreen';
+import LoginScreen from '@/components/LoginScreen';
+import Sidebar from '@/components/Sidebar';
+import TopBar from '@/components/TopBar';
+import CommandBar from '@/components/CommandBar';
+import Dashboard from '@/components/Dashboard';
+import StudentExplorer from '@/components/StudentExplorer';
+import AdmissionsView from '@/components/AdmissionsView';
+import TransfersView from '@/components/TransfersView';
+import CasesView from '@/components/CasesView';
+import { 
+  TeachersView, DocumentsView, AttendanceView, 
+  InstitutionView, AuditView, SettingsView, SearchView,
+  CoursesView, ClassesView, AssignmentsView, ExamsView,
+  TimetableView, GradebookView, LibraryView, CommunicationView,
+  FinanceView, FacilitiesView, ReportsView, SystemLogsView,
+  ProfileView, NotificationsView, StudentProfileView, TeacherProfileView,
+  ManageWidgetsView, AcademicCalendarView, StudentReportCardView
+} from '@/components/OtherViews';
+
+export default function Page() {
+  const { 
+    isActivated, isAuthenticated, currentView, 
+    tabs, activeTabId, setActiveTab, closeTab 
+  } = useAppStore();
+
+  // 1. Activation Flow
+  if (!isActivated) {
+    return <ActivationScreen />;
+  }
+
+  // 2. Authentication Flow
+  if (!isAuthenticated) {
+    return <LoginScreen />;
+  }
+
+  // 3. Render Active Workspace View Component
+  const renderActiveView = () => {
+    switch (currentView) {
+      case 'dashboard':
+        return <Dashboard />;
+      case 'students':
+        return <StudentExplorer />;
+      case 'teachers':
+        return <TeachersView />;
+      case 'admissions':
+        return <AdmissionsView />;
+      case 'transfers':
+        return <TransfersView />;
+      case 'cases':
+        return <CasesView />;
+      case 'documents':
+        return <DocumentsView />;
+      case 'attendance':
+        return <AttendanceView />;
+      case 'institution':
+        return <InstitutionView />;
+      case 'audit':
+        return <AuditView />;
+      case 'settings':
+        return <SettingsView />;
+      case 'search':
+        return <SearchView />;
+      case 'courses':
+        return <CoursesView />;
+      case 'classes':
+        return <ClassesView />;
+      case 'assignments':
+        return <AssignmentsView />;
+      case 'exams':
+        return <ExamsView />;
+      case 'timetable':
+        return <TimetableView />;
+      case 'gradebook':
+        return <GradebookView />;
+      case 'library':
+        return <LibraryView />;
+      case 'communication':
+        return <CommunicationView />;
+      case 'finance':
+        return <FinanceView />;
+      case 'facilities':
+        return <FacilitiesView />;
+      case 'reports':
+        return <ReportsView />;
+      case 'system-logs':
+        return <SystemLogsView />;
+      case 'profile':
+        return <ProfileView />;
+      case 'notifications':
+        return <NotificationsView />;
+      case 'student-profile':
+        return <StudentProfileView />;
+      case 'teacher-profile':
+        return <TeacherProfileView />;
+      case 'manage-widgets':
+        return <ManageWidgetsView />;
+      case 'academic-calendar':
+        return <AcademicCalendarView />;
+      case 'student-report-card':
+        return <StudentReportCardView />;
+      default:
+        return <Dashboard />;
+    }
+  };
+
+  // 4. Main Institutional Operating Layout
+  return (
+    <div style={{
+      display: 'flex',
+      width: '100vw',
+      height: '100vh',
+      background: 'var(--bg-primary)',
+      overflow: 'hidden',
+    }}>
+      {/* Sidebar Navigation */}
+      <Sidebar />
+
+      {/* Main Workspace Frame */}
+      <div style={{
+        flex: 1,
+        display: 'flex',
+        flexDirection: 'column',
+        height: '100%',
+        minWidth: 0,
+        overflow: 'hidden',
+      }}>
+        {/* Top bar containing global search, status, clock, and profile */}
+        <TopBar />
+
+        {/* Workspace Tab Bar */}
+        <div style={{
+          height: 'var(--tab-height)',
+          background: 'var(--bg-secondary)',
+          borderBottom: '1px solid var(--border-primary)',
+          display: 'flex',
+          alignItems: 'center',
+          padding: '0 24px',
+          gap: '6px',
+          overflowX: 'auto',
+          flexShrink: 0,
+          userSelect: 'none',
+        }}>
+          {tabs.map(tab => {
+            const isActive = tab.id === activeTabId;
+            return (
+              <div
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  padding: '0 12px',
+                  height: '28px',
+                  borderRadius: '4px',
+                  background: isActive ? 'var(--bg-active)' : 'transparent',
+                  color: isActive ? 'var(--accent-blue)' : 'var(--text-secondary)',
+                  border: isActive ? '1px solid var(--border-primary)' : '1px solid transparent',
+                  cursor: 'pointer',
+                  fontSize: '11px',
+                  fontWeight: isActive ? 700 : 500,
+                  transition: 'all 120ms ease',
+                  whiteSpace: 'nowrap',
+                }}
+                onMouseEnter={e => {
+                  if (!isActive) {
+                    e.currentTarget.style.background = 'var(--bg-tertiary)';
+                  }
+                }}
+                onMouseLeave={e => {
+                  if (!isActive) {
+                    e.currentTarget.style.background = 'transparent';
+                  }
+                }}
+              >
+                <span>{tab.label}</span>
+                {tab.closable !== false && (
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      closeTab(tab.id);
+                    }}
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      width: '14px',
+                      height: '14px',
+                      borderRadius: '50%',
+                      border: 'none',
+                      background: 'transparent',
+                      cursor: 'pointer',
+                      color: 'var(--text-muted)',
+                      padding: 0,
+                      transition: 'all 120ms ease',
+                      marginLeft: '2px'
+                    }}
+                    onMouseEnter={e => {
+                      e.currentTarget.style.background = 'var(--accent-red-dim)';
+                      e.currentTarget.style.color = 'var(--accent-red)';
+                    }}
+                    onMouseLeave={e => {
+                      e.currentTarget.style.background = 'transparent';
+                      e.currentTarget.style.color = 'var(--text-muted)';
+                    }}
+                  >
+                    <X size={10} />
+                  </button>
+                )}
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Dynamic Workspace Workspace View Area */}
+        <main style={{
+          flex: 1,
+          width: '100%',
+          overflow: 'hidden',
+        }}>
+          {renderActiveView()}
+        </main>
+      </div>
+
+      {/* Global Command Bar Shortcut (Ctrl+K) */}
+      <CommandBar />
+    </div>
+  );
+}
