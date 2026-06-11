@@ -68,6 +68,27 @@ export default function ActivationScreen() {
   const [manualResponse, setManualResponse] = useState('');
   const [manualResponseError, setManualResponseError] = useState('');
 
+  // Automatic verification states
+  const [verificationProgress, setVerificationProgress] = useState(0);
+
+  useEffect(() => {
+    if (step !== 9) return;
+    setVerificationProgress(0);
+    const interval = setInterval(() => {
+      setVerificationProgress(prev => {
+        if (prev < 3) {
+          return prev + 1;
+        } else {
+          clearInterval(interval);
+          setStep(10);
+          return prev;
+        }
+      });
+    }, 2000);
+
+    return () => clearInterval(interval);
+  }, [step]);
+
   useEffect(() => {
     if (step === 6) {
       navigator.clipboard.writeText(licensingRequestPayload).catch(() => {});
@@ -453,9 +474,9 @@ export default function ActivationScreen() {
           <div style={{ 
             display: 'flex', 
             flexDirection: 'column', 
-            alignItems: (step === 1 || step === 2 || step === 6 || step === 7 || step === 8) ? 'center' : 'flex-start', 
+            alignItems: (step === 1 || step === 2 || step === 6 || step === 7 || step === 8 || step === 9 || step === 10) ? 'center' : 'flex-start', 
             width: '100%', 
-            maxWidth: step === 1 ? '980px' : (step === 2 || step === 6 || step === 7 || step === 8) ? '600px' : '500px', 
+            maxWidth: step === 1 ? '980px' : (step === 2 || step === 6 || step === 7 || step === 8 || step === 9 || step === 10) ? '600px' : '500px', 
             animation: 'fadeIn 0.3s ease',
             margin: '0 auto'
           }}>
@@ -790,11 +811,7 @@ export default function ActivationScreen() {
                       }
                       setLicenseError('');
                       if (licenseType === 'automatic') {
-                        setLicenseLoading(true);
-                        setTimeout(() => {
-                          setLicenseLoading(false);
-                          setStep(3); // Route to Choose Role
-                        }, 1500);
+                        setStep(9); // Route to Automatic Verification Loading Screen
                       } else {
                         setStep(6); // Route to Manual Step 1
                       }
@@ -1118,6 +1135,216 @@ export default function ActivationScreen() {
                     }}
                   >
                     Cancel
+                  </button>
+                </div>
+              </div>
+            ) : step === 9 ? (
+              <div style={{ 
+                display: 'flex', 
+                flexDirection: 'column', 
+                alignItems: 'center', 
+                width: '100%',
+                maxWidth: '600px',
+                textAlign: 'center',
+                padding: '20px 0'
+              }}>
+                <div style={{
+                  width: '64px',
+                  height: '64px',
+                  borderRadius: '50%',
+                  border: '3px solid #f1f5f9',
+                  borderTopColor: '#2563eb',
+                  animation: 'akedex-spin 1s linear infinite',
+                  marginBottom: '36px'
+                }} />
+
+                <h2 style={{ 
+                  fontSize: '28px', 
+                  fontWeight: 800, 
+                  color: '#000000', 
+                  letterSpacing: '-0.02em', 
+                  marginBottom: '12px' 
+                }}>
+                  Verifying License
+                </h2>
+                
+                <p style={{ 
+                  fontSize: '15px', 
+                  color: '#64748b', 
+                  fontWeight: 500,
+                  marginBottom: '40px'
+                }}>
+                  Please wait while we connect to the licensing orchestrator
+                </p>
+
+                {/* Progress Checklist */}
+                <div style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '16px',
+                  width: '100%',
+                  maxWidth: '440px',
+                  background: '#f8fafc',
+                  padding: '24px',
+                  borderRadius: '12px',
+                  border: '1px solid #e2e8f0',
+                  textAlign: 'left'
+                }}>
+                  {[
+                    "Connecting to Akedex Activation servers...",
+                    "Verifying cryptographic key signatures...",
+                    "Retrieving environment entitlements...",
+                    "Initializing local database ledgers..."
+                  ].map((label, index) => {
+                    const isCompleted = verificationProgress > index;
+                    const isActive = verificationProgress === index;
+                    return (
+                      <div 
+                        key={index}
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '12px',
+                          color: isCompleted ? '#16a34a' : isActive ? '#0f172a' : '#94a3b8',
+                          fontWeight: isActive || isCompleted ? 600 : 500,
+                          fontSize: '14px',
+                          transition: 'color 0.3s'
+                        }}
+                      >
+                        {isCompleted ? (
+                          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
+                            <polyline points="20 6 9 17 4 12" />
+                          </svg>
+                        ) : isActive ? (
+                          <div style={{
+                            width: '14px',
+                            height: '14px',
+                            borderRadius: '50%',
+                            border: '2px solid #2563eb',
+                            borderTopColor: 'transparent',
+                            animation: 'akedex-spin 0.8s linear infinite',
+                            flexShrink: 0
+                          }} />
+                        ) : (
+                          <div style={{
+                            width: '14px',
+                            height: '14px',
+                            borderRadius: '50%',
+                            background: '#cbd5e1',
+                            flexShrink: 0
+                          }} />
+                        )}
+                        <span>{label}</span>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            ) : step === 10 ? (
+              <div style={{ 
+                display: 'flex', 
+                flexDirection: 'column', 
+                alignItems: 'center', 
+                width: '100%',
+                maxWidth: '600px',
+                textAlign: 'center'
+              }}>
+                <h2 style={{ 
+                  fontSize: '32px', 
+                  fontWeight: 800, 
+                  color: '#000000', 
+                  letterSpacing: '-0.02em', 
+                  marginBottom: '32px' 
+                }}>
+                  Connect to tenant
+                </h2>
+
+                {/* Avatar */}
+                <div style={{
+                  width: '80px',
+                  height: '80px',
+                  borderRadius: '50%',
+                  background: '#f1f5f9',
+                  border: '1px solid #e2e8f0',
+                  color: '#0f172a',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: '28px',
+                  fontWeight: 700,
+                  marginBottom: '20px',
+                  boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)',
+                  userSelect: 'none'
+                }}>
+                  SD
+                </div>
+
+                <div style={{
+                  fontSize: '20px',
+                  fontWeight: 700,
+                  color: '#0f172a',
+                  marginBottom: '6px'
+                }}>
+                  Somraj Development Institute
+                </div>
+
+                <div style={{
+                  fontSize: '14.5px',
+                  color: '#64748b',
+                  fontWeight: 500,
+                  marginBottom: '40px'
+                }}>
+                  somraj.dev@akedex.com
+                </div>
+
+                {/* Footer Controls aligned bottom right */}
+                <div style={{ 
+                  display: 'flex', 
+                  justifyContent: 'flex-end', 
+                  gap: '24px', 
+                  width: '100%',
+                  borderTop: '1px solid #f1f5f9',
+                  paddingTop: '20px',
+                  marginTop: '24px'
+                }}>
+                  <button 
+                    onClick={() => {
+                      setStep(2);
+                    }}
+                    style={{
+                      background: 'transparent', 
+                      color: '#64748b', 
+                      border: 'none',
+                      fontSize: '15px', 
+                      fontWeight: 600, 
+                      cursor: 'pointer',
+                      padding: '8px 12px',
+                      transition: 'color 0.2s'
+                    }}
+                    onMouseEnter={(e) => e.currentTarget.style.color = '#000000'}
+                    onMouseLeave={(e) => e.currentTarget.style.color = '#64748b'}
+                  >
+                    Back
+                  </button>
+
+                  <button 
+                    onClick={() => {
+                      setStep(3); // Route to Choose Role
+                    }}
+                    style={{
+                      background: 'transparent', 
+                      color: '#2563eb', 
+                      border: 'none',
+                      fontSize: '15px', 
+                      fontWeight: 600, 
+                      cursor: 'pointer',
+                      padding: '8px 12px',
+                      transition: 'color 0.2s'
+                    }}
+                    onMouseEnter={(e) => e.currentTarget.style.color = '#1d4ed8'}
+                    onMouseLeave={(e) => e.currentTarget.style.color = '#2563eb'}
+                  >
+                    Continue
                   </button>
                 </div>
               </div>
