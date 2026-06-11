@@ -1745,6 +1745,7 @@ export default function ActivationScreen() {
                   </button>
                 </div>
               </div>
+            ) : step === 6 ? (
               <div style={{ 
                 display: 'flex', 
                 flexDirection: 'column', 
