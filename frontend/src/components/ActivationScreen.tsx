@@ -1259,7 +1259,7 @@ export default function ActivationScreen() {
                   Connect to tenant
                 </h2>
 
-                {/* Avatar */}
+                {/* Avatar AJ */}
                 <div style={{
                   width: '80px',
                   height: '80px',
@@ -1276,7 +1276,7 @@ export default function ActivationScreen() {
                   boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)',
                   userSelect: 'none'
                 }}>
-                  SD
+                  AJ
                 </div>
 
                 <div style={{
@@ -1285,16 +1285,60 @@ export default function ActivationScreen() {
                   color: '#0f172a',
                   marginBottom: '6px'
                 }}>
-                  Somraj Development Institute
+                  Aakanksha Jain
                 </div>
 
                 <div style={{
                   fontSize: '14.5px',
                   color: '#64748b',
                   fontWeight: 500,
-                  marginBottom: '40px'
+                  marginBottom: '24px'
                 }}>
-                  somraj.dev@akedex.com
+                  aakanksha.jain@akedex.com
+                </div>
+
+                {/* Timeout Error Banner */}
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '12px',
+                  background: '#ffffff',
+                  border: '1px solid #cbd5e1',
+                  borderRadius: '4px',
+                  padding: '10px 16px',
+                  boxShadow: '0 2px 4px rgba(0,0,0,0.05)',
+                  margin: '24px auto 16px auto',
+                  maxWidth: '440px',
+                  width: '100%',
+                  boxSizing: 'border-box',
+                  fontSize: '13px',
+                  color: '#0f172a',
+                  textAlign: 'left'
+                }}>
+                  <div style={{
+                    width: '18px',
+                    height: '18px',
+                    borderRadius: '50%',
+                    background: '#ef4444',
+                    color: '#ffffff',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: '11px',
+                    fontWeight: 900,
+                    flexShrink: 0,
+                    lineHeight: 1
+                  }}>
+                    !
+                  </div>
+                  <span>
+                    The operation has timed out.&nbsp;
+                    <span 
+                      style={{ color: '#2563eb', cursor: 'pointer', textDecoration: 'underline', fontWeight: 600 }}
+                    >
+                      Learn more
+                    </span>
+                  </span>
                 </div>
 
                 {/* Footer Controls aligned bottom right */}
@@ -1329,7 +1373,7 @@ export default function ActivationScreen() {
 
                   <button 
                     onClick={() => {
-                      setStep(3); // Route to Choose Role
+                      setStep(9); // Route back to Step 9 loader to Try Again
                     }}
                     style={{
                       background: 'transparent', 
@@ -1344,7 +1388,7 @@ export default function ActivationScreen() {
                     onMouseEnter={(e) => e.currentTarget.style.color = '#1d4ed8'}
                     onMouseLeave={(e) => e.currentTarget.style.color = '#2563eb'}
                   >
-                    Continue
+                    Try Again
                   </button>
                 </div>
               </div>
