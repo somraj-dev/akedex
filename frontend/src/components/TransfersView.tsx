@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { mockCases } from '@/lib/mock-data';
-import { Search, ArrowRightLeft, CheckCircle2, ShieldCheck, Clock, FileText } from 'lucide-react';
+import { Search, ArrowRightLeft, ShieldCheck, Clock, FileText } from 'lucide-react';
 
 export default function TransfersView() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -167,7 +167,7 @@ export default function TransfersView() {
                 </div>
                 <div style={{ textAlign: 'center', flex: 1 }}>
                   <div style={{ fontSize: '11px', color: 'var(--text-tertiary)' }}>RECEIVING</div>
-                  <div style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-primary)' }}>St. Xavier's School</div>
+                  <div style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-primary)' }}>St. Xavier&apos;s School</div>
                   <div style={{ fontSize: '9px', color: 'var(--accent-amber)', fontFamily: 'var(--font-mono)' }}>PENDING INCOMING</div>
                 </div>
               </div>

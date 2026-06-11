@@ -1,5 +1,5 @@
 // =====================================================
-// ACADEx — Mock Data for V1 Development
+// Akedex — Mock Data for V1 Development
 // Realistic operational data for Bloomberg-style views
 // =====================================================
 

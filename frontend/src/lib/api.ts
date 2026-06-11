@@ -1,22 +1,22 @@
 // =====================================================
-// ACADEx — API Integration Layer
+// Akedex — API Integration Layer
 // Communicates with Spring Boot backend at http://localhost:8080
 // Falls back to mock data if backend is offline.
 // =====================================================
 
 import { 
   mockStudents, mockCases, mockAdmissions, 
-  mockTeachers, recentActivity, dashboardMetrics 
+  mockTeachers, recentActivity,  
 } from './mock-data';
 
 const BACKEND_URL = 'http://localhost:8080/api';
 
 // Memory storage to simulate DB state when offline
-let localStudents = [...mockStudents];
+const localStudents = [...mockStudents];
 let localCases = [...mockCases];
 let localAdmissions = [...mockAdmissions];
-let localTeachers = [...mockTeachers];
-let localActivity = [...recentActivity];
+const localTeachers = [...mockTeachers];
+const localActivity = [...recentActivity];
 
 function getHeaders(tenantId?: string | null) {
   const headers: Record<string, string> = {
@@ -43,7 +43,7 @@ async function request<T>(path: string, options: RequestInit, fallbackData: T): 
     }
     return await res.json() as T;
   } catch (err) {
-    console.warn(`[ACADEx API] Backend unavailable at ${BACKEND_URL}${path}. Falling back to memory storage.`, err);
+    console.warn(`[Akedex API] Backend unavailable at ${BACKEND_URL}${path}. Falling back to memory storage.`, err);
     return fallbackData;
   }
 }
@@ -64,7 +64,7 @@ export const api = {
 
   // 2. Auth
   login: async (email: string, password: string, tenantId: string) => {
-    return request<{ token: string; user: any }>('/auth/login', {
+    return request<{ token: string; user: unknown }>('/auth/login', {
       method: 'POST',
       headers: getHeaders(tenantId),
       body: JSON.stringify({ email, password }),
@@ -107,7 +107,7 @@ export const api = {
   },
 
   resolveCase: async (id: string, notes: string, tenantId: string | null) => {
-    const updated = await request<any>(`/cases/${id}/resolve`, {
+    const updated = await request<unknown>(`/cases/${id}/resolve`, {
       method: 'PUT',
       headers: getHeaders(tenantId),
       body: JSON.stringify({ notes }),
@@ -132,7 +132,7 @@ export const api = {
   },
 
   reassignCase: async (id: string, assigneeName: string, tenantId: string | null) => {
-    const updated = await request<any>(`/cases/${id}/reassign`, {
+    const updated = await request<unknown>(`/cases/${id}/reassign`, {
       method: 'PUT',
       headers: getHeaders(tenantId),
       body: JSON.stringify({ assigneeName }),
@@ -157,7 +157,7 @@ export const api = {
   },
 
   updateAdmissionStatus: async (id: string, status: string, tenantId: string | null) => {
-    const updated = await request<any>(`/admissions/${id}/status`, {
+    const updated = await request<unknown>(`/admissions/${id}/status`, {
       method: 'PUT',
       headers: getHeaders(tenantId),
       body: JSON.stringify({ status }),
@@ -183,7 +183,7 @@ export const api = {
 
   // 7. Audit events
   getAuditEvents: async (tenantId: string | null) => {
-    return request<any>('/audit', {
+    return request<unknown>('/audit', {
       method: 'GET',
       headers: getHeaders(tenantId),
     }, localActivity.map((a, i) => ({

@@ -1,5 +1,5 @@
 -- =====================================================
--- ACADEx Platform — V1 Database Schema
+-- Akedex Platform — V1 Database Schema
 -- Education Operating Environment
 -- =====================================================
 -- Multi-tenant: All tables include tenant_id

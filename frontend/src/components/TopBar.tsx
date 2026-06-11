@@ -2,13 +2,11 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { useAppStore } from '@/lib/store';
-import { Search, Bell, MessageSquare, Calendar, ChevronDown, Shield, Key, LogOut, Clock, AlertTriangle } from 'lucide-react';
-import { format } from 'date-fns';
+import { Search, Bell, MessageSquare, Calendar, ChevronDown, Shield, Key, LogOut, Clock } from 'lucide-react';
 
 export default function TopBar() {
   const { currentUser, toggleCommandBar, logout } = useAppStore();
   const openTab = useAppStore(s => s.openTab);
-  const [time, setTime] = useState<Date | null>(null);
 
   // Popover States
   const [showNotifications, setShowNotifications] = useState(false);
@@ -46,15 +44,6 @@ export default function TopBar() {
     }
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
-
-  // Update clock every second
-  useEffect(() => {
-    setTime(new Date());
-    const interval = setInterval(() => {
-      setTime(new Date());
-    }, 1000);
-    return () => clearInterval(interval);
   }, []);
 
   return (

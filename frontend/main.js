@@ -7,7 +7,7 @@ function createWindow() {
     height: 900,
     minWidth: 1024,
     minHeight: 768,
-    title: "ACADEx — Education Operating Environment",
+    title: "Akedex — Education Operating Environment",
     autoHideMenuBar: true,
     icon: path.join(__dirname, 'public/favicon.ico'),
     webPreferences: {

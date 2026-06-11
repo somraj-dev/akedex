@@ -111,7 +111,7 @@ export default function Dashboard() {
             >
               <Plus size={14} /> Add Widget
             </button>
-            <button className="btn btn-secondary btn-sm" style={{ padding: '6px', background: 'var(--bg-secondary)', border: '1px solid var(--border-primary)', color: 'var(--text-secondary)' }}>
+            <button aria-label="More widget options" title="More widget options" className="btn btn-secondary btn-sm" style={{ padding: '6px', background: 'var(--bg-secondary)', border: '1px solid var(--border-primary)', color: 'var(--text-secondary)' }}>
               <MoreHorizontal size={14} />
             </button>
           </div>
@@ -415,7 +415,7 @@ export default function Dashboard() {
           gap: '16px'
         }}>
           
-          {/* Institution Overview */}
+          {/* Quick Actions */}
           <div style={{
             background: 'var(--bg-secondary)',
             border: '1px solid var(--border-primary)',
@@ -426,33 +426,53 @@ export default function Dashboard() {
             boxShadow: '0 1px 3px rgba(0,0,0,0.02)'
           }}>
             <h3 style={{ fontSize: 'var(--font-card-size)', fontWeight: 'var(--font-card-weight)', lineHeight: 'var(--font-card-lh)', color: 'var(--text-primary)', marginBottom: '14px' }}>
-              Institution Overview
+              Quick Actions
             </h3>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '8px', flex: 1, alignContent: 'center' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', flex: 1, alignContent: 'center' }}>
               {[
-                { label: 'Students', val: '8,542', color: 'rgba(59, 130, 246, 0.08)', view: 'students' as AppView, navLabel: 'Students' },
-                { label: 'Courses', val: '568', color: 'rgba(168, 85, 247, 0.08)', view: 'courses' as AppView, navLabel: 'Courses' },
-                { label: 'Classes', val: '642', color: 'rgba(6, 182, 212, 0.08)', view: 'classes' as AppView, navLabel: 'Classes' },
-                { label: 'Faculty', val: '312', color: 'rgba(16, 185, 129, 0.08)', view: 'teachers' as AppView, navLabel: 'Faculty' },
-                { label: 'Depts', val: '24', color: 'rgba(239, 68, 68, 0.08)', view: 'institution' as AppView, navLabel: 'Institution' }
-              ].map((stat, idx) => (
+                { label: 'New Admission', icon: <Users size={16} />, color: 'var(--accent-blue)', bg: 'rgba(59, 130, 246, 0.1)', view: 'new-admission-flow' as AppView, navLabel: 'New Admission' },
+                { label: 'Collect Fees', icon: <DollarSign size={16} />, color: 'var(--accent-green)', bg: 'rgba(16, 185, 129, 0.1)', view: 'finance' as AppView, navLabel: 'Finance' },
+                { label: 'Complaints', icon: <AlertCircle size={16} />, color: 'var(--accent-amber)', bg: 'rgba(245, 158, 11, 0.1)', view: 'cases' as AppView, navLabel: 'Disciplinary Cases' },
+                { label: 'Library', icon: <BookMarked size={16} />, color: 'var(--accent-purple)', bg: 'rgba(168, 85, 247, 0.1)', view: 'library' as AppView, navLabel: 'Library' }
+              ].map((action, idx) => (
                 <div 
                   key={idx} 
-                  onClick={() => handleQuickNav(stat.view, stat.navLabel)}
+                  onClick={() => handleQuickNav(action.view, action.navLabel)}
                   style={{
-                    background: '#f8fafc',
+                    background: 'var(--bg-tertiary)',
                     border: '1px solid var(--border-primary)',
                     borderRadius: '8px',
-                    padding: '8px 4px',
-                    textAlign: 'center',
+                    padding: '12px 8px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    gap: '8px',
                     cursor: 'pointer',
                     transition: 'all var(--transition-fast)'
                   }}
-                  onMouseEnter={e => e.currentTarget.style.borderColor = 'var(--accent-blue)'}
-                  onMouseLeave={e => e.currentTarget.style.borderColor = 'var(--border-primary)'}
+                  onMouseEnter={e => {
+                    e.currentTarget.style.borderColor = action.color;
+                    e.currentTarget.style.transform = 'translateY(-2px)';
+                    e.currentTarget.style.boxShadow = `0 4px 12px ${action.bg}`;
+                  }}
+                  onMouseLeave={e => {
+                    e.currentTarget.style.borderColor = 'var(--border-primary)';
+                    e.currentTarget.style.transform = 'translateY(0)';
+                    e.currentTarget.style.boxShadow = 'none';
+                  }}
                 >
-                  <div style={{ fontSize: '13px', fontWeight: 800, color: 'var(--text-primary)', fontFamily: 'var(--font-mono)' }}>{stat.val}</div>
-                  <div style={{ fontSize: '9px', color: 'var(--text-tertiary)', marginTop: '2px', fontWeight: 500 }}>{stat.label}</div>
+                  <div style={{ 
+                    color: action.color, 
+                    background: action.bg, 
+                    padding: '8px', 
+                    borderRadius: '50%',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                  }}>
+                    {action.icon}
+                  </div>
+                  <div style={{ fontSize: '11px', fontWeight: 600, color: 'var(--text-primary)' }}>{action.label}</div>
                 </div>
               ))}
             </div>
@@ -461,14 +481,12 @@ export default function Dashboard() {
               paddingTop: '8px', 
               marginTop: '12px', 
               display: 'flex', 
-              justifyContent: 'space-between', 
+              justifyContent: 'center', 
               fontSize: '10px',
               color: 'var(--text-secondary)',
               fontWeight: 500
             }}>
-              <span>Active Programs: <strong style={{ color: 'var(--text-primary)' }}>92</strong></span>
-              <span>Ongoing Batches: <strong style={{ color: 'var(--text-primary)' }}>156</strong></span>
-              <span>New Enrollments: <strong style={{ color: 'var(--accent-blue)' }}>+128</strong></span>
+              Select an action to jump directly to the module
             </div>
           </div>
 
@@ -552,7 +570,7 @@ export default function Dashboard() {
             </div>
           </div>
 
-          {/* Acadex Intelligence */}
+          {/* Akedex Intelligence */}
           <div style={{
             background: 'var(--bg-secondary)',
             border: '1px solid var(--border-primary)',
@@ -564,7 +582,7 @@ export default function Dashboard() {
           }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
               <h3 style={{ fontSize: 'var(--font-card-size)', fontWeight: 'var(--font-card-weight)', lineHeight: 'var(--font-card-lh)', color: 'var(--text-primary)', margin: 0 }}>
-                Acadex Intelligence
+                Akedex Intelligence
               </h3>
               <span 
                 onClick={() => handleQuickNav('reports', 'Reports & Analytics')}

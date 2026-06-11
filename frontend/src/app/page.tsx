@@ -11,11 +11,16 @@ import CommandBar from '@/components/CommandBar';
 import Dashboard from '@/components/Dashboard';
 import StudentExplorer from '@/components/StudentExplorer';
 import AdmissionsView from '@/components/AdmissionsView';
+import NewAdmissionFlow from '@/components/NewAdmissionFlow';
+import FreshAdmissionWizard from '@/components/FreshAdmissionWizard';
+import ApplicantProfileView from '@/components/ApplicantProfile';
+import TransferAdmissionWizard from '@/components/TransferAdmissionWizard';
 import TransfersView from '@/components/TransfersView';
 import CasesView from '@/components/CasesView';
+import SettingsView from '@/components/SettingsView';
 import { 
   TeachersView, DocumentsView, AttendanceView, 
-  InstitutionView, AuditView, SettingsView, SearchView,
+  InstitutionView, AuditView, SearchView,
   CoursesView, ClassesView, AssignmentsView, ExamsView,
   TimetableView, GradebookView, LibraryView, CommunicationView,
   FinanceView, FacilitiesView, ReportsView, SystemLogsView,
@@ -50,6 +55,14 @@ export default function Page() {
         return <TeachersView />;
       case 'admissions':
         return <AdmissionsView />;
+      case 'new-admission-flow':
+        return <NewAdmissionFlow />;
+      case 'fresh-admission':
+        return <FreshAdmissionWizard />;
+      case 'applicant-profile':
+        return <ApplicantProfileView />;
+      case 'transfer-admission-wizard':
+        return <TransferAdmissionWizard />;
       case 'transfers':
         return <TransfersView />;
       case 'cases':
@@ -182,6 +195,8 @@ export default function Page() {
                 <span>{tab.label}</span>
                 {tab.closable !== false && (
                   <button
+                    aria-label={`Close ${tab.label} tab`}
+                    title={`Close ${tab.label} tab`}
                     onClick={(e) => {
                       e.stopPropagation();
                       closeTab(tab.id);

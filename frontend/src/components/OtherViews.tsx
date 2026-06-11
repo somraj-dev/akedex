@@ -11,7 +11,7 @@ import {
   Copy, MapPin, Printer, ArrowUpRight, Briefcase, GraduationCap, User, ChevronDown, ChevronUp, X
 } from 'lucide-react';
 import { useAppStore, AppView } from '@/lib/store';
-import { StudentAcademicsTab, StudentAttendanceTab } from './StudentProfileTabs';
+import { StudentAcademicsTab, StudentAttendanceTab, StudentFeesTab, StudentAchievementsTab, StudentDocumentsTab } from './StudentProfileTabs';
 
 // =====================================================
 // TEACHERS VIEW (Already defined, but kept clean)
@@ -622,50 +622,7 @@ export function AuditView() {
 }
 
 // =====================================================
-// SETTINGS VIEW (Already defined)
-// =====================================================
-export function SettingsView() {
-  const { currentUser } = useAppStore();
-
-  return (
-    <div style={{ padding: '16px', background: 'var(--bg-primary)', height: '100%', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '16px' }}>
-      <div>
-        <h2 style={{ fontSize: '16px', fontWeight: 700, color: 'var(--text-primary)', margin: 0 }}>System Settings & Profile</h2>
-        <p style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>Manage your workspace operator credentials and cryptokeys.</p>
-      </div>
-
-      <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: '16px' }}>
-        <div style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-primary)', borderRadius: '8px', padding: '16px', display: 'flex', flexDirection: 'column', gap: '14px' }}>
-          <h3 style={{ fontSize: '12px', fontWeight: 700, color: 'var(--text-primary)', margin: 0 }}>OPERATOR CERTIFICATE</h3>
-          {currentUser && (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', background: 'var(--bg-tertiary)', padding: '12px', borderRadius: '8px', border: '1px solid var(--border-primary)' }}>
-              <div>
-                <div style={{ fontSize: '10px', color: 'var(--text-tertiary)' }}>OPERATOR NAME</div>
-                <div style={{ fontSize: '12px', color: 'var(--text-primary)', fontWeight: 600 }}>{currentUser.name}</div>
-              </div>
-              <div>
-                <div style={{ fontSize: '10px', color: 'var(--text-tertiary)' }}>OPERATOR EMAIL</div>
-                <div style={{ fontSize: '12px', color: 'var(--text-primary)' }}>{currentUser.email}</div>
-              </div>
-              <div>
-                <div style={{ fontSize: '10px', color: 'var(--text-tertiary)' }}>SECURITY ROLE</div>
-                <div style={{ fontSize: '12px', color: 'var(--accent-blue)', fontWeight: 600, fontFamily: 'var(--font-mono)' }}>{currentUser.role}</div>
-              </div>
-            </div>
-          )}
-        </div>
-
-        <div style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-primary)', borderRadius: '8px', padding: '16px', display: 'flex', flexDirection: 'column', gap: '14px' }}>
-          <h3 style={{ fontSize: '12px', fontWeight: 700, color: 'var(--text-primary)', margin: 0 }}>CRYPTO KEYS</h3>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-            <button className="btn btn-secondary btn-sm" style={{ gap: '4px' }}><Key size={14} /> Regenerate Secret Tokens</button>
-            <button className="btn btn-secondary btn-sm" style={{ gap: '4px' }}><Shield size={14} /> Enable Hardware Key (WebAuthn)</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
+// SETTINGS VIEW (Moved to SettingsView.tsx)
 
 // =====================================================
 // GLOBAL SEARCH VIEW (Already defined)
@@ -1309,14 +1266,14 @@ export function SystemLogsView() {
   useEffect(() => {
     // Generate simulated server startup logs on mount
     const initial = [
-      '[INFO] 10:28:12 Starting Acadex Platform Spring Boot Service v1.0.0-PROD',
+      '[INFO] 10:28:12 Starting Akedex Platform Spring Boot Service v1.0.0-PROD',
       '[INFO] 10:28:14 HikariPool-1 - Starting...',
-      '[INFO] 10:28:15 HikariPool-1 - Start completed (PostgreSQL jdbc:postgresql://localhost:5432/acadex)',
+      '[INFO] 10:28:15 HikariPool-1 - Start completed (PostgreSQL jdbc:postgresql://localhost:5432/akedex)',
       '[INFO] 10:28:16 Flyway Community Edition 10.11.0.1 initialized',
       '[INFO] 10:28:16 Successfully validated 1 migration schema (v1_initial_schema)',
       '[INFO] 10:28:18 Spring Security Filter Chain Initialized successfully',
       '[INFO] 10:28:20 Tomcat initialized on port 8080 (http)',
-      '[INFO] 10:28:21 Acadex Application started successfully in 8.42 seconds'
+      '[INFO] 10:28:21 Akedex Application started successfully in 8.42 seconds'
     ];
     setLogs(initial);
 
@@ -1474,7 +1431,7 @@ export function ProfileView() {
               <div style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-primary)', borderRadius: '8px', padding: '16px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
                 <h4 style={{ fontSize: '12px', fontWeight: 700, color: 'var(--text-primary)', margin: 0 }}>BIOGRAPHIC ATTESTATION</h4>
                 <p style={{ fontSize: '12px', color: 'var(--text-secondary)', lineHeight: 1.5, margin: 0 }}>
-                  Dr. Priya Sharma is the Director of Academic Operations for Axio Education Group and acts as the Super Admin for the Acadex environment. She holds a Ph.D. in Educational Administration and coordinates campus networks.
+                  Dr. Priya Sharma is the Director of Academic Operations for Axio Education Group and acts as the Super Admin for the Akedex environment. She holds a Ph.D. in Educational Administration and coordinates campus networks.
                 </p>
               </div>
             </>
@@ -1664,9 +1621,9 @@ function getEnrichedStudentData(student: any) {
   const attendanceRate = isAarav ? 96.4 : (student.attendance || 96.4);
   const attendanceTrend = isAarav ? '+4.2%' : `+${(1.2 + (idNum % 4) * 0.8).toFixed(1)}%`;
   
-  const isPaid = isAarav || idNum % 3 !== 0;
-  const totalFees = 85000;
-  const paidAmount = isPaid ? 85000 : 45000;
+  const isPaid = isAarav || (idNum % 3 !== 0 && idNum !== 7);
+  const totalFees = idNum === 7 ? 120000 : 85000;
+  const paidAmount = idNum === 7 ? 84500 : (isPaid ? 85000 : 45000);
   const outstanding = totalFees - paidAmount;
   const feeStatus = outstanding === 0 ? 'Paid' : 'Pending';
   
@@ -2084,8 +2041,8 @@ export function StudentProfileView() {
       {/* 3. SUB-NAVIGATION TABS */}
       <div style={{ display: 'flex', gap: '4px', borderBottom: '1px solid var(--border-primary)', paddingBottom: '1px', overflowX: 'auto', WebkitOverflowScrolling: 'touch', flexShrink: 0 }}>
         {[
-          'Overview', 'Academics', 'Attendance', 'Fees', 
-          'Activities', 'Achievements', 'Documents', 'History'
+          'Overview', 'Academics', 'Attendance', 'Fees',
+          'Achievements', 'Documents', 'History'
         ].map(tabName => {
           const isActive = activeTab === tabName;
           return (
@@ -2579,16 +2536,19 @@ export function StudentProfileView() {
         <StudentAcademicsTab studentId={studentId} />
       ) : activeTab === 'Attendance' ? (
         <StudentAttendanceTab studentId={studentId} />
+      ) : activeTab === 'Fees' ? (
+        <StudentFeesTab studentId={studentId} sData={sData} />
+      ) : activeTab === 'Achievements' ? (
+        <StudentAchievementsTab studentId={studentId} sData={sData} />
+      ) : activeTab === 'Documents' ? (
+        <StudentDocumentsTab studentId={studentId} sData={sData} />
       ) : (
         /* Render generic descriptive placeholders for other tabs */
         <div style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-primary)', borderRadius: '16px', padding: '48px 24px', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px', boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}>
           <div style={{ width: '48px', height: '48px', borderRadius: '50%', background: 'rgba(37,99,235,0.08)', color: 'var(--accent-blue)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            {activeTab === 'Fees' && <DollarSign size={24} />}
             {activeTab === 'Behavior' && <Shield size={24} />}
             {activeTab === 'Health' && <ShieldAlert size={24} />}
             {activeTab === 'Activities' && <Layers size={24} />}
-            {activeTab === 'Achievements' && <Award size={24} />}
-            {activeTab === 'Documents' && <FileText size={24} />}
             {activeTab === 'Communication' && <MessageSquare size={24} />}
             {activeTab === 'Transfers' && <LogOut size={24} />}
             {activeTab === 'AI Insights' && <HelpCircle size={24} />}
@@ -3568,7 +3528,7 @@ export function ManageWidgetsView() {
                         marginBottom: '6px',
                         fontWeight: 400
                       }}>
-                        by ACADEx
+                        by Akedex
                       </div>
                       {/* Description */}
                       <p style={{
@@ -3781,7 +3741,7 @@ export function ManageWidgetsView() {
                     color: '#9ca3af',
                     fontWeight: 400
                   }}>
-                    By ACADEx
+                    By Akedex
                   </span>
                 </div>
                 {/* Configure / Install Button */}

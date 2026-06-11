@@ -33,7 +33,11 @@ export type AppView =
   | 'teacher-profile'
   | 'manage-widgets'
   | 'academic-calendar'
-  | 'student-report-card';
+  | 'student-report-card'
+  | 'new-admission-flow'
+  | 'fresh-admission'
+  | 'applicant-profile'
+  | 'transfer-admission-wizard';
 
 export type WorkspaceTab = {
   id: string;

@@ -92,7 +92,7 @@ export default function Sidebar() {
             </div>
             <div>
               <div style={{ fontSize: '15px', fontWeight: 800, color: 'var(--text-primary)', display: 'flex', alignItems: 'center', lineHeight: 1.1 }}>
-                <span>Acadex</span>
+                <span>Akedex</span>
               </div>
               <div style={{ fontSize: '9px', color: 'var(--text-tertiary)', fontWeight: 500 }}>
                 Educational Operating Environment
