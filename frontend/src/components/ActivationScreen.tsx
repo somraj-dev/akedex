@@ -789,15 +789,15 @@ export default function ActivationScreen() {
                         return;
                       }
                       setLicenseError('');
-                      setLicenseLoading(true);
-                      setTimeout(() => {
-                        setLicenseLoading(false);
-                        if (licenseType === 'automatic') {
+                      if (licenseType === 'automatic') {
+                        setLicenseLoading(true);
+                        setTimeout(() => {
+                          setLicenseLoading(false);
                           setStep(3); // Route to Choose Role
-                        } else {
-                          setStep(6); // Route to Manual Step 1
-                        }
-                      }, 1500);
+                        }, 1500);
+                      } else {
+                        setStep(6); // Route to Manual Step 1
+                      }
                     }}
                     disabled={licenseLoading}
                     style={{
