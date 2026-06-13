@@ -1,5 +1,31 @@
 import { create } from 'zustand';
 
+export type FinanceSubView =
+  | 'finance-dashboard'
+  | 'finance-fee-collection'
+  | 'finance-defaulters'
+  | 'finance-revenue'
+  | 'finance-payroll'
+  | 'finance-reports';
+
+export type ExamsSubView =
+  | 'exams-dashboard'
+  | 'exams-planning'
+  | 'exams-schedule'
+  | 'exams-hall-seating'
+  | 'exams-admit-card'
+  | 'exams-attendance-invigilation'
+  | 'exams-question-vault'
+  | 'exams-evaluation'
+  | 'exams-marks-entry'
+  | 'exams-result-processing'
+  | 'exams-analytics'
+  | 'exams-rank-merit'
+  | 'exams-transcript'
+  | 'exams-report-cards'
+  | 'exams-certificates'
+  | 'exams-reports';
+
 export type AppView = 
   | 'activation' 
   | 'login' 
@@ -74,6 +100,16 @@ interface AppState {
   selectedEntityId: string | null;
   detailPanelOpen: boolean;
 
+  // Finance sub-navigation
+  financeSubView: FinanceSubView;
+  setFinanceSubView: (subView: FinanceSubView) => void;
+
+  // Exams sub-navigation
+  examsSubView: ExamsSubView;
+  setExamsSubView: (subView: ExamsSubView) => void;
+  examsSidebarActive: boolean;
+  setExamsSidebarActive: (active: boolean) => void;
+
   // Installed widgets
   installedWidgetIds: string[];
   installWidget: (id: string) => void;
@@ -110,6 +146,14 @@ export const useAppStore = create<AppState>((set, get) => ({
 
   selectedEntityId: null,
   detailPanelOpen: false,
+
+  financeSubView: 'finance-dashboard',
+  setFinanceSubView: (subView) => set({ financeSubView: subView }),
+
+  examsSubView: 'exams-dashboard',
+  setExamsSubView: (subView) => set({ examsSubView: subView }),
+  examsSidebarActive: false,
+  setExamsSidebarActive: (active) => set({ examsSidebarActive: active }),
 
   installedWidgetIds: [
     'total-students', 
@@ -155,13 +199,16 @@ export const useAppStore = create<AppState>((set, get) => ({
   openTab: (tab) => {
     const state = get();
     const exists = state.tabs.find(t => t.id === tab.id);
+    const updates: Partial<AppState> = { activeTabId: tab.id, currentView: tab.view };
+    if (tab.view === 'exams') {
+      updates.examsSidebarActive = true;
+    }
     if (exists) {
-      set({ activeTabId: tab.id, currentView: tab.view });
+      set(updates);
     } else {
       set({ 
         tabs: [...state.tabs, tab], 
-        activeTabId: tab.id, 
-        currentView: tab.view 
+        ...updates
       });
     }
   },
@@ -181,7 +228,11 @@ export const useAppStore = create<AppState>((set, get) => ({
     const state = get();
     const tab = state.tabs.find(t => t.id === tabId);
     if (tab) {
-      set({ activeTabId: tabId, currentView: tab.view });
+      const updates: Partial<AppState> = { activeTabId: tabId, currentView: tab.view };
+      if (tab.view === 'exams') {
+        updates.examsSidebarActive = true;
+      }
+      set(updates);
     }
   },
 

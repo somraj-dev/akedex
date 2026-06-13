@@ -6,6 +6,7 @@ import { api } from '@/lib/api';
 import { 
   Shield, Code, Zap, Sparkles, Bot, LineChart, Lock, Users, Activity, ChevronRight, X, Cloud
 } from 'lucide-react';
+import Navbar from './Navbar';
 
 const indianStates = [
   'Andhra Pradesh',
@@ -83,8 +84,6 @@ export default function ActivationScreen() {
           clearInterval(interval);
           if (automaticTryCount === 1) {
             setStep(10);
-          } else if (automaticTryCount === 2) {
-            setStep(11);
           } else {
             setStep(12);
           }
@@ -352,38 +351,11 @@ export default function ActivationScreen() {
           <X size={20} />
         </button>
       )}
-      
-      {/* Navbar - Light Mode exactly matching the design template */}
-      <div style={{ 
-        display: 'flex', alignItems: 'center', justifyContent: 'space-between', 
-        padding: '24px 48px', 
-        background: '#ffffff', 
-        borderBottom: '1px solid #f8fafc',
-        flexShrink: 0
-      }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '60px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#0f172a', fontWeight: 800, fontSize: '20px', letterSpacing: '-0.5px' }}>
-            <div style={{ width: '28px', height: '28px', background: '#000000', borderRadius: '50%', color: '#ffffff', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <Activity size={14} />
-            </div>
-            Akedex
-          </div>
-          <div style={{ display: 'flex', gap: '28px', fontSize: '13.5px', fontWeight: 600, color: '#64748b' }}>
-            {['Home', 'About', 'Our Services', 'Portfolio', 'Contact Us'].map((link) => (
-              <span 
-                key={link} 
-                style={{ cursor: 'pointer', transition: 'color 0.2s' }}
-                onMouseEnter={(e) => e.currentTarget.style.color = '#000000'}
-                onMouseLeave={(e) => e.currentTarget.style.color = '#64748b'}
-              >
-                {link}
-              </span>
-            ))}
-          </div>
-        </div>
-        {/* Right side search bar and person icon completely removed */}
-        <div style={{ width: '100px' }}></div>
-      </div>
+      <Navbar onHomeClick={() => {
+        setShowActivation(false);
+        setStep(1);
+        setError('');
+      }} />
 
       {/* HERO SECTION - Single view content, matching template photo exactly */}
       <div style={{ 
@@ -1401,198 +1373,6 @@ export default function ActivationScreen() {
                   </button>
                 </div>
               </div>
-            ) : step === 11 ? (
-              <div style={{ 
-                display: 'flex', 
-                flexDirection: 'column', 
-                alignItems: 'center', 
-                width: '100%',
-                maxWidth: '600px',
-                textAlign: 'center'
-              }}>
-                <h2 style={{ 
-                  fontSize: '32px', 
-                  fontWeight: 800, 
-                  color: '#000000', 
-                  letterSpacing: '-0.02em', 
-                  marginBottom: '10px' 
-                }}>
-                  Select a tenant you would like to connect to
-                </h2>
-                
-                <p style={{ 
-                  fontSize: '15px', 
-                  color: '#64748b', 
-                  fontWeight: 500,
-                  marginBottom: '36px'
-                }}>
-                  Your account has access to the following tenants:
-                </p>
-
-                {/* Avatar AJ */}
-                <div style={{
-                  width: '80px',
-                  height: '80px',
-                  borderRadius: '50%',
-                  background: '#f1f5f9',
-                  border: '1px solid #e2e8f0',
-                  color: '#0f172a',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontSize: '28px',
-                  fontWeight: 700,
-                  marginBottom: '20px',
-                  boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)',
-                  userSelect: 'none'
-                }}>
-                  AJ
-                </div>
-
-                <div style={{
-                  fontSize: '20px',
-                  fontWeight: 700,
-                  color: '#0f172a',
-                  marginBottom: '6px'
-                }}>
-                  Aakanksha Jain
-                </div>
-
-                <div style={{
-                  fontSize: '14.5px',
-                  color: '#64748b',
-                  fontWeight: 500,
-                  marginBottom: '32px'
-                }}>
-                  aakanksha.jain@akedex.com
-                </div>
-
-                {/* Tenant Radio Selection */}
-                <div style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '12px',
-                  padding: '12px 24px',
-                  borderBottom: '1px solid #e2e8f0',
-                  width: '100%',
-                  maxWidth: '320px',
-                  margin: '0 auto 40px auto',
-                  cursor: 'pointer',
-                  userSelect: 'none'
-                }}>
-                  <div style={{
-                    width: '18px',
-                    height: '18px',
-                    borderRadius: '50%',
-                    border: '2px solid #2563eb',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center'
-                  }}>
-                    <div style={{
-                      width: '10px',
-                      height: '10px',
-                      borderRadius: '50%',
-                      background: '#2563eb'
-                    }} />
-                  </div>
-                  <span style={{ fontSize: '16px', fontWeight: 700, color: '#0f172a' }}>
-                    MasteryDefault
-                  </span>
-                </div>
-
-                {/* Cannot acquire license warning banner */}
-                <div style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '12px',
-                  background: '#ffffff',
-                  border: '1px solid #cbd5e1',
-                  borderRadius: '4px',
-                  padding: '10px 16px',
-                  boxShadow: '0 2px 4px rgba(0,0,0,0.05)',
-                  margin: '24px auto 16px auto',
-                  maxWidth: '440px',
-                  width: '100%',
-                  boxSizing: 'border-box',
-                  fontSize: '13px',
-                  color: '#0f172a',
-                  textAlign: 'left'
-                }}>
-                  <div style={{
-                    width: '18px',
-                    height: '18px',
-                    borderRadius: '50%',
-                    background: '#ef4444',
-                    color: '#ffffff',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    fontSize: '11px',
-                    fontWeight: 900,
-                    flexShrink: 0,
-                    lineHeight: 1
-                  }}>
-                    !
-                  </div>
-                  <span>
-                    Cannot acquire a license.
-                  </span>
-                </div>
-
-                {/* Footer Controls aligned bottom right */}
-                <div style={{ 
-                  display: 'flex', 
-                  justifyContent: 'flex-end', 
-                  gap: '24px', 
-                  width: '100%',
-                  borderTop: '1px solid #f1f5f9',
-                  paddingTop: '20px',
-                  marginTop: '24px'
-                }}>
-                  <button 
-                    onClick={() => {
-                      setStep(2);
-                    }}
-                    style={{
-                      background: 'transparent', 
-                      color: '#64748b', 
-                      border: 'none',
-                      fontSize: '15px', 
-                      fontWeight: 600, 
-                      cursor: 'pointer',
-                      padding: '8px 12px',
-                      transition: 'color 0.2s'
-                    }}
-                    onMouseEnter={(e) => e.currentTarget.style.color = '#000000'}
-                    onMouseLeave={(e) => e.currentTarget.style.color = '#64748b'}
-                  >
-                    Back
-                  </button>
-
-                  <button 
-                    onClick={() => {
-                      setAutomaticTryCount(3);
-                      setStep(9); // Restart loader for Step 12
-                    }}
-                    style={{
-                      background: 'transparent', 
-                      color: '#2563eb', 
-                      border: 'none',
-                      fontSize: '15px', 
-                      fontWeight: 600, 
-                      cursor: 'pointer',
-                      padding: '8px 12px',
-                      transition: 'color 0.2s'
-                    }}
-                    onMouseEnter={(e) => e.currentTarget.style.color = '#1d4ed8'}
-                    onMouseLeave={(e) => e.currentTarget.style.color = '#2563eb'}
-                  >
-                    Continue
-                  </button>
-                </div>
-              </div>
             ) : step === 12 ? (
               <div style={{ 
                 display: 'flex', 
@@ -1690,7 +1470,7 @@ export default function ActivationScreen() {
                     }} />
                   </div>
                   <span style={{ fontSize: '16px', fontWeight: 700, color: '#0f172a' }}>
-                    MasteryDefault
+                    Admin 
                   </span>
                 </div>
 

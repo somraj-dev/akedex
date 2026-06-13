@@ -3,9 +3,9 @@ spring:
     name: akedex-platform
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/akedex
-    username: akedex
-    password: akedex_secret
+    url: jdbc:postgresql://localhost:5432/acadex
+    username: acadex
+    password: acadex_secret
     driver-class-name: org.postgresql.Driver
 
   jpa:

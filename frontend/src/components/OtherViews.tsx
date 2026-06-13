@@ -8,10 +8,19 @@ import {
   BookOpen, Layers, FileSpreadsheet, Clock, Clipboard, BookMarked,
   MessageSquare, DollarSign, BarChart3, Send, Download, RefreshCw,
   LogOut, Trash2, Plus, Minus, Phone, Link, Mail, MoreHorizontal, Edit,
-  Copy, MapPin, Printer, ArrowUpRight, Briefcase, GraduationCap, User, ChevronDown, ChevronUp, X
+  Copy, MapPin, Printer, ArrowUpRight, Briefcase, GraduationCap, User, ChevronDown, ChevronUp, X, TrendingUp, ArrowLeft,
+  Bell, TrendingDown, Users, Brain, CreditCard
 } from 'lucide-react';
 import { useAppStore, AppView } from '@/lib/store';
 import { StudentAcademicsTab, StudentAttendanceTab, StudentFeesTab, StudentAchievementsTab, StudentDocumentsTab } from './StudentProfileTabs';
+import { 
+  ExecutiveDashboardSubView, 
+  FeeCollectionSubView, 
+  DefaultersRecoverySubView, 
+  PayrollSubView, 
+  FinancialReportsSubView 
+} from './FinanceSubViews';
+import AdmitCardCenter from './AdmitCardCenter';
 
 // =====================================================
 // TEACHERS VIEW (Already defined, but kept clean)
@@ -872,50 +881,1295 @@ export function AssignmentsView() {
 // EXAMS VIEW (NEW)
 // =====================================================
 export function ExamsView() {
+  const { examsSubView, examsSidebarActive } = useAppStore();
+
   const exams = [
     { subject: 'Data Structures - Midterm', date: '2026-06-20', time: '10:00 AM', duration: '3 Hours', passingRate: '92.5%', status: 'CONFIRMED' },
     { subject: 'Discrete Mathematics - Final', date: '2026-06-25', time: '02:00 PM', duration: '3 Hours', passingRate: '88.0%', status: 'SCHEDULED' },
     { subject: 'Quantum Physics Attestation Test', date: '2026-06-18', time: '09:00 AM', duration: '2 Hours', passingRate: '95.2%', status: 'LOCK_READY' }
   ];
 
-  return (
-    <div style={{ padding: '16px', background: 'var(--bg-primary)', height: '100%', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '16px' }}>
-      <div>
-        <h2 style={{ fontSize: '16px', fontWeight: 700, color: 'var(--text-primary)', margin: 0 }}>Exams & Term Assessments</h2>
-        <p style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>Schedule major final audits, lock attestation keys, and audit passing ratios.</p>
-      </div>
-      <div style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-primary)', borderRadius: '12px', overflow: 'hidden' }}>
-        <table className="data-table">
-          <thead>
-            <tr>
-              <th>Audit Subject Name</th>
-              <th>Date</th>
-              <th>Start Time</th>
-              <th>Duration</th>
-              <th>Last Term Pass Rate</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {exams.map((e, idx) => (
-              <tr key={idx}>
-                <td style={{ fontWeight: 600 }}>{e.subject}</td>
-                <td className="font-mono text-xs">{e.date}</td>
-                <td className="font-mono text-xs">{e.time}</td>
-                <td>{e.duration}</td>
-                <td className="font-mono">{e.passingRate}</td>
-                <td>
-                  <span className={`badge ${e.status === 'CONFIRMED' ? 'badge-active' : e.status === 'LOCK_READY' ? 'badge-pending' : 'badge-info'}`}>
-                    {e.status.replace('_', ' ')}
+  switch (examsSubView) {
+    case 'exams-dashboard':
+      return (
+        <div style={{
+          padding: '24px',
+          background: 'var(--bg-primary)',
+          height: '100%',
+          overflowY: 'auto',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '20px',
+          fontFamily: 'var(--font-sans)',
+        }}>
+          {/* Header Block */}
+          <div style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            flexWrap: 'wrap',
+            gap: '16px'
+          }}>
+            <div>
+              {examsSidebarActive && (
+                <button 
+                  onClick={() => useAppStore.setState({ examsSidebarActive: false })}
+                  style={{
+                    background: 'none',
+                    border: 'none',
+                    padding: 0,
+                    color: 'var(--accent-blue)',
+                    fontSize: '11px',
+                    fontWeight: 600,
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '4px',
+                    cursor: 'pointer',
+                    marginBottom: '8px'
+                  }}
+                >
+                  <ArrowLeft size={12} /> Back to Main Menu
+                </button>
+              )}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <h1 style={{
+                  fontSize: '20px',
+                  fontWeight: 700,
+                  color: 'var(--text-primary)',
+                  margin: 0,
+                  letterSpacing: '-0.02em'
+                }}>
+                  Executive Examination Dashboard
+                </h1>
+                <span style={{
+                  background: 'rgba(37, 99, 235, 0.1)',
+                  color: 'var(--accent-blue)',
+                  fontSize: '10px',
+                  fontWeight: 700,
+                  padding: '2px 6px',
+                  borderRadius: '4px',
+                  textTransform: 'uppercase'
+                }}>
+                  Live
+                </span>
+              </div>
+              <p style={{
+                fontSize: '12px',
+                color: 'var(--text-secondary)',
+                marginTop: '4px'
+              }}>
+                Real-time overview of examination operations and academic performance.
+              </p>
+            </div>
+
+            {/* Right side buttons & search */}
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '12px',
+              flexWrap: 'wrap'
+            }}>
+              {/* Search bar */}
+              <div style={{ position: 'relative', width: '200px' }}>
+                <Search size={14} style={{
+                  position: 'absolute',
+                  left: '10px',
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                  color: 'var(--text-muted)'
+                }} />
+                <input
+                  type="text"
+                  placeholder="Search anything..."
+                  className="input-field"
+                  style={{
+                    paddingLeft: '30px',
+                    height: '32px',
+                    borderRadius: '6px',
+                    fontSize: '11px'
+                  }}
+                />
+              </div>
+
+              {/* Notification icon */}
+              <button style={{
+                position: 'relative',
+                background: 'var(--bg-secondary)',
+                border: '1px solid var(--border-primary)',
+                borderRadius: '6px',
+                width: '32px',
+                height: '32px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: 'var(--text-secondary)',
+                cursor: 'pointer',
+                transition: 'all var(--transition-fast)'
+              }}
+              onMouseEnter={e => e.currentTarget.style.borderColor = 'var(--accent-blue)'}
+              onMouseLeave={e => e.currentTarget.style.borderColor = 'var(--border-primary)'}
+              >
+                <Bell size={16} />
+                <span style={{
+                  position: 'absolute',
+                  top: '-4px',
+                  right: '-4px',
+                  background: 'var(--accent-red)',
+                  color: '#ffffff',
+                  fontSize: '9px',
+                  fontWeight: 700,
+                  borderRadius: '50%',
+                  width: '15px',
+                  height: '15px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  boxShadow: '0 0 0 2px #ffffff'
+                }}>
+                  6
+                </span>
+              </button>
+
+              {/* Action buttons */}
+              <button className="btn btn-secondary btn-sm" style={{ height: '32px', gap: '6px', fontSize: '11px', borderRadius: '6px' }}>
+                <FileText size={14} /> Examination Reports
+              </button>
+
+              <button className="btn btn-secondary btn-sm" style={{ height: '32px', gap: '6px', fontSize: '11px', borderRadius: '6px' }}>
+                <Download size={14} /> Export
+              </button>
+
+              <button className="btn btn-primary btn-sm" style={{ height: '32px', gap: '6px', fontSize: '11px', borderRadius: '6px', fontWeight: 600 }}>
+                <Plus size={14} /> Create Examination
+              </button>
+            </div>
+          </div>
+
+          {/* Operational Metrics Row */}
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+            gap: '16px'
+          }}>
+            {/* Card 1: Active Examinations */}
+            <div style={{
+              background: 'var(--bg-secondary)',
+              border: '1px solid var(--border-primary)',
+              borderRadius: '12px',
+              padding: '16px',
+              boxShadow: '0 1px 3px rgba(0,0,0,0.02)',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '12px'
+            }}>
+              <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+                <div style={{
+                  width: '36px',
+                  height: '36px',
+                  borderRadius: '8px',
+                  background: 'rgba(139, 92, 246, 0.08)',
+                  color: 'var(--accent-purple)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  flexShrink: 0
+                }}>
+                  <FileText size={18} />
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                  <span style={{ fontSize: '11px', fontWeight: 600, color: 'var(--text-tertiary)' }}>
+                    Active Examinations
                   </span>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </div>
-  );
+                  <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px', marginTop: '2px' }}>
+                    <span style={{ fontSize: '20px', fontWeight: 800, color: 'var(--text-primary)', fontFamily: 'var(--font-mono)' }}>
+                      12
+                    </span>
+                    <span style={{ fontSize: '10px', color: 'var(--accent-green)', fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: '2px' }}>
+                      <TrendingUp size={10} /> +20% vs last month
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div style={{ borderTop: '1px solid var(--border-secondary)', margin: '0 -16px' }} />
+              <div style={{ width: '100%', height: '24px', padding: '0 16px', boxSizing: 'border-box' }}>
+                <svg width="100%" height="100%" viewBox="0 0 240 24" preserveAspectRatio="none" style={{ overflow: 'visible' }}>
+                  <path
+                    d="M0,15 C48,10 96,20 144,8 C192,12 216,2 240,5"
+                    fill="none"
+                    stroke="var(--accent-purple)"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                  />
+                </svg>
+              </div>
+            </div>
+
+            {/* Card 2: Students Registered */}
+            <div style={{
+              background: 'var(--bg-secondary)',
+              border: '1px solid var(--border-primary)',
+              borderRadius: '12px',
+              padding: '16px',
+              boxShadow: '0 1px 3px rgba(0,0,0,0.02)',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '12px'
+            }}>
+              <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+                <div style={{
+                  width: '36px',
+                  height: '36px',
+                  borderRadius: '8px',
+                  background: 'rgba(16, 185, 129, 0.08)',
+                  color: 'var(--accent-green)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  flexShrink: 0
+                }}>
+                  <Users size={18} />
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                  <span style={{ fontSize: '11px', fontWeight: 600, color: 'var(--text-tertiary)' }}>
+                    Students Registered
+                  </span>
+                  <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px', marginTop: '2px' }}>
+                    <span style={{ fontSize: '20px', fontWeight: 800, color: 'var(--text-primary)', fontFamily: 'var(--font-mono)' }}>
+                      4,826
+                    </span>
+                    <span style={{ fontSize: '10px', color: 'var(--accent-green)', fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: '2px' }}>
+                      <TrendingUp size={10} /> +12.5% vs last month
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div style={{ borderTop: '1px solid var(--border-secondary)', margin: '0 -16px' }} />
+              <div style={{ width: '100%', height: '24px', padding: '0 16px', boxSizing: 'border-box' }}>
+                <svg width="100%" height="100%" viewBox="0 0 240 24" preserveAspectRatio="none" style={{ overflow: 'visible' }}>
+                  <path
+                    d="M0,18 C48,15 84,22 132,10 C168,12 204,2 240,6"
+                    fill="none"
+                    stroke="var(--accent-green)"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                  />
+                </svg>
+              </div>
+            </div>
+
+            {/* Card 3: Results Published */}
+            <div style={{
+              background: 'var(--bg-secondary)',
+              border: '1px solid var(--border-primary)',
+              borderRadius: '12px',
+              padding: '16px',
+              boxShadow: '0 1px 3px rgba(0,0,0,0.02)',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '12px'
+            }}>
+              <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+                <div style={{
+                  width: '36px',
+                  height: '36px',
+                  borderRadius: '8px',
+                  background: 'rgba(245, 158, 11, 0.08)',
+                  color: 'var(--accent-amber)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  flexShrink: 0
+                }}>
+                  <Award size={18} />
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                  <span style={{ fontSize: '11px', fontWeight: 600, color: 'var(--text-tertiary)' }}>
+                    Results Published
+                  </span>
+                  <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px', marginTop: '2px' }}>
+                    <span style={{ fontSize: '20px', fontWeight: 800, color: 'var(--text-primary)', fontFamily: 'var(--font-mono)' }}>
+                      8
+                    </span>
+                    <span style={{ fontSize: '10px', color: 'var(--accent-green)', fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: '2px' }}>
+                      <TrendingUp size={10} /> +33% vs last month
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div style={{ borderTop: '1px solid var(--border-secondary)', margin: '0 -16px' }} />
+              <div style={{ width: '100%', height: '24px', padding: '0 16px', boxSizing: 'border-box' }}>
+                <svg width="100%" height="100%" viewBox="0 0 240 24" preserveAspectRatio="none" style={{ overflow: 'visible' }}>
+                  <path
+                    d="M0,16 C36,22 72,12 120,20 C168,14 204,4 240,10"
+                    fill="none"
+                    stroke="var(--accent-amber)"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                  />
+                </svg>
+              </div>
+            </div>
+
+            {/* Card 4: Pending Evaluations */}
+            <div style={{
+              background: 'var(--bg-secondary)',
+              border: '1px solid var(--border-primary)',
+              borderRadius: '12px',
+              padding: '16px',
+              boxShadow: '0 1px 3px rgba(0,0,0,0.02)',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '12px'
+            }}>
+              <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+                <div style={{
+                  width: '36px',
+                  height: '36px',
+                  borderRadius: '8px',
+                  background: 'rgba(239, 68, 68, 0.08)',
+                  color: 'var(--accent-red)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  flexShrink: 0
+                }}>
+                  <Clipboard size={18} />
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                  <span style={{ fontSize: '11px', fontWeight: 600, color: 'var(--text-tertiary)' }}>
+                    Pending Evaluations
+                  </span>
+                  <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px', marginTop: '2px' }}>
+                    <span style={{ fontSize: '20px', fontWeight: 800, color: 'var(--text-primary)', fontFamily: 'var(--font-mono)' }}>
+                      242
+                    </span>
+                    <span style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>Scripts</span>
+                    <span style={{ fontSize: '10px', color: 'var(--accent-red)', fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: '2px', marginLeft: '4px' }}>
+                      <TrendingDown size={10} /> 8.2% vs last month
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div style={{ borderTop: '1px solid var(--border-secondary)', margin: '0 -16px' }} />
+              <div style={{ width: '100%', height: '24px', padding: '0 16px', boxSizing: 'border-box' }}>
+                <svg width="100%" height="100%" viewBox="0 0 240 24" preserveAspectRatio="none" style={{ overflow: 'visible' }}>
+                  <path
+                    d="M0,10 C48,18 96,8 144,18 C192,10 216,22 240,12"
+                    fill="none"
+                    stroke="var(--accent-red)"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                  />
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          {/* Main Grid Section */}
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: '2fr 1fr',
+            gap: '20px',
+            alignItems: 'start'
+          }}>
+            {/* LEFT COLUMN */}
+            <div style={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '20px'
+            }}>
+              {/* Card 1: Examination Progress Overview */}
+              <div style={{
+                background: 'var(--bg-secondary)',
+                border: '1px solid var(--border-primary)',
+                borderRadius: '12px',
+                padding: '20px',
+                boxShadow: '0 1px 3px rgba(0,0,0,0.02)'
+              }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+                  <h3 style={{ fontSize: '13px', fontWeight: 700, color: 'var(--text-primary)', margin: 0 }}>
+                    Examination Progress Overview
+                  </h3>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                    {/* Legend */}
+                    <div style={{ display: 'flex', gap: '8px', fontSize: '10px', fontWeight: 600, color: 'var(--text-secondary)' }}>
+                      <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                        <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#2563eb' }} /> Scheduled
+                      </span>
+                      <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                        <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#f97316' }} /> In Progress
+                      </span>
+                      <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                        <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#8b5cf6' }} /> Evaluation
+                      </span>
+                      <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                        <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#10b981' }} /> Completed
+                      </span>
+                    </div>
+
+                    {/* Academic Year Selector */}
+                    <select style={{
+                      padding: '4px 8px',
+                      fontSize: '10px',
+                      fontWeight: 600,
+                      borderRadius: '6px',
+                      border: '1px solid var(--border-primary)',
+                      background: 'var(--bg-primary)',
+                      color: 'var(--text-primary)',
+                      outline: 'none',
+                      cursor: 'pointer'
+                    }}>
+                      <option>This Academic Year</option>
+                      <option>Previous Academic Year</option>
+                    </select>
+                  </div>
+                </div>
+
+                {/* flex row: Y-axis labels + SVG */}
+                <div style={{ display: 'flex', gap: '8px', height: '170px' }}>
+                  {/* Y-axis Labels */}
+                  <div style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'space-between',
+                    alignItems: 'flex-end',
+                    width: '20px',
+                    height: '170px',
+                    fontSize: '9px',
+                    fontWeight: 600,
+                    color: 'var(--text-tertiary)',
+                    fontFamily: 'var(--font-mono)',
+                    paddingRight: '4px',
+                    boxSizing: 'border-box',
+                    lineHeight: '1'
+                  }}>
+                    <span>25</span>
+                    <span>20</span>
+                    <span>15</span>
+                    <span>10</span>
+                    <span>5</span>
+                    <span>0</span>
+                  </div>
+
+                  {/* SVG Chart area */}
+                  <div style={{ flex: 1, height: '170px', position: 'relative' }}>
+                    <svg width="100%" height="100%" viewBox="0 0 600 170" preserveAspectRatio="none" style={{ overflow: 'visible' }}>
+                      {/* Grid lines */}
+                      <line x1="0" y1="0" x2="600" y2="0" stroke="var(--border-secondary)" strokeWidth="1" strokeDasharray="3,3" />
+                      <line x1="0" y1="34" x2="600" y2="34" stroke="var(--border-secondary)" strokeWidth="1" strokeDasharray="3,3" />
+                      <line x1="0" y1="68" x2="600" y2="68" stroke="var(--border-secondary)" strokeWidth="1" strokeDasharray="3,3" />
+                      <line x1="0" y1="102" x2="600" y2="102" stroke="var(--border-secondary)" strokeWidth="1" strokeDasharray="3,3" />
+                      <line x1="0" y1="136" x2="600" y2="136" stroke="var(--border-secondary)" strokeWidth="1" strokeDasharray="3,3" />
+                      <line x1="0" y1="170" x2="600" y2="170" stroke="var(--border-primary)" strokeWidth="1" />
+                      
+                      {/* Scheduled (Blue) */}
+                      <path
+                        d="M0,110 L50,88 L100,105 L150,75 L200,90 L250,55 L300,78 L350,65 L400,38 L450,55 L500,85 L550,55 L600,60"
+                        fill="none"
+                        stroke="#2563eb"
+                        strokeWidth="2.5"
+                        strokeLinecap="round"
+                      />
+                      {/* In Progress (Orange) */}
+                      <path
+                        d="M0,150 L50,140 L100,145 L150,118 L200,125 L250,135 L300,115 L350,98 L400,120 L450,125 L500,140 L550,120 L600,125"
+                        fill="none"
+                        stroke="#f97316"
+                        strokeWidth="2.5"
+                        strokeLinecap="round"
+                      />
+                      {/* Evaluation (Purple) */}
+                      <path
+                        d="M0,160 L50,150 L100,155 L150,128 L200,134 L250,140 L300,132 L350,115 L400,112 L450,118 L500,125 L550,115 L600,125"
+                        fill="none"
+                        stroke="#8b5cf6"
+                        strokeWidth="2.5"
+                        strokeLinecap="round"
+                      />
+                      {/* Completed (Green) */}
+                      <path
+                        d="M0,168 L50,163 L100,165 L150,152 L200,156 L250,162 L300,154 L350,142 L400,146 L450,140 L500,136 L550,146 L600,142"
+                        fill="none"
+                        stroke="#10b981"
+                        strokeWidth="2.5"
+                        strokeLinecap="round"
+                      />
+
+                      {/* Data Points Dots */}
+                      {/* Scheduled */}
+                      <circle cx="50" cy="88" r="3.5" fill="#ffffff" stroke="#2563eb" strokeWidth="2" />
+                      <circle cx="150" cy="75" r="3.5" fill="#ffffff" stroke="#2563eb" strokeWidth="2" />
+                      <circle cx="250" cy="55" r="3.5" fill="#ffffff" stroke="#2563eb" strokeWidth="2" />
+                      <circle cx="400" cy="38" r="3.5" fill="#ffffff" stroke="#2563eb" strokeWidth="2" />
+                      <circle cx="550" cy="55" r="3.5" fill="#ffffff" stroke="#2563eb" strokeWidth="2" />
+
+                      {/* In Progress */}
+                      <circle cx="150" cy="118" r="3.5" fill="#ffffff" stroke="#f97316" strokeWidth="2" />
+                      <circle cx="350" cy="98" r="3.5" fill="#ffffff" stroke="#f97316" strokeWidth="2" />
+                      
+                      {/* Evaluation */}
+                      <circle cx="150" cy="128" r="3.5" fill="#ffffff" stroke="#8b5cf6" strokeWidth="2" />
+                      <circle cx="350" cy="115" r="3.5" fill="#ffffff" stroke="#8b5cf6" strokeWidth="2" />
+                    </svg>
+                  </div>
+                </div>
+
+                {/* X-axis Labels */}
+                <div style={{ display: 'flex', fontSize: '9px', fontWeight: 600, color: 'var(--text-tertiary)', padding: '8px 4px 0', fontFamily: 'var(--font-mono)' }}>
+                  <div style={{ width: '24px', flexShrink: 0 }} />
+                  <div style={{ flex: 1, display: 'flex', justifyContent: 'space-between' }}>
+                    <span>May '25</span>
+                    <span>Jun '25</span>
+                    <span>Jul '25</span>
+                    <span>Aug '25</span>
+                    <span>Sep '25</span>
+                    <span>Oct '25</span>
+                    <span>Nov '25</span>
+                    <span>Dec '25</span>
+                    <span>Jan '26</span>
+                    <span>Feb '26</span>
+                    <span>Mar '26</span>
+                    <span>Apr '26</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Card 2: Row of 4 Sub-metrics */}
+              <div style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(4, 1fr)',
+                gap: '12px'
+              }}>
+                {/* Card 2.1: Admit Cards */}
+                <div style={{
+                  background: 'var(--bg-secondary)',
+                  border: '1px solid var(--border-primary)',
+                  borderRadius: '12px',
+                  padding: '12px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '8px'
+                }}>
+                  {/* Top */}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <div style={{
+                      width: '24px',
+                      height: '24px',
+                      borderRadius: '6px',
+                      background: 'rgba(37, 99, 235, 0.08)',
+                      color: 'var(--accent-blue)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      flexShrink: 0
+                    }}>
+                      <CreditCard size={12} />
+                    </div>
+                    <div>
+                      <div style={{ fontSize: '9px', fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                        Admit Cards
+                      </div>
+                      <div style={{ fontSize: '13px', fontWeight: 800, color: 'var(--text-primary)', marginTop: '1px' }}>
+                        4,826 <span style={{ fontSize: '9px', fontWeight: 500, color: 'var(--text-secondary)' }}>Generated</span>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {/* Divider */}
+                  <div style={{ borderTop: '1px solid var(--border-secondary)' }} />
+
+                  {/* Mid */}
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '10px', color: 'var(--text-primary)', fontWeight: 700 }}>
+                    <span>3,991 <span style={{ color: 'var(--text-secondary)', fontWeight: 500, fontSize: '9px' }}>Downloaded</span></span>
+                    <span>835 <span style={{ color: 'var(--text-secondary)', fontWeight: 500, fontSize: '9px' }}>Pending</span></span>
+                  </div>
+
+                  {/* Bottom Progress Bar */}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '9px', color: 'var(--accent-blue)', fontWeight: 700, marginTop: '2px' }}>
+                    <div style={{ flex: 1, height: '4px', background: 'var(--border-secondary)', borderRadius: '2px', overflow: 'hidden' }}>
+                      <div style={{ width: '82%', height: '100%', background: 'var(--accent-blue)' }} />
+                    </div>
+                    <span>82%</span>
+                  </div>
+                </div>
+
+                {/* Card 2.2: Attendance Summary */}
+                <div style={{
+                  background: 'var(--bg-secondary)',
+                  border: '1px solid var(--border-primary)',
+                  borderRadius: '12px',
+                  padding: '12px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '8px'
+                }}>
+                  {/* Top */}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <div style={{
+                      width: '24px',
+                      height: '24px',
+                      borderRadius: '6px',
+                      background: 'rgba(16, 185, 129, 0.08)',
+                      color: 'var(--accent-green)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      flexShrink: 0
+                    }}>
+                      <CheckCircle2 size={12} />
+                    </div>
+                    <div>
+                      <div style={{ fontSize: '9px', fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                        Attendance
+                      </div>
+                      <div style={{ fontSize: '13px', fontWeight: 800, color: 'var(--text-primary)', marginTop: '1px' }}>
+                        4,682 <span style={{ fontSize: '9px', fontWeight: 500, color: 'var(--text-secondary)' }}>Present</span>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {/* Divider */}
+                  <div style={{ borderTop: '1px solid var(--border-secondary)' }} />
+
+                  {/* Mid */}
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '10px', color: 'var(--text-primary)', fontWeight: 700 }}>
+                    <span>144 <span style={{ color: 'var(--text-secondary)', fontWeight: 500, fontSize: '9px' }}>Absent</span></span>
+                    <span>28 <span style={{ color: 'var(--text-secondary)', fontWeight: 500, fontSize: '9px' }}>Late</span></span>
+                  </div>
+
+                  {/* Bottom Progress Bar */}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '9px', color: 'var(--accent-green)', fontWeight: 700, marginTop: '2px' }}>
+                    <div style={{ flex: 1, height: '4px', background: 'var(--border-secondary)', borderRadius: '2px', overflow: 'hidden' }}>
+                      <div style={{ width: '97%', height: '100%', background: 'var(--accent-green)' }} />
+                    </div>
+                    <span>96.98%</span>
+                  </div>
+                </div>
+
+                {/* Card 2.3: Evaluation Progress */}
+                <div style={{
+                  background: 'var(--bg-secondary)',
+                  border: '1px solid var(--border-primary)',
+                  borderRadius: '12px',
+                  padding: '12px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '8px'
+                }}>
+                  {/* Top */}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <div style={{
+                      width: '24px',
+                      height: '24px',
+                      borderRadius: '6px',
+                      background: 'rgba(139, 92, 246, 0.08)',
+                      color: 'var(--accent-purple)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      flexShrink: 0
+                    }}>
+                      <Clipboard size={12} />
+                    </div>
+                    <div>
+                      <div style={{ fontSize: '9px', fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                        Evaluation
+                      </div>
+                      <div style={{ fontSize: '13px', fontWeight: 800, color: 'var(--text-primary)', marginTop: '1px' }}>
+                        74% <span style={{ fontSize: '9px', fontWeight: 500, color: 'var(--text-secondary)' }}>Completed</span>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {/* Divider */}
+                  <div style={{ borderTop: '1px solid var(--border-secondary)' }} />
+
+                  {/* Mid */}
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '10px', color: 'var(--text-primary)', fontWeight: 700 }}>
+                    <span>3,564 <span style={{ color: 'var(--text-secondary)', fontWeight: 500, fontSize: '9px' }}>Evaluated</span></span>
+                    <span>1,278 <span style={{ color: 'var(--text-secondary)', fontWeight: 500, fontSize: '9px' }}>Pending</span></span>
+                  </div>
+
+                  {/* Bottom Progress Bar */}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '9px', color: 'var(--accent-purple)', fontWeight: 700, marginTop: '2px' }}>
+                    <div style={{ flex: 1, height: '4px', background: 'var(--border-secondary)', borderRadius: '2px', overflow: 'hidden' }}>
+                      <div style={{ width: '74%', height: '100%', background: 'var(--accent-purple)' }} />
+                    </div>
+                    <span>74%</span>
+                  </div>
+                </div>
+
+                {/* Card 2.4: Result Processing */}
+                <div style={{
+                  background: 'var(--bg-secondary)',
+                  border: '1px solid var(--border-primary)',
+                  borderRadius: '12px',
+                  padding: '12px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '8px'
+                }}>
+                  {/* Top */}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <div style={{
+                      width: '24px',
+                      height: '24px',
+                      borderRadius: '6px',
+                      background: 'rgba(245, 158, 11, 0.08)',
+                      color: 'var(--accent-amber)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      flexShrink: 0
+                    }}>
+                      <Brain size={12} />
+                    </div>
+                    <div>
+                      <div style={{ fontSize: '9px', fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                        Result Processing
+                      </div>
+                      <div style={{ fontSize: '13px', fontWeight: 800, color: 'var(--text-primary)', marginTop: '1px' }}>
+                        96% <span style={{ fontSize: '9px', fontWeight: 500, color: 'var(--text-secondary)' }}>Ready</span>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {/* Divider */}
+                  <div style={{ borderTop: '1px solid var(--border-secondary)' }} />
+
+                  {/* Mid */}
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '10px', color: 'var(--text-primary)', fontWeight: 700 }}>
+                    <span>4,635 <span style={{ color: 'var(--text-secondary)', fontWeight: 500, fontSize: '9px' }}>Completed</span></span>
+                    <span>191 <span style={{ color: 'var(--text-secondary)', fontWeight: 500, fontSize: '9px' }}>Processing</span></span>
+                  </div>
+
+                  {/* Bottom Progress Bar */}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '9px', color: 'var(--accent-amber)', fontWeight: 700, marginTop: '2px' }}>
+                    <div style={{ flex: 1, height: '4px', background: 'var(--border-secondary)', borderRadius: '2px', overflow: 'hidden' }}>
+                      <div style={{ width: '96%', height: '100%', background: 'var(--accent-amber)' }} />
+                    </div>
+                    <span>96%</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Card 3: Double Tables Row */}
+              <div style={{
+                display: 'grid',
+                gridTemplateColumns: '1fr 1fr',
+                gap: '16px'
+              }}>
+                {/* 3.1: Upcoming Examinations */}
+                <div style={{
+                  background: 'var(--bg-secondary)',
+                  border: '1px solid var(--border-primary)',
+                  borderRadius: '12px',
+                  padding: '16px',
+                  boxShadow: '0 1px 3px rgba(0,0,0,0.02)',
+                  display: 'flex',
+                  flexDirection: 'column'
+                }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+                    <h4 style={{ fontSize: '12.5px', fontWeight: 700, color: 'var(--text-primary)', margin: 0 }}>
+                      Upcoming Examinations
+                    </h4>
+                    <span style={{ fontSize: '10.5px', fontWeight: 600, color: 'var(--accent-blue)', cursor: 'pointer' }}>
+                      View All
+                    </span>
+                  </div>
+                  <div style={{ overflowX: 'auto' }}>
+                    <table className="data-table" style={{ width: '100%', minWidth: '320px' }}>
+                      <thead>
+                        <tr>
+                          <th style={{ padding: '6px 8px', fontSize: '9px' }}>Exam Name</th>
+                          <th style={{ padding: '6px 8px', fontSize: '9px' }}>Classes</th>
+                          <th style={{ padding: '6px 8px', fontSize: '9px' }}>Dates</th>
+                          <th style={{ padding: '6px 8px', fontSize: '9px' }}>Students</th>
+                          <th style={{ padding: '6px 8px', fontSize: '9px' }}>Status</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {[
+                          { name: 'Half Yearly Examination', cls: 'III - XII', start: '15 May', end: '28 May', students: '4,826', status: 'In Progress', statusType: 'active' },
+                          { name: 'Unit Test - I', cls: 'VI - XII', start: '05 Jun', end: '12 Jun', students: '3,214', status: 'Scheduled', statusType: 'info' },
+                          { name: 'Practical Examination', cls: 'IX - XII', start: '20 Jun', end: '30 Jun', students: '1,982', status: 'Scheduled', statusType: 'info' },
+                          { name: 'Annual Examination', cls: 'I - XII', start: '05 Oct', end: '25 Oct', students: '5,102', status: 'Planned', statusType: 'pending' },
+                          { name: 'Board Preparation Test', cls: 'X - XII', start: '15 Nov', end: '30 Nov', students: '1,120', status: 'Planned', statusType: 'pending' }
+                        ].map((row, idx) => (
+                          <tr key={idx}>
+                            <td style={{ padding: '8px 6px', fontSize: '10.5px', fontWeight: 600 }}>{row.name}</td>
+                            <td style={{ padding: '8px 6px', fontSize: '10.5px' }}>{row.cls}</td>
+                            <td style={{ padding: '8px 6px', fontSize: '10px', color: 'var(--text-secondary)' }}>
+                              {row.start} - {row.end}
+                            </td>
+                            <td style={{ padding: '8px 6px', fontSize: '10.5px', fontFamily: 'var(--font-mono)' }}>{row.students}</td>
+                            <td style={{ padding: '8px 6px' }}>
+                              <span className={`badge ${row.statusType === 'active' ? 'badge-active' : row.statusType === 'info' ? 'badge-info' : 'badge-warning'}`} style={{ fontSize: '9px', padding: '1px 5px' }}>
+                                {row.status}
+                              </span>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                {/* 3.2: Top Performers */}
+                <div style={{
+                  background: 'var(--bg-secondary)',
+                  border: '1px solid var(--border-primary)',
+                  borderRadius: '12px',
+                  padding: '16px',
+                  boxShadow: '0 1px 3px rgba(0,0,0,0.02)',
+                  display: 'flex',
+                  flexDirection: 'column'
+                }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+                    <h4 style={{ fontSize: '12.5px', fontWeight: 700, color: 'var(--text-primary)', margin: 0 }}>
+                      Top Performers <span style={{ fontSize: '10px', color: 'var(--text-tertiary)', fontWeight: 500 }}>(Latest Exam)</span>
+                    </h4>
+                    <span style={{ fontSize: '10.5px', fontWeight: 600, color: 'var(--accent-blue)', cursor: 'pointer' }}>
+                      View All
+                    </span>
+                  </div>
+                  
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                    {[
+                      { rank: 1, name: 'Aarav Sharma', cls: 'X-A', score: '98.6%', color: '#f59e0b' },
+                      { rank: 2, name: 'Diya Patel', cls: 'X-B', score: '97.4%', color: '#94a3b8' },
+                      { rank: 3, name: 'Vivaan Mehta', cls: 'X-A', score: '96.8%', color: '#b45309' },
+                      { rank: 4, name: 'Ananya Singh', cls: 'IX-C', score: '95.7%' },
+                      { rank: 5, name: 'Kabir Verma', cls: 'IX-B', score: '95.3%' }
+                    ].map((row, idx) => (
+                      <div key={idx} style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        padding: '6px 8px',
+                        borderRadius: '8px',
+                        background: 'var(--bg-primary)',
+                        border: '1px solid var(--border-secondary)',
+                        fontSize: '11px'
+                      }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                          <span style={{
+                            width: '20px',
+                            height: '20px',
+                            borderRadius: '50%',
+                            background: row.rank <= 3 ? row.color : '#e2e8f0',
+                            color: row.rank <= 3 ? '#ffffff' : 'var(--text-secondary)',
+                            fontWeight: 700,
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            fontSize: '10px'
+                          }}>
+                            {row.rank}
+                          </span>
+                          {/* Mini Avatar icon */}
+                          <div style={{
+                            width: '20px',
+                            height: '20px',
+                            borderRadius: '50%',
+                            background: '#2563eb15',
+                            color: 'var(--accent-blue)',
+                            fontWeight: 800,
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            fontSize: '9px'
+                          }}>
+                            {row.name.charAt(0)}
+                          </div>
+                          <div>
+                            <span style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{row.name}</span>
+                            <span style={{ fontSize: '9px', color: 'var(--text-tertiary)', marginLeft: '6px' }}>{row.cls}</span>
+                          </div>
+                        </div>
+                        <span style={{ fontWeight: 700, color: 'var(--text-primary)', fontFamily: 'var(--font-mono)' }}>
+                          {row.score}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* RIGHT COLUMN */}
+            <div style={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '20px'
+            }}>
+              {/* Row 1: Evaluation Status Donut & Pass Percentage side-by-side */}
+              <div style={{
+                display: 'flex',
+                gap: '16px'
+              }}>
+                {/* 1.1: Evaluation Status */}
+                <div style={{
+                  flex: 1,
+                  background: 'var(--bg-secondary)',
+                  border: '1px solid var(--border-primary)',
+                  borderRadius: '12px',
+                  padding: '16px',
+                  boxShadow: '0 1px 3px rgba(0,0,0,0.02)',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '12px'
+                }}>
+                  <h4 style={{ fontSize: '12.5px', fontWeight: 700, color: 'var(--text-primary)', margin: 0 }}>
+                    Evaluation Status
+                  </h4>
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px' }}>
+                    {/* SVG Donut */}
+                    <div style={{ position: 'relative', width: '80px', height: '80px', flexShrink: 0 }}>
+                      <svg width="80" height="80" viewBox="0 0 100 100">
+                        <circle cx="50" cy="50" r="38" fill="transparent" stroke="#f1f5f9" strokeWidth="10" />
+                        {/* Evaluated 74% (Green) */}
+                        <circle 
+                          cx="50" 
+                          cy="50" 
+                          r="38" 
+                          fill="transparent" 
+                          stroke="var(--accent-green)" 
+                          strokeWidth="10" 
+                          strokeDasharray="238.76" 
+                          strokeDashoffset="62.08" 
+                          strokeLinecap="round" 
+                          transform="rotate(-90 50 50)"
+                        />
+                        {/* In Progress 15% (Orange) */}
+                        <circle 
+                          cx="50" 
+                          cy="50" 
+                          r="38" 
+                          fill="transparent" 
+                          stroke="var(--accent-amber)" 
+                          strokeWidth="10" 
+                          strokeDasharray="238.76" 
+                          strokeDashoffset="202.94" 
+                          strokeLinecap="round" 
+                          transform="rotate(176.4 50 50)"
+                        />
+                        {/* Pending 11% (Purple) */}
+                        <circle 
+                          cx="50" 
+                          cy="50" 
+                          r="38" 
+                          fill="transparent" 
+                          stroke="var(--accent-purple)" 
+                          strokeWidth="10" 
+                          strokeDasharray="238.76" 
+                          strokeDashoffset="212.5" 
+                          strokeLinecap="round" 
+                          transform="rotate(230.4 50 50)"
+                        />
+                      </svg>
+                      <div style={{
+                        position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column',
+                        alignItems: 'center', justifyContent: 'center', lineHeight: 1.1
+                      }}>
+                        <span style={{ fontSize: '13px', fontWeight: 800, color: 'var(--text-primary)', fontFamily: 'var(--font-mono)' }}>74%</span>
+                        <span style={{ fontSize: '7px', color: 'var(--text-tertiary)', textTransform: 'uppercase', fontWeight: 700 }}>Evaluated</span>
+                      </div>
+                    </div>
+
+                    {/* Donut Legend */}
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', width: '100%' }}>
+                      {[
+                        { label: 'Evaluated', percent: '74%', val: '3,564', color: 'var(--accent-green)' },
+                        { label: 'In Progress', percent: '15%', val: '723', color: 'var(--accent-amber)' },
+                        { label: 'Pending', percent: '11%', val: '539', color: 'var(--accent-purple)' }
+                      ].map((item, idx) => (
+                        <div key={idx} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '10px' }}>
+                          <span style={{ display: 'flex', alignItems: 'center', gap: '4px', color: 'var(--text-secondary)' }}>
+                            <span style={{ width: '4px', height: '4px', borderRadius: '50%', background: item.color }} />
+                            {item.label}
+                          </span>
+                          <span style={{ fontWeight: 600, color: 'var(--text-primary)', fontSize: '9.5px' }}>
+                            {item.percent} <span style={{ color: 'var(--text-muted)', fontSize: '8px', fontWeight: 500 }}>({item.val})</span>
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                {/* 1.2: Pass Percentage */}
+                <div style={{
+                  flex: 1,
+                  background: 'var(--bg-secondary)',
+                  border: '1px solid var(--border-primary)',
+                  borderRadius: '12px',
+                  padding: '16px',
+                  boxShadow: '0 1px 3px rgba(0,0,0,0.02)',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'space-between',
+                  gap: '12px'
+                }}>
+                  <div>
+                    <h4 style={{ fontSize: '12.5px', fontWeight: 700, color: 'var(--text-primary)', margin: 0 }}>
+                      Pass Percentage
+                    </h4>
+                    <span style={{ fontSize: '9px', color: 'var(--text-tertiary)' }}>All Exams</span>
+                    
+                    <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px', marginTop: '12px' }}>
+                      <span style={{ fontSize: '22px', fontWeight: 800, color: 'var(--text-primary)', fontFamily: 'var(--font-mono)' }}>
+                        85.4%
+                      </span>
+                    </div>
+                    <div style={{ fontSize: '9px', color: 'var(--accent-green)', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '2px', marginTop: '2px' }}>
+                      <TrendingUp size={10} /> +6.8% vs last year
+                    </div>
+                  </div>
+                  
+                  {/* Sparkline mini-graph path */}
+                  <div style={{ width: '100%', height: '35px', marginTop: '8px' }}>
+                    <svg width="100%" height="100%" viewBox="0 0 200 35" preserveAspectRatio="none" style={{ overflow: 'visible' }}>
+                      <path
+                        d="M0,28 L30,15 L60,22 L90,17 L120,25 L150,12 L180,18 L200,8"
+                        fill="none"
+                        stroke="var(--accent-blue)"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                      />
+                      <circle cx="200" cy="8" r="3" fill="#ffffff" stroke="var(--accent-blue)" strokeWidth="2" />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+
+              {/* Card 2: Grade Distribution */}
+              <div style={{
+                background: 'var(--bg-secondary)',
+                border: '1px solid var(--border-primary)',
+                borderRadius: '12px',
+                padding: '16px',
+                boxShadow: '0 1px 3px rgba(0,0,0,0.02)',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '10px'
+              }}>
+                <h4 style={{ fontSize: '12.5px', fontWeight: 700, color: 'var(--text-primary)', margin: '0 0 6px' }}>
+                  Grade Distribution <span style={{ fontSize: '10px', color: 'var(--text-tertiary)', fontWeight: 500 }}>(All Exams)</span>
+                </h4>
+                
+                {[
+                  { grade: 'A (90-100)', pct: 28, color: 'var(--accent-green)' },
+                  { grade: 'B (75-89)', pct: 34, color: 'var(--accent-blue)' },
+                  { grade: 'C (60-74)', pct: 24, color: 'var(--accent-amber)' },
+                  { grade: 'D (40-59)', pct: 10, color: 'var(--accent-red)' },
+                  { grade: 'E (<40)', pct: 4, color: '#f43f5e' }
+                ].map((item, idx) => (
+                  <div key={idx} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px', fontSize: '10.5px' }}>
+                    <span style={{ width: '70px', color: 'var(--text-secondary)', fontWeight: 500 }}>{item.grade}</span>
+                    <div style={{ flex: 1, height: '6px', background: 'var(--border-secondary)', borderRadius: '3px', overflow: 'hidden' }}>
+                      <div style={{ width: `${item.pct}%`, height: '100%', background: item.color, borderRadius: '3px' }} />
+                    </div>
+                    <span style={{ width: '30px', textAlign: 'right', fontWeight: 700, color: 'var(--text-primary)', fontFamily: 'var(--font-mono)' }}>
+                      {item.pct}%
+                    </span>
+                  </div>
+                ))}
+              </div>
+
+              {/* Card 3: Announcements */}
+              <div style={{
+                background: 'var(--bg-secondary)',
+                border: '1px solid var(--border-primary)',
+                borderRadius: '12px',
+                padding: '16px',
+                boxShadow: '0 1px 3px rgba(0,0,0,0.02)',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '12px'
+              }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
+                  <h4 style={{ fontSize: '12.5px', fontWeight: 700, color: 'var(--text-primary)', margin: 0 }}>
+                    Announcements
+                  </h4>
+                  <span style={{ fontSize: '10.5px', fontWeight: 600, color: 'var(--accent-blue)', cursor: 'pointer' }}>
+                    View All
+                  </span>
+                </div>
+
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                  {[
+                    { title: 'Half Yearly Examination Timetable Published', desc: 'Timetable for Half Yearly Examination is now available.', time: 'Today, 10:30 AM', color: 'rgba(139, 92, 246, 0.08)', textCol: 'var(--accent-purple)', icon: <Calendar size={12} /> },
+                    { title: 'Admit Cards Available', desc: 'Admit cards for Half Yearly Examination are ready for download.', time: 'Yesterday, 04:15 PM', color: 'rgba(16, 185, 129, 0.08)', textCol: 'var(--accent-green)', icon: <CreditCard size={12} /> },
+                    { title: 'Result Declaration Notice', desc: 'Annual Examination results will be published on 10 June 2026.', time: '2 Days Ago', color: 'rgba(245, 158, 11, 0.08)', textCol: 'var(--accent-amber)', icon: <Bell size={12} /> }
+                  ].map((ann, idx) => (
+                    <div key={idx} style={{
+                      display: 'flex',
+                      alignItems: 'flex-start',
+                      gap: '10px',
+                      fontSize: '11px'
+                    }}>
+                      <div style={{
+                        width: '24px',
+                        height: '24px',
+                        borderRadius: '6px',
+                        background: ann.color,
+                        color: ann.textCol,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        flexShrink: 0,
+                        marginTop: '2px'
+                      }}>
+                        {ann.icon}
+                      </div>
+                      <div style={{ minWidth: 0 }}>
+                        <div style={{ fontWeight: 700, color: 'var(--text-primary)', lineHeight: 1.3 }}>{ann.title}</div>
+                        <div style={{ color: 'var(--text-secondary)', fontSize: '10px', marginTop: '2px', lineHeight: 1.3 }}>{ann.desc}</div>
+                        <div style={{ color: 'var(--text-muted)', fontSize: '9px', marginTop: '4px', fontFamily: 'var(--font-mono)' }}>{ann.time}</div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <span style={{ fontSize: '11px', color: 'var(--accent-blue)', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '4px', cursor: 'pointer', marginTop: '4px' }}>
+                  See All Announcements →
+                </span>
+              </div>
+
+              {/* Card 4: Quick Actions */}
+              <div style={{
+                background: 'var(--bg-secondary)',
+                border: '1px solid var(--border-primary)',
+                borderRadius: '12px',
+                padding: '16px',
+                boxShadow: '0 1px 3px rgba(0,0,0,0.02)',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '10px'
+              }}>
+                <h4 style={{ fontSize: '12.5px', fontWeight: 700, color: 'var(--text-primary)', margin: '0 0 4px' }}>
+                  Quick Actions
+                </h4>
+                
+                <div style={{
+                  display: 'grid',
+                  gridTemplateColumns: '1fr 1fr',
+                  gap: '8px'
+                }}>
+                  {[
+                    { label: 'Create Examination', icon: <Plus size={13} />, color: 'var(--accent-blue)', bg: 'rgba(37, 99, 235, 0.06)' },
+                    { label: 'Generate Admit Cards', icon: <CreditCard size={13} />, color: 'var(--accent-blue)', bg: 'rgba(37, 99, 235, 0.06)' },
+                    { label: 'Mark Attendance', icon: <UserCheck size={13} />, color: 'var(--accent-green)', bg: 'rgba(16, 185, 129, 0.06)' },
+                    { label: 'Upload Marks', icon: <FileSpreadsheet size={13} />, color: 'var(--accent-amber)', bg: 'rgba(245, 158, 11, 0.06)' },
+                    { label: 'Process Results', icon: <Brain size={13} />, color: 'var(--accent-purple)', bg: 'rgba(139, 92, 246, 0.06)' },
+                    { label: 'Generate Report Cards', icon: <FileText size={13} />, color: 'var(--accent-purple)', bg: 'rgba(139, 92, 246, 0.06)' },
+                    { label: 'View Analytics', icon: <BarChart3 size={13} />, color: 'var(--accent-blue)', bg: 'rgba(37, 99, 235, 0.06)' },
+                    { label: 'Exam Reports', icon: <FileText size={13} />, color: 'var(--accent-cyan)', bg: 'rgba(6, 182, 212, 0.06)' }
+                  ].map((act, idx) => (
+                    <button
+                      key={idx}
+                      style={{
+                        padding: '8px 10px',
+                        background: 'var(--bg-primary)',
+                        border: '1px solid var(--border-primary)',
+                        borderRadius: '8px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '8px',
+                        cursor: 'pointer',
+                        transition: 'all var(--transition-fast)',
+                        fontSize: '11px',
+                        fontWeight: 600,
+                        color: 'var(--text-primary)',
+                        textAlign: 'left'
+                      }}
+                      onMouseEnter={e => {
+                        e.currentTarget.style.borderColor = act.color;
+                        e.currentTarget.style.background = act.bg;
+                      }}
+                      onMouseLeave={e => {
+                        e.currentTarget.style.borderColor = 'var(--border-primary)';
+                        e.currentTarget.style.background = 'var(--bg-primary)';
+                      }}
+                    >
+                      <span style={{ color: act.color, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        {act.icon}
+                      </span>
+                      <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{act.label}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    case 'exams-admit-card':
+      return <AdmitCardCenter />;
+    default: {
+      const getExamsTabLabel = (subView: string) => {
+        switch (subView) {
+          case 'exams-planning': return 'Examination Planning';
+          case 'exams-schedule': return 'Exam Schedule Center';
+          case 'exams-hall-seating': return 'Hall & Seating Management';
+          case 'exams-admit-card': return 'Admit Card Center';
+          case 'exams-attendance-invigilation': return 'Attendance & Invigilation';
+          case 'exams-question-vault': return 'Question Paper Vault';
+          case 'exams-evaluation': return 'Evaluation Center';
+          case 'exams-marks-entry': return 'Marks Entry';
+          case 'exams-result-processing': return 'Result Processing';
+          case 'exams-analytics': return 'Academic Analytics';
+          case 'exams-rank-merit': return 'Rank & Merit Lists';
+          case 'exams-transcript': return 'Transcript Center';
+          case 'exams-report-cards': return 'Report Cards';
+          case 'exams-certificates': return 'Certificates';
+          case 'exams-reports': return 'Examination Reports';
+          default: return 'Examination Registry';
+        }
+      };
+      const activeTabLabel = getExamsTabLabel(examsSubView);
+      return (
+        <div style={{ padding: '16px', background: 'var(--bg-primary)', height: '100%', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          <div>
+            <h2 style={{ fontSize: '16px', fontWeight: 700, color: 'var(--text-primary)', margin: 0 }}>{activeTabLabel}</h2>
+            <p style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>System tools, configurations, and entries for {activeTabLabel.toLowerCase()}.</p>
+          </div>
+          <div style={{ 
+            background: 'var(--bg-secondary)', 
+            border: '1px solid var(--border-primary)', 
+            borderRadius: '12px', 
+            padding: '48px 24px', 
+            textAlign: 'center', 
+            display: 'flex', 
+            flexDirection: 'column', 
+            alignItems: 'center', 
+            gap: '12px', 
+            boxShadow: '0 1px 3px rgba(0,0,0,0.05)' 
+          }}>
+            <div style={{ 
+              width: '48px', 
+              height: '48px', 
+              borderRadius: '50%', 
+              background: 'rgba(59, 130, 246, 0.08)', 
+              color: 'var(--accent-blue)', 
+              display: 'flex', 
+              alignItems: 'center', 
+              justifyContent: 'center' 
+            }}>
+              <Award size={24} />
+            </div>
+            <div>
+              <h3 style={{ fontSize: '15px', fontWeight: 800, color: 'var(--text-primary)' }}>{activeTabLabel} Registry</h3>
+              <p style={{ fontSize: '12px', color: 'var(--text-secondary)', marginTop: '4px', maxWidth: '380px', margin: '4px auto 0' }}>
+                Manage exams, setups, details and reports for {activeTabLabel.toLowerCase()} within the assessment office control center.
+              </p>
+            </div>
+          </div>
+        </div>
+      );
+    }
+  }
 }
 
 // =====================================================
@@ -1128,50 +2382,66 @@ export function CommunicationView() {
 }
 
 // =====================================================
-// FINANCE VIEW (NEW)
+// FINANCE VIEW (NEW - with sub-navigation)
 // =====================================================
 export function FinanceView() {
-  const invoices = [
-    { invoice: 'INV-2026-00912', name: 'Arjun Mehta', amount: '₹75,000', status: 'PAID', date: '2026-06-01' },
-    { invoice: 'INV-2026-00913', name: 'Priya Sharma', amount: '₹75,000', status: 'PAID', date: '2026-05-28' },
-    { invoice: 'INV-2026-00914', name: 'Vikash Tiwari', amount: '₹75,000', status: 'OVERDUE', date: '2026-05-15' },
-    { invoice: 'INV-2026-00915', name: 'Sneha Reddy', amount: '₹45,000', status: 'OVERDUE', date: '2026-05-10' }
-  ];
+  const financeSubView = useAppStore(s => s.financeSubView);
 
-  return (
-    <div style={{ padding: '16px', background: 'var(--bg-primary)', height: '100%', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '16px' }}>
-      <div>
-        <h2 style={{ fontSize: '16px', fontWeight: 700, color: 'var(--text-primary)', margin: 0 }}>Finance & Fee Ledgers</h2>
-        <p style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>Audit outstanding invoices, collection status ratios, and payment history logs.</p>
-      </div>
-      <div style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-primary)', borderRadius: '12px', overflow: 'hidden' }}>
-        <table className="data-table">
-          <thead>
-            <tr>
-              <th>Invoice ID</th>
-              <th>Student Identity Name</th>
-              <th>Total Amount</th>
-              <th>Attributed Date</th>
-              <th>Payment Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {invoices.map((inv, idx) => (
-              <tr key={idx}>
-                <td className="font-mono text-xs" style={{ color: 'var(--accent-blue)', fontWeight: 600 }}>{inv.invoice}</td>
-                <td style={{ fontWeight: 700 }}>{inv.name}</td>
-                <td className="font-mono">{inv.amount}</td>
-                <td className="font-mono text-xs">{inv.date}</td>
-                <td>
-                  <span className={`badge ${inv.status === 'PAID' ? 'badge-active' : 'badge-critical'}`}>{inv.status}</span>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </div>
-  );
+  switch (financeSubView) {
+    case 'finance-dashboard':
+      return <ExecutiveDashboardSubView />;
+    case 'finance-fee-collection':
+      return <FeeCollectionSubView />;
+    case 'finance-defaulters':
+      return <DefaultersRecoverySubView />;
+    case 'finance-payroll':
+      return <PayrollSubView />;
+    case 'finance-reports':
+      return <FinancialReportsSubView />;
+    case 'finance-revenue':
+    default:
+      return (
+        <div style={{ padding: '20px', background: '#f8fafc', height: '100%', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '20px', fontFamily: 'system-ui, sans-serif' }}>
+          <div>
+            <h1 style={{ fontSize: '22px', fontWeight: 700, color: '#0f172a', margin: 0 }}>Revenue Analytics</h1>
+            <p style={{ fontSize: '13px', color: '#64748b', margin: '4px 0 0' }}>Analyze revenue streams, collection trends, and income breakdowns by category and term.</p>
+          </div>
+          <div style={{
+            background: '#ffffff',
+            border: '1px solid #e2e8f0',
+            borderRadius: '12px',
+            padding: '48px 24px',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            textAlign: 'center',
+            minHeight: '400px',
+            boxShadow: '0 1px 3px rgba(0,0,0,0.05)'
+          }}>
+            <div style={{
+              width: '56px',
+              height: '56px',
+              borderRadius: '12px',
+              background: 'rgba(59, 130, 246, 0.08)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              marginBottom: '16px',
+              color: '#2563eb',
+            }}>
+              <TrendingUp size={28} />
+            </div>
+            <h3 style={{ fontSize: '16px', fontWeight: 700, color: '#0f172a', margin: '0 0 8px' }}>
+              Revenue Analytics Control
+            </h3>
+            <p style={{ fontSize: '13px', color: '#64748b', maxWidth: '380px', lineHeight: 1.5, margin: 0 }}>
+              This module is part of the Finance CFO Control Center. Multi-dimensional filters, projections, and breakdown charts will load here.
+            </p>
+          </div>
+        </div>
+      );
+  }
 }
 
 // =====================================================

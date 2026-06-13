@@ -1,12 +1,15 @@
 'use client';
 
 import React from 'react';
-import { useAppStore, AppView } from '@/lib/store';
+import { useAppStore, AppView, FinanceSubView, ExamsSubView } from '@/lib/store';
 import {
   Home, Users, BookOpen, Layers, FileSpreadsheet, Award,
   GraduationCap, Calendar, Clock, Clipboard, BookMarked,
   MessageSquare, DollarSign, Building, BarChart3, Settings,
-  LogOut, ShieldAlert, ArrowRight, CheckCircle2, ChevronLeft, ChevronRight
+  LogOut, ShieldAlert, ArrowRight, CheckCircle2, ChevronLeft, ChevronRight,
+  LayoutDashboard, CreditCard, AlertTriangle, TrendingUp, Receipt,
+  PiggyBank, Banknote, Wallet, GraduationCap as ScholarshipIcon,
+  ShoppingCart, ShieldCheck, Brain, FileText, ArrowLeft
 } from 'lucide-react';
 
 type NavItem = {
@@ -42,9 +45,63 @@ const navItems: NavItem[] = [
   { id: 'settings', label: 'Settings', icon: <Settings size={18} /> }
 ];
 
+type FinanceNavItem = {
+  id: FinanceSubView;
+  label: string;
+  icon: React.ReactNode;
+  section?: string;
+};
+
+const financeNavItems: FinanceNavItem[] = [
+  { id: 'finance-dashboard', label: 'Executive Dashboard', icon: <LayoutDashboard size={18} />, section: 'OVERVIEW' },
+  { id: 'finance-fee-collection', label: 'Fee Collection', icon: <CreditCard size={18} />, section: 'REVENUE' },
+  { id: 'finance-defaulters', label: 'Defaulters & Recovery', icon: <AlertTriangle size={18} /> },
+  { id: 'finance-revenue', label: 'Revenue Analytics', icon: <TrendingUp size={18} /> },
+  { id: 'finance-payroll', label: 'Payroll', icon: <Wallet size={18} />, section: 'OPERATIONS' },
+  { id: 'finance-reports', label: 'Financial Reports', icon: <FileText size={18} />, section: 'REPORTS' },
+];
+
+type ExamsNavItem = {
+  id: ExamsSubView;
+  label: string;
+  icon: React.ReactNode;
+  section?: string;
+};
+
+const examsNavItems: ExamsNavItem[] = [
+  { id: 'exams-dashboard', label: 'Executive Examination Dashboard', icon: <LayoutDashboard size={18} />, section: 'OVERVIEW' },
+  
+  { id: 'exams-planning', label: 'Examination Planning', icon: <Calendar size={18} />, section: 'PLANNING & PREP' },
+  { id: 'exams-schedule', label: 'Exam Schedule Center', icon: <Clock size={18} /> },
+  { id: 'exams-hall-seating', label: 'Hall & Seating Management', icon: <Building size={18} /> },
+  { id: 'exams-admit-card', label: 'Admit Card Center', icon: <CreditCard size={18} /> },
+  
+  { id: 'exams-attendance-invigilation', label: 'Attendance & Invigilation', icon: <Users size={18} />, section: 'EXECUTION' },
+  { id: 'exams-question-vault', label: 'Question Paper Vault', icon: <ShieldCheck size={18} /> },
+  
+  { id: 'exams-evaluation', label: 'Evaluation Center', icon: <CheckCircle2 size={18} />, section: 'EVALUATION & RESULTS' },
+  { id: 'exams-marks-entry', label: 'Marks Entry', icon: <FileSpreadsheet size={18} /> },
+  { id: 'exams-result-processing', label: 'Result Processing', icon: <Brain size={18} /> },
+  
+  { id: 'exams-analytics', label: 'Academic Analytics', icon: <BarChart3 size={18} />, section: 'ANALYTICS & REPORTS' },
+  { id: 'exams-rank-merit', label: 'Rank & Merit Lists', icon: <Award size={18} /> },
+  
+  { id: 'exams-transcript', label: 'Transcript Center', icon: <GraduationCap size={18} />, section: 'CREDENTIALING' },
+  { id: 'exams-report-cards', label: 'Report Cards', icon: <FileText size={18} /> },
+  { id: 'exams-certificates', label: 'Certificates', icon: <Award size={18} /> },
+  { id: 'exams-reports', label: 'Examination Reports', icon: <FileText size={18} /> },
+];
+
 export default function Sidebar() {
-  const { currentView, sidebarCollapsed, toggleSidebar, currentUser, logout } = useAppStore();
+  const { 
+    currentView, sidebarCollapsed, toggleSidebar, currentUser, logout, 
+    financeSubView, examsSubView, examsSidebarActive, setExamsSubView 
+  } = useAppStore();
   const openTab = useAppStore(s => s.openTab);
+  const setFinanceSubView = useAppStore(s => s.setFinanceSubView);
+
+  const isFinanceMode = currentView === 'finance';
+  const isExamsMode = currentView === 'exams' && examsSidebarActive;
 
   const handleNavClick = (item: NavItem) => {
     openTab({
@@ -52,6 +109,26 @@ export default function Sidebar() {
       label: item.label,
       view: item.id as AppView,
       closable: item.id !== 'dashboard',
+    });
+  };
+
+  const handleFinanceNavClick = (item: FinanceNavItem) => {
+    setFinanceSubView(item.id);
+    // Ensure we're on the finance tab
+    openTab({
+      id: 'finance',
+      label: 'Finance',
+      view: 'finance',
+      closable: true,
+    });
+  };
+
+  const handleBackToMainMenu = () => {
+    openTab({
+      id: 'dashboard',
+      label: 'Operations Dashboard',
+      view: 'dashboard',
+      closable: false,
     });
   };
 
@@ -84,18 +161,23 @@ export default function Sidebar() {
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <div style={{
               width: '28px', height: '28px', borderRadius: '6px',
-              background: 'linear-gradient(135deg, var(--accent-blue), #1d4ed8)',
+              background: isFinanceMode
+                ? 'linear-gradient(135deg, #10b981, #059669)'
+                : isExamsMode
+                ? 'linear-gradient(135deg, #f59e0b, #d97706)'
+                : 'linear-gradient(135deg, var(--accent-blue), #1d4ed8)',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
-              color: 'white', fontWeight: 800, fontSize: '16px'
+              color: 'white', fontWeight: 800, fontSize: '16px',
+              transition: 'background 0.3s ease'
             }}>
-              A
+              {isFinanceMode ? <DollarSign size={14} /> : isExamsMode ? <Award size={14} /> : 'A'}
             </div>
             <div>
               <div style={{ fontSize: '15px', fontWeight: 800, color: 'var(--text-primary)', display: 'flex', alignItems: 'center', lineHeight: 1.1 }}>
-                <span>Akedex</span>
+                <span>{isFinanceMode ? 'Finance' : isExamsMode ? 'Examinations' : 'Akedex'}</span>
               </div>
               <div style={{ fontSize: '9px', color: 'var(--text-tertiary)', fontWeight: 500 }}>
-                Educational Operating Environment
+                {isFinanceMode ? 'CFO Control Center' : isExamsMode ? 'Assessment Office' : 'Educational Operating Environment'}
               </div>
             </div>
           </div>
@@ -116,70 +198,311 @@ export default function Sidebar() {
         overflowX: 'hidden',
         padding: '8px 12px',
       }}>
-        {navItems.map((item, index) => {
-          const isActive = currentView === item.id || (item.id === 'dashboard' && currentView === 'dashboard');
-          const showSection = item.section && !sidebarCollapsed;
-
-          return (
-            <React.Fragment key={item.id}>
-              {showSection && (
-                <div style={{
-                  fontSize: '9px',
-                  fontWeight: 700,
-                  color: 'var(--text-muted)',
-                  letterSpacing: '0.08em',
-                  padding: '16px 8px 6px',
-                  textTransform: 'uppercase',
-                }}>
-                  {item.section}
-                </div>
+        {isExamsMode ? (
+          <>
+            {/* Back to Main Menu button */}
+            <button
+              onClick={() => useAppStore.setState({ examsSidebarActive: false })}
+              title={sidebarCollapsed ? 'Main Menu' : undefined}
+              style={{
+                width: '100%',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '10px',
+                padding: sidebarCollapsed ? '10px 0' : '8px 12px',
+                borderRadius: '6px',
+                border: 'none',
+                background: 'transparent',
+                color: 'var(--text-secondary)',
+                cursor: 'pointer',
+                fontSize: 'var(--font-nav-size)',
+                fontWeight: 600,
+                lineHeight: 'var(--font-nav-lh)',
+                fontFamily: 'var(--font-sans)',
+                transition: 'all var(--transition-fast)',
+                justifyContent: sidebarCollapsed ? 'center' : 'flex-start',
+                marginBottom: '4px',
+              }}
+              onMouseEnter={e => {
+                (e.currentTarget as HTMLElement).style.background = 'var(--bg-tertiary)';
+                (e.currentTarget as HTMLElement).style.color = 'var(--text-primary)';
+              }}
+              onMouseLeave={e => {
+                (e.currentTarget as HTMLElement).style.background = 'transparent';
+                (e.currentTarget as HTMLElement).style.color = 'var(--text-secondary)';
+              }}
+            >
+              <span style={{ flexShrink: 0, color: 'var(--text-tertiary)' }}><ArrowLeft size={18} /></span>
+              {!sidebarCollapsed && (
+                <span style={{ flex: 1, textAlign: 'left' }}>Main Menu</span>
               )}
-              <button
-                onClick={() => handleNavClick(item)}
-                title={sidebarCollapsed ? item.label : undefined}
-                style={{
-                  width: '100%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '10px',
-                  padding: sidebarCollapsed ? '10px 0' : '8px 12px',
-                  borderRadius: '6px',
-                  border: 'none',
-                  background: isActive ? 'var(--bg-active)' : 'transparent',
-                  color: isActive ? 'var(--accent-blue)' : 'var(--text-secondary)',
-                  cursor: 'pointer',
-                  fontSize: 'var(--font-nav-size)',
-                  fontWeight: isActive ? 600 : 'var(--font-nav-weight)',
-                  lineHeight: 'var(--font-nav-lh)',
-                  fontFamily: 'var(--font-sans)',
-                  transition: 'all var(--transition-fast)',
-                  justifyContent: sidebarCollapsed ? 'center' : 'flex-start',
-                  marginBottom: '2px',
-                }}
-                onMouseEnter={e => {
-                  if (!isActive) {
-                    (e.currentTarget as HTMLElement).style.background = 'var(--bg-tertiary)';
-                    (e.currentTarget as HTMLElement).style.color = 'var(--text-primary)';
-                  }
-                }}
-                onMouseLeave={e => {
-                  if (!isActive) {
-                    (e.currentTarget as HTMLElement).style.background = 'transparent';
-                    (e.currentTarget as HTMLElement).style.color = 'var(--text-secondary)';
-                  }
-                }}
-              >
-                <span style={{ 
-                  flexShrink: 0, 
-                  color: isActive ? 'var(--accent-blue)' : 'var(--text-tertiary)' 
-                }}>{item.icon}</span>
-                {!sidebarCollapsed && (
-                  <span style={{ flex: 1, textAlign: 'left' }}>{item.label}</span>
+            </button>
+
+            {/* Divider */}
+            {!sidebarCollapsed && (
+              <div style={{
+                height: '1px',
+                background: 'var(--border-primary)',
+                margin: '4px 8px 8px',
+              }} />
+            )}
+
+            {/* Exams sub-navigation items */}
+            {examsNavItems.map((item) => {
+              const isActive = examsSubView === item.id;
+              const showSection = item.section && !sidebarCollapsed;
+
+              return (
+                <React.Fragment key={item.id}>
+                  {showSection && (
+                    <div style={{
+                      fontSize: '9px',
+                      fontWeight: 700,
+                      color: 'var(--text-muted)',
+                      letterSpacing: '0.08em',
+                      padding: '16px 8px 6px',
+                      textTransform: 'uppercase',
+                    }}>
+                      {item.section}
+                    </div>
+                  )}
+                  <button
+                    onClick={() => {
+                      setExamsSubView(item.id);
+                      openTab({
+                        id: 'exams',
+                        label: 'Exams & Assessments',
+                        view: 'exams',
+                        closable: true,
+                      });
+                    }}
+                    title={sidebarCollapsed ? item.label : undefined}
+                    style={{
+                      width: '100%',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '10px',
+                      padding: sidebarCollapsed ? '10px 0' : '8px 12px',
+                      borderRadius: '6px',
+                      border: 'none',
+                      background: isActive ? 'var(--bg-active)' : 'transparent',
+                      color: isActive ? 'var(--accent-blue)' : 'var(--text-secondary)',
+                      cursor: 'pointer',
+                      fontSize: 'var(--font-nav-size)',
+                      fontWeight: isActive ? 600 : 'var(--font-nav-weight)',
+                      lineHeight: 'var(--font-nav-lh)',
+                      fontFamily: 'var(--font-sans)',
+                      transition: 'all var(--transition-fast)',
+                      justifyContent: sidebarCollapsed ? 'center' : 'flex-start',
+                      marginBottom: '2px',
+                    }}
+                    onMouseEnter={e => {
+                      if (!isActive) {
+                        (e.currentTarget as HTMLElement).style.background = 'var(--bg-tertiary)';
+                        (e.currentTarget as HTMLElement).style.color = 'var(--text-primary)';
+                      }
+                    }}
+                    onMouseLeave={e => {
+                      if (!isActive) {
+                        (e.currentTarget as HTMLElement).style.background = 'transparent';
+                        (e.currentTarget as HTMLElement).style.color = 'var(--text-secondary)';
+                      }
+                    }}
+                  >
+                    <span style={{ 
+                      flexShrink: 0, 
+                      color: isActive ? 'var(--accent-blue)' : 'var(--text-tertiary)' 
+                    }}>{item.icon}</span>
+                    {!sidebarCollapsed && (
+                      <span style={{ flex: 1, textAlign: 'left', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{item.label}</span>
+                    )}
+                  </button>
+                </React.Fragment>
+              );
+            })}
+          </>
+        ) : isFinanceMode ? (
+          <>
+            {/* Back to Main Menu button */}
+            <button
+              onClick={handleBackToMainMenu}
+              title={sidebarCollapsed ? 'Main Menu' : undefined}
+              style={{
+                width: '100%',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '10px',
+                padding: sidebarCollapsed ? '10px 0' : '8px 12px',
+                borderRadius: '6px',
+                border: 'none',
+                background: 'transparent',
+                color: 'var(--text-secondary)',
+                cursor: 'pointer',
+                fontSize: 'var(--font-nav-size)',
+                fontWeight: 600,
+                lineHeight: 'var(--font-nav-lh)',
+                fontFamily: 'var(--font-sans)',
+                transition: 'all var(--transition-fast)',
+                justifyContent: sidebarCollapsed ? 'center' : 'flex-start',
+                marginBottom: '4px',
+              }}
+              onMouseEnter={e => {
+                (e.currentTarget as HTMLElement).style.background = 'var(--bg-tertiary)';
+                (e.currentTarget as HTMLElement).style.color = 'var(--text-primary)';
+              }}
+              onMouseLeave={e => {
+                (e.currentTarget as HTMLElement).style.background = 'transparent';
+                (e.currentTarget as HTMLElement).style.color = 'var(--text-secondary)';
+              }}
+            >
+              <span style={{ flexShrink: 0, color: 'var(--text-tertiary)' }}><ArrowLeft size={18} /></span>
+              {!sidebarCollapsed && (
+                <span style={{ flex: 1, textAlign: 'left' }}>Main Menu</span>
+              )}
+            </button>
+
+            {/* Divider */}
+            {!sidebarCollapsed && (
+              <div style={{
+                height: '1px',
+                background: 'var(--border-primary)',
+                margin: '4px 8px 8px',
+              }} />
+            )}
+
+            {/* Finance sub-navigation items */}
+            {financeNavItems.map((item) => {
+              const isActive = financeSubView === item.id;
+              const showSection = item.section && !sidebarCollapsed;
+
+              return (
+                <React.Fragment key={item.id}>
+                  {showSection && (
+                    <div style={{
+                      fontSize: '9px',
+                      fontWeight: 700,
+                      color: 'var(--text-muted)',
+                      letterSpacing: '0.08em',
+                      padding: '16px 8px 6px',
+                      textTransform: 'uppercase',
+                    }}>
+                      {item.section}
+                    </div>
+                  )}
+                  <button
+                    onClick={() => handleFinanceNavClick(item)}
+                    title={sidebarCollapsed ? item.label : undefined}
+                    style={{
+                      width: '100%',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '10px',
+                      padding: sidebarCollapsed ? '10px 0' : '8px 12px',
+                      borderRadius: '6px',
+                      border: 'none',
+                      background: isActive ? 'var(--bg-active)' : 'transparent',
+                      color: isActive ? 'var(--accent-blue)' : 'var(--text-secondary)',
+                      cursor: 'pointer',
+                      fontSize: 'var(--font-nav-size)',
+                      fontWeight: isActive ? 600 : 'var(--font-nav-weight)',
+                      lineHeight: 'var(--font-nav-lh)',
+                      fontFamily: 'var(--font-sans)',
+                      transition: 'all var(--transition-fast)',
+                      justifyContent: sidebarCollapsed ? 'center' : 'flex-start',
+                      marginBottom: '2px',
+                    }}
+                    onMouseEnter={e => {
+                      if (!isActive) {
+                        (e.currentTarget as HTMLElement).style.background = 'var(--bg-tertiary)';
+                        (e.currentTarget as HTMLElement).style.color = 'var(--text-primary)';
+                      }
+                    }}
+                    onMouseLeave={e => {
+                      if (!isActive) {
+                        (e.currentTarget as HTMLElement).style.background = 'transparent';
+                        (e.currentTarget as HTMLElement).style.color = 'var(--text-secondary)';
+                      }
+                    }}
+                  >
+                    <span style={{ 
+                      flexShrink: 0, 
+                      color: isActive ? 'var(--accent-blue)' : 'var(--text-tertiary)' 
+                    }}>{item.icon}</span>
+                    {!sidebarCollapsed && (
+                      <span style={{ flex: 1, textAlign: 'left' }}>{item.label}</span>
+                    )}
+                  </button>
+                </React.Fragment>
+              );
+            })}
+          </>
+        ) : (
+          /* Main navigation items */
+          navItems.map((item) => {
+            const isActive = currentView === item.id || (item.id === 'dashboard' && currentView === 'dashboard');
+            const showSection = item.section && !sidebarCollapsed;
+
+            return (
+              <React.Fragment key={item.id}>
+                {showSection && (
+                  <div style={{
+                    fontSize: '9px',
+                    fontWeight: 700,
+                    color: 'var(--text-muted)',
+                    letterSpacing: '0.08em',
+                    padding: '16px 8px 6px',
+                    textTransform: 'uppercase',
+                  }}>
+                    {item.section}
+                  </div>
                 )}
-              </button>
-            </React.Fragment>
-          );
-        })}
+                <button
+                  onClick={() => handleNavClick(item)}
+                  title={sidebarCollapsed ? item.label : undefined}
+                  style={{
+                    width: '100%',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '10px',
+                    padding: sidebarCollapsed ? '10px 0' : '8px 12px',
+                    borderRadius: '6px',
+                    border: 'none',
+                    background: isActive ? 'var(--bg-active)' : 'transparent',
+                    color: isActive ? 'var(--accent-blue)' : 'var(--text-secondary)',
+                    cursor: 'pointer',
+                    fontSize: 'var(--font-nav-size)',
+                    fontWeight: isActive ? 600 : 'var(--font-nav-weight)',
+                    lineHeight: 'var(--font-nav-lh)',
+                    fontFamily: 'var(--font-sans)',
+                    transition: 'all var(--transition-fast)',
+                    justifyContent: sidebarCollapsed ? 'center' : 'flex-start',
+                    marginBottom: '2px',
+                  }}
+                  onMouseEnter={e => {
+                    if (!isActive) {
+                      (e.currentTarget as HTMLElement).style.background = 'var(--bg-tertiary)';
+                      (e.currentTarget as HTMLElement).style.color = 'var(--text-primary)';
+                    }
+                  }}
+                  onMouseLeave={e => {
+                    if (!isActive) {
+                      (e.currentTarget as HTMLElement).style.background = 'transparent';
+                      (e.currentTarget as HTMLElement).style.color = 'var(--text-secondary)';
+                    }
+                  }}
+                >
+                  <span style={{ 
+                    flexShrink: 0, 
+                    color: isActive ? 'var(--accent-blue)' : 'var(--text-tertiary)' 
+                  }}>{item.icon}</span>
+                  {!sidebarCollapsed && (
+                    <span style={{ flex: 1, textAlign: 'left' }}>{item.label}</span>
+                  )}
+                </button>
+              </React.Fragment>
+            );
+          })
+        )}
       </nav>
 
       {/* Lower Left Status Block (only visible when expanded) */}
