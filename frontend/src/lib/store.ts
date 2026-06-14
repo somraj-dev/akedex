@@ -60,10 +60,12 @@ export type AppView =
   | 'manage-widgets'
   | 'academic-calendar'
   | 'student-report-card'
+  | 'student-transcript'
   | 'new-admission-flow'
   | 'fresh-admission'
   | 'applicant-profile'
-  | 'transfer-admission-wizard';
+  | 'transfer-admission-wizard'
+  | 'edit-student-data';
 
 export type WorkspaceTab = {
   id: string;

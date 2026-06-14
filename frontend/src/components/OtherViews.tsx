@@ -12,6 +12,10 @@ import {
   Bell, TrendingDown, Users, Brain, CreditCard
 } from 'lucide-react';
 import { useAppStore, AppView } from '@/lib/store';
+import {
+  ResponsiveContainer, LineChart, Line, BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Legend,
+  RadarChart, Radar, PolarGrid, PolarAngleAxis, PolarRadiusAxis
+} from 'recharts';
 import { StudentAcademicsTab, StudentAttendanceTab, StudentFeesTab, StudentAchievementsTab, StudentDocumentsTab } from './StudentProfileTabs';
 import { 
   ExecutiveDashboardSubView, 
@@ -21,6 +25,7 @@ import {
   FinancialReportsSubView 
 } from './FinanceSubViews';
 import AdmitCardCenter from './AdmitCardCenter';
+import ResultProcessingCenter from './ResultProcessingCenter';
 
 // =====================================================
 // TEACHERS VIEW (Already defined, but kept clean)
@@ -2105,6 +2110,8 @@ export function ExamsView() {
           </div>
         </div>
       );
+    case 'exams-result-processing':
+      return <ResultProcessingCenter />;
     case 'exams-admit-card':
       return <AdmitCardCenter />;
     default: {
@@ -2870,7 +2877,7 @@ function getEnrichedStudentData(student: any) {
   const lastName = isAarav ? 'Sharma' : (student.lastName || 'Sharma');
   const fullName = `${firstName} ${lastName}`;
   const status = student.status || 'ACTIVE';
-  const institution = isAarav ? 'Springfield International School' : (student.institution || 'Springfield International School');
+  const institution = isAarav ? 'Your School Name' : (student.institution || 'Springfield International School');
   
   let grade = isAarav ? '10' : '10';
   let section = isAarav ? 'A' : 'A';
@@ -2879,11 +2886,11 @@ function getEnrichedStudentData(student: any) {
     if (parts.length > 0) grade = parts[0];
     if (parts.length > 1) section = parts[1];
   }
-  const rollNo = isAarav ? 24 : ((idNum * 7) % 29 + 1);
+  const rollNo = isAarav ? 23 : ((idNum * 7) % 29 + 1);
   
   const dobYear = student.dob ? parseInt(student.dob.split('-')[0]) : 2011;
   const age = 2026 - dobYear;
-  const academicAge = isAarav ? '10 Years' : `${age} Years`;
+  const academicAge = isAarav ? '15 Years' : `${age} Years`;
   
   const gpaVal = isAarav ? '8.9' : (8.0 + (idNum % 7) * 0.3 - (idNum % 3) * 0.1).toFixed(1);
   const gpa = parseFloat(gpaVal) > 10.0 ? '9.8' : gpaVal;
@@ -2904,7 +2911,7 @@ function getEnrichedStudentData(student: any) {
   const behaviorScoreVal = isAarav ? 94 : Math.min(100, 85 + (idNum % 5) * 4 - (idNum % 2) * 3);
   const behaviorLabel = behaviorScoreVal >= 90 ? 'Excellent' : behaviorScoreVal >= 80 ? 'Good' : 'Satisfactory';
   
-  const bloodGroup = isAarav ? 'B+' : ['A+', 'B+', 'O+', 'AB+', 'O-', 'A-'][idNum % 6];
+  const bloodGroup = isAarav ? 'O+' : ['A+', 'B+', 'O+', 'AB+', 'O-', 'A-'][idNum % 6];
   const nationality = 'Indian';
   const aadhaar = isAarav ? 'XXXX-XXXX-4587' : `XXXX-XXXX-${(4587 + idNum * 13) % 10000}`;
   const email = isAarav ? 'aarav.sharma@springfield.edu.in' : (student.email || `${firstName.toLowerCase()}.${lastName.toLowerCase()}@springfield.edu.in`);
@@ -2946,7 +2953,14 @@ function getEnrichedStudentData(student: any) {
   const classRank = isAarav ? 12 : ((idNum * 3) % 35 + 2);
   const totalInClass = 120;
   
-  const subjects = [
+  const subjects = isAarav ? [
+    { name: 'English', max: 100, marks: 88, rank: 3, grade: 'A' },
+    { name: 'Mathematics', max: 100, marks: 92, rank: 2, grade: 'A+' },
+    { name: 'Science', max: 100, marks: 86, rank: 4, grade: 'A' },
+    { name: 'Social Science', max: 100, marks: 84, rank: 5, grade: 'A' },
+    { name: 'Hindi', max: 100, marks: 80, rank: 6, grade: 'B+' },
+    { name: 'Computer', max: 100, marks: 90, rank: 1, grade: 'A+' }
+  ] : [
     { name: 'Mathematics', max: 100, marks: Math.min(100, 85 + (idNum % 4) * 4), rank: Math.max(1, (idNum * 3) % 25) },
     { name: 'Science', max: 100, marks: Math.min(100, 80 + (idNum % 5) * 4), rank: Math.max(1, (idNum * 2) % 25) },
     { name: 'English', max: 100, marks: Math.min(100, 78 + (idNum % 3) * 6), rank: Math.max(1, (idNum * 4) % 25) },
@@ -3023,6 +3037,8 @@ function getEnrichedStudentData(student: any) {
     behaviorScore: behaviorScoreVal,
     behaviorLabel,
     bloodGroup,
+    dob: isAarav ? '14 Mar 2011' : (student.dob || '14 Mar 2011'),
+    admissionNo: isAarav ? '2021/0456' : (student.admissionNo || `2021/${idNum.toString().padStart(4, '0')}`),
     nationality,
     aadhaar,
     email,
@@ -3073,6 +3089,24 @@ export function StudentProfileView() {
         id: `student-report-card-${sData.id}`,
         label: `Report Card — ${sData.fullName}`,
         view: 'student-report-card',
+        closable: true
+      });
+      return;
+    }
+    if (actionName === 'Download Transcript') {
+      openTab({
+        id: `student-transcript-${sData.id}`,
+        label: `Profile Summary — ${sData.fullName}`,
+        view: 'student-transcript',
+        closable: true
+      });
+      return;
+    }
+    if (actionName === 'Edit Student Data') {
+      openTab({
+        id: `edit-student-${sData.id}`,
+        label: `Edit Data — ${sData.fullName}`,
+        view: 'edit-student-data',
         closable: true
       });
       return;
@@ -3173,7 +3207,7 @@ export function StudentProfileView() {
         {/* Right Side: Quick Action buttons grid */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '8px', width: '300px', flexShrink: 0, alignContent: 'center' }}>
           {[
-            { label: 'View Academic Record', icon: <FileSpreadsheet size={12} />, action: 'View Academic Record' },
+            { label: 'Edit Student Data', icon: <FileSpreadsheet size={12} />, action: 'Edit Student Data' },
             { label: 'Download Transcript', icon: <Download size={12} />, action: 'Download Transcript' },
             { label: 'Transfer Student', icon: <svg width="12" height="12" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M7.5 21L3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5" /></svg>, action: 'Transfer Student' },
             { label: 'Generate Report', icon: <FileText size={12} />, action: 'Generate Report' },
@@ -7186,6 +7220,942 @@ export function StudentReportCardView() {
           }
         }
       `}</style>
+    </div>
+  );
+}
+
+// =====================================================
+// --- STUDENT TRANSCRIPT / PROFILE SUMMARY VIEW ---
+// =====================================================
+export function StudentTranscriptView() {
+  const activeTabId = useAppStore(s => s.activeTabId);
+  const studentId = activeTabId.startsWith('student-transcript-')
+    ? activeTabId.replace('student-transcript-', '')
+    : '';
+
+  const rawStudent = mockStudents.find(s => s.id === studentId) || mockStudents[0];
+  const sData = getEnrichedStudentData(rawStudent);
+
+  const [imageFailed, setImageFailed] = useState(false);
+
+  useEffect(() => {
+    setImageFailed(false);
+  }, [studentId]);
+
+  const idNum = parseInt(sData.id) || 1;
+
+  // Performance data
+  const overallPct = sData.subjects.length > 0
+    ? (sData.subjects.reduce((sum: number, s: any) => sum + s.marks, 0) / sData.subjects.length).toFixed(1)
+    : '87.4';
+  const overallGrade = parseFloat(overallPct) >= 90 ? 'A+' : parseFloat(overallPct) >= 80 ? 'A' : parseFloat(overallPct) >= 70 ? 'B+' : 'B';
+  const totalMarks = sData.subjects.reduce((sum: number, s: any) => sum + s.marks, 0);
+  const totalMax = sData.subjects.length * 100;
+  const classRank = sData.classRank;
+  const totalInClass = sData.totalInClass;
+  const promotionStatus = parseFloat(overallPct) >= 33 ? 'Eligible' : 'Detained';
+  const attendancePct = sData.attendanceRate;
+
+  const performanceSummary = [
+    { label: 'Academic Performance', value: parseFloat(overallPct) },
+    { label: 'Attendance', value: attendancePct },
+    { label: 'Assignments', value: Math.min(100, 78 + (idNum * 3) % 18) },
+    { label: 'Behaviour', value: Math.min(100, 82 + (idNum * 5) % 16) }
+  ];
+
+  const perfTrend = [
+    { term: 'Term 1', yourScore: 78, classAvg: 65 },
+    { term: 'Term 2', yourScore: 82, classAvg: 68 },
+    { term: 'Term 3', yourScore: 85, classAvg: 71 },
+    { term: 'Final Term', yourScore: 87, classAvg: 74 }
+  ];
+
+  // Attendance data
+  const workingDays = 210;
+  const presentDays = sData.presentDays || 198;
+  const absentDays = sData.absentDays || 12;
+  const lateComing = sData.halfDays || 4;
+
+  const attendanceTrend = [
+    { month: 'Jan', pct: 95 },
+    { month: 'Feb', pct: 92 },
+    { month: 'Mar', pct: 93 },
+    { month: 'Apr', pct: 96 },
+    { month: 'May', pct: 90 },
+    { month: 'Jun', pct: 94 }
+  ];
+
+  const attendanceDistribution = [
+    { label: '90% & above', value: 65, color: '#10b981' },
+    { label: '75% - 89%', value: 25, color: '#3b82f6' },
+    { label: '50% - 74%', value: 8, color: '#f59e0b' },
+    { label: 'Below 50%', value: 2, color: '#ef4444' }
+  ];
+
+  // Behavioural
+  const behaviouralItems = [
+    { label: 'Class Participation', stars: 4 },
+    { label: 'Discipline', stars: 5 },
+    { label: 'Leadership', stars: 4 },
+    { label: 'Teamwork', stars: 5 },
+    { label: 'Communication', stars: 4 }
+  ];
+  const overallBehaviour = sData.behaviorLabel || 'Good';
+
+  // Subject performance vs class avg
+  const doubleBarData = [
+    { subject: 'Eng', Student: 88, ClassAvg: 74 },
+    { subject: 'Maths', Student: 92, ClassAvg: 78 },
+    { subject: 'Sci', Student: 86, ClassAvg: 72 },
+    { subject: 'SST', Student: 84, ClassAvg: 70 },
+    { subject: 'Hindi', Student: 80, ClassAvg: 68 },
+    { subject: 'Comp', Student: 90, ClassAvg: 76 }
+  ];
+
+  // Grade distribution
+  const gradeDistData = [
+    { grade: 'A+', value: 15, color: '#8b5cf6' },
+    { grade: 'A', value: 40, color: '#3b82f6' },
+    { grade: 'B+', value: 25, color: '#10b981' },
+    { grade: 'B', value: 15, color: '#f59e0b' },
+    { grade: 'C & Below', value: 5, color: '#ef4444' }
+  ];
+
+  // Achievements list
+  const achievementsList = [
+    'Science Olympiad Finalist',
+    'House Captain',
+    'Inter-School Debate Winner',
+    'Basketball Team Member'
+  ];
+
+  // AI Insights
+  const learningInsights = [
+    'Performs exceptionally in analytical and technical subjects.',
+    'Shows strong classroom participation and leadership qualities.',
+    'Can improve written presentation and time management.',
+    'Responds well to project-based and hands-on learning.',
+    'Recommended focus: Enhance consistency in assignments.'
+  ];
+
+  const strengths = ['Analytical Skills', 'Leadership', 'Curious Learner'];
+  const areasToImprove = ['Written Presentation', 'Time Management', 'Consistency'];
+
+  // Learning Skills Radar
+  const learningSkills = [
+    { label: 'Analytical Thinking', value: 78 },
+    { label: 'Conceptual Understanding', value: 82 },
+    { label: 'Application', value: 68 },
+    { label: 'Problem Solving', value: 70 },
+    { label: 'Creativity', value: 65 }
+  ];
+
+  const today = new Date();
+  const dateStr = '14 Jun 2026'; // Hardcoded to match mockup exactly
+
+  const handlePrint = async () => {
+    try {
+      const html2canvas = (await import('html2canvas')).default;
+      const { jsPDF } = await import('jspdf');
+      const el = document.querySelector('.transcript-page');
+      if (!el) return;
+      const canvas = await html2canvas(el as HTMLElement, { scale: 2, useCORS: true, backgroundColor: '#ffffff' });
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      const pdfW = pdf.internal.pageSize.getWidth();
+      const pdfH = (canvas.height * pdfW) / canvas.width;
+      pdf.addImage(imgData, 'PNG', 0, 0, pdfW, pdfH);
+      pdf.save(`${sData.fullName}_Profile_Summary.pdf`);
+    } catch (err) {
+      window.print();
+    }
+  };
+
+  return (
+    <div style={{ padding: '20px', background: 'var(--bg-primary)', display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%', height: '100%', overflowY: 'auto' }}>
+      {/* Top action controls hidden during print */}
+      <div className="no-print" style={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        padding: '12px 24px',
+        background: 'var(--bg-secondary)',
+        border: '1px solid var(--border-primary)',
+        width: '100%',
+        maxWidth: '900px',
+        marginBottom: '16px',
+        borderRadius: '8px',
+        boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
+        boxSizing: 'border-box'
+      }}>
+        <div>
+          <h3 style={{ margin: 0, fontSize: '13px', fontWeight: 700, color: 'var(--text-primary)' }}>Profile Summary — {sData.fullName}</h3>
+          <span style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>A4 Student Insight Report</span>
+        </div>
+        <div style={{ display: 'flex', gap: '8px' }}>
+          <button 
+            onClick={() => window.print()}
+            style={{
+              padding: '6px 12px',
+              fontSize: '11px',
+              fontWeight: 600,
+              background: 'var(--bg-primary)',
+              border: '1px solid var(--border-primary)',
+              borderRadius: '6px',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+              color: 'var(--text-primary)'
+            }}
+          >
+            <Printer size={13} /> Print Report
+          </button>
+          <button 
+            onClick={handlePrint}
+            style={{
+              padding: '6px 12px',
+              fontSize: '11px',
+              fontWeight: 600,
+              background: 'var(--accent-blue)',
+              color: '#ffffff',
+              border: 'none',
+              borderRadius: '6px',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px'
+            }}
+          >
+            <Download size={13} /> Download PDF
+          </button>
+        </div>
+      </div>
+
+      {/* Main A4 Document Sheet */}
+      <div 
+        className="transcript-page"
+        style={{
+          width: '900px',
+          height: '1270px',
+          background: '#ffffff',
+          color: '#1e293b',
+          fontFamily: "'Outfit', 'Inter', system-ui, sans-serif",
+          boxShadow: '0 8px 30px rgba(0,0,0,0.06)',
+          border: '1px solid #e2e8f0',
+          position: 'relative',
+          display: 'flex',
+          flexDirection: 'row',
+          boxSizing: 'border-box',
+          overflow: 'hidden'
+        }}
+      >
+        <style>{`
+          @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&family=Caveat:wght@600&display=swap');
+          
+          .transcript-page * {
+            box-sizing: border-box;
+          }
+          .t-card {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 8px 10px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.01);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+          }
+          .t-card-title {
+            font-size: 10px;
+            font-weight: 800;
+            color: #1e3a8a;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+            border-bottom: 1.5px solid #f1f5f9;
+            padding-bottom: 2px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+          }
+          @media print {
+            .no-print { display: none !important; }
+            body { background: white !important; margin: 0 !important; }
+            .transcript-page {
+              box-shadow: none !important;
+              border: none !important;
+              margin: 0 !important;
+              width: 100% !important;
+              height: 100% !important;
+              page-break-inside: avoid;
+            }
+          }
+        `}</style>
+
+        {/* LEFT COLUMN: Main Report Body */}
+        <div style={{ width: '860px', height: '100%', padding: '15px', display: 'flex', flexDirection: 'column', gap: '9px' }}>
+          
+          {/* Header Row */}
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', height: '75px', borderBottom: '2.5px double #cbd5e1', paddingBottom: '8px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              {/* Premium Shield Crest Logo */}
+              <svg width="45" height="45" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M50 5L15 20V50C15 72.5 50 95 50 95C50 95 85 72.5 85 50V20L50 5Z" fill="#1e3a8a" stroke="#10b981" strokeWidth="4"/>
+                <path d="M50 15L25 26V48C25 65 50 82 50 82C50 82 75 65 75 48V26L50 15Z" fill="#1e3a8a"/>
+                {/* Open book graphic */}
+                <path d="M32 56C38 52 47 52 50 56C53 52 62 52 68 56V36C62 32 53 32 50 36C47 32 38 32 32 36V56Z" fill="#ffffff" stroke="#10b981" strokeWidth="2.5"/>
+                <line x1="50" y1="36" x2="50" y2="56" stroke="#10b981" strokeWidth="2.5"/>
+                {/* Star above book */}
+                <path d="M50 20L52.5 25.5L58.5 26L54 29.8L55.5 35.5L50 32.5L44.5 35.5L46 29.8L41.5 26L47.5 25.5L50 20Z" fill="#f59e0b"/>
+              </svg>
+              <div>
+                <h1 style={{ margin: 0, fontSize: '15px', fontWeight: 800, color: '#1e3a8a', letterSpacing: '0.2px' }}>Your School Name</h1>
+                <span style={{ fontSize: '9px', fontStyle: 'italic', color: '#64748b', fontWeight: 500 }}>Excellence in Education</span>
+              </div>
+            </div>
+
+            <div style={{ textAlign: 'center' }}>
+              <div style={{ fontSize: '12px', fontWeight: 800, color: '#1e3a8a', letterSpacing: '1px', textTransform: 'uppercase' }}>Acadex</div>
+              <div style={{ fontSize: '14px', fontWeight: 800, color: '#0f172a', letterSpacing: '0.5px', marginTop: '1px' }}>STUDENT PROFILE SUMMARY</div>
+              <div style={{ display: 'inline-block', background: '#f1f5f9', border: '1px solid #cbd5e1', borderRadius: '12px', padding: '1px 8px', fontSize: '8px', fontWeight: 700, color: '#1e3a8a', marginTop: '2px' }}>
+                Academic Session: 2026-27
+              </div>
+            </div>
+
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <div style={{ fontSize: '8.5px', textAlign: 'right', color: '#475569', lineHeight: 1.4 }}>
+                <div><strong>Acadex ID:</strong> <span style={{ fontFamily: 'monospace', fontWeight: 700, color: '#1e3a8a' }}>ACX-STU-H4D9K7P2</span></div>
+                <div><strong>APAAR ID:</strong> <span style={{ fontFamily: 'monospace', fontWeight: 700 }}>XXXX XXXX XXXX</span></div>
+              </div>
+              {/* Custom detailed SVG QR code */}
+              <svg width="40" height="40" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect width="100" height="100" fill="white" rx="4"/>
+                <rect x="10" y="10" width="25" height="25" stroke="black" strokeWidth="6" fill="none"/>
+                <rect x="17.5" y="17.5" width="10" height="10" fill="black"/>
+                <rect x="65" y="10" width="25" height="25" stroke="black" strokeWidth="6" fill="none"/>
+                <rect x="72.5" y="17.5" width="10" height="10" fill="black"/>
+                <rect x="10" y="65" width="25" height="25" stroke="black" strokeWidth="6" fill="none"/>
+                <rect x="17.5" y="17.5" width="10" height="10" fill="black"/>
+                <rect x="17.5" y="72.5" width="10" height="10" fill="black"/>
+                <rect x="45" y="15" width="8" height="8" fill="black"/>
+                <rect x="53" y="25" width="6" height="12" fill="black"/>
+                <rect x="45" y="45" width="12" height="12" fill="black"/>
+                <rect x="70" y="45" width="15" height="8" fill="black"/>
+                <rect x="80" y="58" width="8" height="18" fill="black"/>
+                <rect x="58" y="75" width="14" height="6" fill="black"/>
+                <rect x="45" y="80" width="8" height="8" fill="black"/>
+              </svg>
+            </div>
+          </div>
+
+          {/* Row 1: Student Information + Academic Snapshot */}
+          <div style={{ display: 'grid', gridTemplateColumns: '235px 591px', gap: '9px', height: '200px' }}>
+            {/* Student Info Card */}
+            <div className="t-card" style={{ height: '100%', padding: '10px' }}>
+              <div className="t-card-title">Student Details</div>
+              <div style={{ display: 'flex', gap: '10px', flex: 1, alignItems: 'center' }}>
+                <div style={{ width: '65px', height: '78px', borderRadius: '4px', overflow: 'hidden', border: '1px solid #cbd5e1', background: '#f8fafc', flexShrink: 0 }}>
+                  {!imageFailed ? (
+                    <img 
+                      src="/student_avatar.png" 
+                      alt={sData.fullName} 
+                      style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                      onError={() => setImageFailed(true)}
+                    />
+                  ) : (
+                    <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'linear-gradient(135deg, #1e3a8a, #10b981)', color: '#ffffff', fontWeight: 800, fontSize: '18px' }}>
+                      AS
+                    </div>
+                  )}
+                </div>
+                <div style={{ flex: 1 }}>
+                  <h3 style={{ margin: '0 0 4px 0', fontSize: '12px', fontWeight: 800, color: '#0f172a' }}>{sData.fullName}</h3>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', fontSize: '9px', color: '#475569' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between' }}><span>Class</span><strong style={{ color: '#0f172a' }}>X-A</strong></div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between' }}><span>Roll No.</span><strong style={{ color: '#0f172a', fontFamily: 'monospace' }}>23</strong></div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between' }}><span>Gender</span><strong style={{ color: '#0f172a' }}>Male</strong></div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between' }}><span>DOB</span><strong style={{ color: '#0f172a' }}>14 Mar 2011</strong></div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between' }}><span>Blood Group</span><strong style={{ color: '#0f172a' }}>O+</strong></div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between' }}><span>Mother Tongue</span><strong style={{ color: '#0f172a' }}>Hindi</strong></div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', borderTop: '1px dashed #e2e8f0', paddingTop: '2px', marginTop: '2px' }}><span>Admission No.</span><strong style={{ color: '#1e3a8a', fontFamily: 'monospace' }}>2021/0456</strong></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Academic Snapshot Card */}
+            <div className="t-card" style={{ height: '100%', padding: '10px' }}>
+              <div className="t-card-title">Academic Snapshot</div>
+              
+              {/* Snapshot Top: Metrics row */}
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '6px', background: '#f8fafc', padding: '6px', borderRadius: '6px', textAlign: 'center', border: '1px solid #e2e8f0' }}>
+                <div style={{ borderRight: '1px solid #cbd5e1' }}>
+                  <div style={{ fontSize: '7.5px', color: '#64748b', fontWeight: 700, textTransform: 'uppercase' }}>Overall Pct</div>
+                  <div style={{ fontSize: '12px', fontWeight: 800, color: '#0f172a', marginTop: '1px' }}>87.4%</div>
+                  <div style={{ fontSize: '7px', color: '#10b981', fontWeight: 700 }}>↑ 5.6% vs Last Term</div>
+                </div>
+                <div style={{ borderRight: '1px solid #cbd5e1' }}>
+                  <div style={{ fontSize: '7.5px', color: '#64748b', fontWeight: 700, textTransform: 'uppercase' }}>Class Rank</div>
+                  <div style={{ fontSize: '12px', fontWeight: 800, color: '#0f172a', marginTop: '1px' }}>12 / 120</div>
+                  <div style={{ fontSize: '7px', color: '#10b981', fontWeight: 700 }}>Top 10%</div>
+                </div>
+                <div style={{ borderRight: '1px solid #cbd5e1' }}>
+                  <div style={{ fontSize: '7.5px', color: '#64748b', fontWeight: 700, textTransform: 'uppercase' }}>Grade</div>
+                  <div style={{ fontSize: '12px', fontWeight: 800, color: '#1e3a8a', marginTop: '1px' }}>A</div>
+                  <div style={{ fontSize: '7px', color: '#10b981', fontWeight: 700 }}>Excellent</div>
+                </div>
+                <div style={{ borderRight: '1px solid #cbd5e1' }}>
+                  <div style={{ fontSize: '7.5px', color: '#64748b', fontWeight: 700, textTransform: 'uppercase' }}>Attendance</div>
+                  <div style={{ fontSize: '12px', fontWeight: 800, color: '#0f172a', marginTop: '1px' }}>94%</div>
+                  <div style={{ fontSize: '7px', color: '#10b981', fontWeight: 700 }}>Excellent</div>
+                </div>
+                <div>
+                  <div style={{ fontSize: '7.5px', color: '#64748b', fontWeight: 700, textTransform: 'uppercase' }}>Promotion</div>
+                  <div style={{ fontSize: '11px', fontWeight: 800, color: '#166534', marginTop: '1px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '2px' }}>
+                    Eligible <span style={{ color: '#10b981', fontSize: '9px' }}>✓</span>
+                  </div>
+                  <div style={{ fontSize: '7px', color: '#64748b', fontWeight: 700 }}>Next Grade</div>
+                </div>
+              </div>
+
+              {/* Snapshot Bottom: side-by-side elements */}
+              <div style={{ display: 'flex', gap: '12px', flex: 1, marginTop: '8px', alignItems: 'center' }}>
+                {/* Left side: Horizontal progress list */}
+                <div style={{ width: '48%', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                  <span style={{ fontSize: '8px', color: '#64748b', fontWeight: 700, textTransform: 'uppercase', marginBottom: '2px' }}>Performance Summary</span>
+                  {performanceSummary.map((item, idx) => (
+                    <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '8.5px' }}>
+                      <span style={{ width: '90px', color: '#475569', fontWeight: 500 }}>{item.label}</span>
+                      <div style={{ flex: 1, height: '5px', background: '#e2e8f0', borderRadius: '2.5px', overflow: 'hidden' }}>
+                        <div style={{ width: `${item.value}%`, height: '100%', background: '#1e3a8a', borderRadius: '2.5px' }} />
+                      </div>
+                      <span style={{ width: '22px', fontWeight: 700, textAlign: 'right', color: '#0f172a' }}>{item.value}%</span>
+                    </div>
+                  ))}
+                </div>
+                {/* Divider */}
+                <div style={{ width: '1px', height: '90%', background: '#e2e8f0' }} />
+                {/* Right side: Term Trend Line Chart */}
+                <div style={{ width: '48%', height: '100%', display: 'flex', flexDirection: 'column' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
+                    <span style={{ fontSize: '8px', color: '#64748b', fontWeight: 700, textTransform: 'uppercase' }}>Performance Trend</span>
+                    <span style={{ fontSize: '7px', color: '#64748b', display: 'flex', gap: '6px' }}>
+                      <span style={{ display: 'flex', alignItems: 'center', gap: '2px' }}><span style={{ width: '5px', height: '5px', background: '#3b82f6', borderRadius: '50%' }} />Score</span>
+                      <span style={{ display: 'flex', alignItems: 'center', gap: '2px' }}><span style={{ width: '5px', height: '5px', background: '#94a3b8', borderRadius: '50%' }} />Avg</span>
+                    </span>
+                  </div>
+                  <div style={{ flex: 1, height: '60px' }}>
+                    <ResponsiveContainer width="100%" height="100%">
+                      <LineChart data={perfTrend} margin={{ top: 2, right: 5, left: -25, bottom: 0 }}>
+                        <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
+                        <XAxis dataKey="term" tick={{ fontSize: 6, fontWeight: 700 }} stroke="#94a3b8" />
+                        <YAxis tick={{ fontSize: 6 }} domain={[50, 100]} stroke="#94a3b8" />
+                        <Line type="monotone" dataKey="yourScore" stroke="#3b82f6" strokeWidth={1.5} dot={{ r: 2 }} />
+                        <Line type="monotone" dataKey="classAvg" stroke="#94a3b8" strokeDasharray="3 3" strokeWidth={1} dot={{ r: 1 }} />
+                      </LineChart>
+                    </ResponsiveContainer>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Row 2: Subject Wise Performance + Subject Wise Marks Distribution */}
+          <div style={{ display: 'grid', gridTemplateColumns: '490px 336px', gap: '9px', height: '220px' }}>
+            {/* Subject Performance Table Card */}
+            <div className="t-card" style={{ height: '100%', padding: '10px' }}>
+              <div className="t-card-title">Subject Wise Performance</div>
+              <div style={{ flex: 1, overflow: 'hidden' }}>
+                <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '9px', color: '#1e293b' }}>
+                  <thead>
+                    <tr style={{ background: '#f8fafc', borderBottom: '1px solid #cbd5e1' }}>
+                      <th style={{ padding: '4px', textAlign: 'left', fontWeight: 800 }}>Subject</th>
+                      <th style={{ padding: '4px', textAlign: 'center', fontWeight: 800 }}>Marks Obtained <span style={{ fontSize: '7px', fontWeight: 500, color: '#64748b' }}>(Out of 100)</span></th>
+                      <th style={{ padding: '4px', textAlign: 'left', fontWeight: 800, width: '140px' }}>Percentage</th>
+                      <th style={{ padding: '4px', textAlign: 'center', fontWeight: 800 }}>Grade</th>
+                      <th style={{ padding: '4px', textAlign: 'left', fontWeight: 800 }}>Teacher Remark</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {[
+                      { name: 'English', marks: 88, grade: 'A', remark: 'Excellent' },
+                      { name: 'Mathematics', marks: 92, grade: 'A+', remark: 'Strong' },
+                      { name: 'Science', marks: 86, grade: 'A', remark: 'Good' },
+                      { name: 'Social Science', marks: 84, grade: 'A', remark: 'Good' },
+                      { name: 'Hindi', marks: 80, grade: 'B+', remark: 'Average' },
+                      { name: 'Computer', marks: 90, grade: 'A+', remark: 'Excellent' }
+                    ].map((s, idx) => (
+                      <tr key={idx} style={{ borderBottom: '1px solid #f1f5f9' }}>
+                        <td style={{ padding: '4px', fontWeight: 600, color: '#0f172a' }}>{s.name}</td>
+                        <td style={{ padding: '4px', textAlign: 'center', fontWeight: 700 }}>{s.marks}</td>
+                        <td style={{ padding: '4px' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                            <span style={{ fontWeight: 700, width: '22px', textAlign: 'right' }}>{s.marks}%</span>
+                            <div style={{ flex: 1, height: '5px', background: '#e2e8f0', borderRadius: '2.5px', overflow: 'hidden' }}>
+                              <div style={{ width: `${s.marks}%`, height: '100%', background: '#1e3a8a', borderRadius: '2.5px' }} />
+                            </div>
+                          </div>
+                        </td>
+                        <td style={{ padding: '4px', textAlign: 'center', fontWeight: 700, color: s.grade.includes('+') ? '#10b981' : '#0f172a' }}>{s.grade}</td>
+                        <td style={{ padding: '4px', color: '#475569', fontWeight: 500 }}>{s.remark}</td>
+                      </tr>
+                    ))}
+                    <tr style={{ background: '#f0fdf4', borderTop: '1.5px solid #86efac', borderBottom: '1px solid #86efac', fontWeight: 700 }}>
+                      <td style={{ padding: '5px 4px', color: '#166534' }}>Overall</td>
+                      <td style={{ padding: '5px 4px', textAlign: 'center', color: '#166534' }}>520 / 600</td>
+                      <td style={{ padding: '5px 4px' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                          <span style={{ fontWeight: 700, width: '22px', color: '#166534' }}>87.4%</span>
+                          <div style={{ flex: 1, height: '5px', background: '#bbf7d0', borderRadius: '2.5px', overflow: 'hidden' }}>
+                            <div style={{ width: `87.4%`, height: '100%', background: '#15803d', borderRadius: '2.5px' }} />
+                          </div>
+                        </div>
+                      </td>
+                      <td style={{ padding: '5px 4px', textAlign: 'center', color: '#166534' }}>A</td>
+                      <td style={{ padding: '5px 4px', color: '#166534' }}>Excellent</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            {/* Subject Marks Donut Card */}
+            <div className="t-card" style={{ height: '100%', padding: '10px' }}>
+              <div className="t-card-title">Subject Wise Marks Distribution</div>
+              <div style={{ display: 'flex', flexDirection: 'column', flex: 1, justifyContent: 'center' }}>
+                <div style={{ position: 'relative', width: '100%', height: '110px' }}>
+                  <ResponsiveContainer width="100%" height="100%">
+                    <PieChart>
+                      <Pie
+                        data={[
+                          { name: 'Mathematics', value: 92, color: '#10b981' },
+                          { name: 'Computer', value: 90, color: '#2563eb' },
+                          { name: 'English', value: 88, color: '#0ea5e9' },
+                          { name: 'Science', value: 86, color: '#f97316' },
+                          { name: 'SST', value: 84, color: '#eab308' },
+                          { name: 'Hindi', value: 80, color: '#ef4444' }
+                        ]}
+                        cx="50%"
+                        cy="50%"
+                        innerRadius={32}
+                        outerRadius={46}
+                        paddingAngle={2}
+                        dataKey="value"
+                      >
+                        {[
+                          { color: '#10b981' },
+                          { color: '#2563eb' },
+                          { color: '#0ea5e9' },
+                          { color: '#f97316' },
+                          { color: '#eab308' },
+                          { color: '#ef4444' }
+                        ].map((cell, index) => (
+                          <Cell key={`cell-${index}`} fill={cell.color} />
+                        ))}
+                      </Pie>
+                    </PieChart>
+                  </ResponsiveContainer>
+                  {/* Absolute Center Text */}
+                  <div style={{
+                    position: 'absolute',
+                    top: '50%',
+                    left: '50%',
+                    transform: 'translate(-50%, -50%)',
+                    textAlign: 'center',
+                    pointerEvents: 'none'
+                  }}>
+                    <div style={{ fontSize: '8px', color: '#64748b', fontWeight: 700, textTransform: 'uppercase', lineHeight: 1 }}>Average</div>
+                    <div style={{ fontSize: '13px', color: '#1e3a8a', fontWeight: 800, marginTop: '2px', lineHeight: 1.1 }}>86.7%</div>
+                  </div>
+                </div>
+                
+                {/* Horizontal Legend Grid */}
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4px', fontSize: '8px', fontWeight: 600, marginTop: '4px' }}>
+                  {[
+                    { name: 'Mathematics', value: '92%', color: '#10b981' },
+                    { name: 'Computer', value: '90%', color: '#2563eb' },
+                    { name: 'English', value: '88%', color: '#0ea5e9' },
+                    { name: 'Science', value: '86%', color: '#f97316' },
+                    { name: 'SST', value: '84%', color: '#eab308' },
+                    { name: 'Hindi', value: '80%', color: '#ef4444' }
+                  ].map((s, idx) => (
+                    <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                      <span style={{ width: '7px', height: '7px', borderRadius: '1.5px', background: s.color, flexShrink: 0 }} />
+                      <span style={{ color: '#475569', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{s.name}</span>
+                      <span style={{ color: '#0f172a', marginLeft: 'auto', fontWeight: 700 }}>{s.value}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Row 3: Attendance Overview + Attendance Trend + Attendance Distribution */}
+          <div style={{ display: 'grid', gridTemplateColumns: '250px 337px 239px', gap: '9px', height: '140px' }}>
+            
+            {/* Attendance Overview Card */}
+            <div className="t-card" style={{ height: '100%', padding: '10px' }}>
+              <div className="t-card-title">Attendance Overview</div>
+              <div style={{ display: 'flex', alignItems: 'center', flex: 1, gap: '8px' }}>
+                <div style={{ position: 'relative', width: '70px', height: '70px', flexShrink: 0 }}>
+                  <ResponsiveContainer width="100%" height="100%">
+                    <PieChart>
+                      <Pie
+                        data={[
+                          { name: 'Present', value: 198, color: '#10b981' },
+                          { name: 'Absent', value: 12, color: '#ef4444' }
+                        ]}
+                        cx="50%"
+                        cy="50%"
+                        innerRadius={22}
+                        outerRadius={30}
+                        dataKey="value"
+                      >
+                        <Cell fill="#10b981" />
+                        <Cell fill="#ef4444" />
+                      </Pie>
+                    </PieChart>
+                  </ResponsiveContainer>
+                  <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', textAlign: 'center', pointerEvents: 'none' }}>
+                    <div style={{ fontSize: '10px', fontWeight: 800, color: '#0f172a', lineHeight: 1 }}>94%</div>
+                    <div style={{ fontSize: '5.5px', color: '#64748b', fontWeight: 600, lineHeight: 1 }}>Rate</div>
+                  </div>
+                </div>
+                <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '2px', fontSize: '8.5px', color: '#475569' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between' }}><span>Working Days</span><strong style={{ color: '#0f172a' }}>210</strong></div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', color: '#166534' }}><span>Present Days</span><strong>198</strong></div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', color: '#991b1b' }}><span>Absent Days</span><strong>12</strong></div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', color: '#b45309' }}><span>Late Coming</span><strong>4</strong></div>
+                </div>
+              </div>
+              <div style={{ display: 'flex', gap: '8px', fontSize: '7.5px', fontWeight: 700, justifyContent: 'center', marginTop: '4px', borderTop: '1px solid #f1f5f9', paddingTop: '3px' }}>
+                <span style={{ display: 'flex', alignItems: 'center', gap: '2px', color: '#166534' }}><span style={{ width: '5px', height: '5px', borderRadius: '50%', background: '#10b981' }} />Present (198)</span>
+                <span style={{ display: 'flex', alignItems: 'center', gap: '2px', color: '#991b1b' }}><span style={{ width: '5px', height: '5px', borderRadius: '50%', background: '#ef4444' }} />Absent (12)</span>
+              </div>
+            </div>
+
+            {/* Attendance Trend Card */}
+            <div className="t-card" style={{ height: '100%', padding: '10px' }}>
+              <div className="t-card-title">Attendance Trend <span style={{ fontSize: '7px', color: '#64748b', textTransform: 'none', fontWeight: 500 }}>(Last 6 Months)</span></div>
+              <div style={{ flex: 1, height: '100%' }}>
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={attendanceTrend} margin={{ top: 5, right: 5, left: -25, bottom: 0 }}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
+                    <XAxis dataKey="month" tick={{ fontSize: 7, fontWeight: 700 }} stroke="#94a3b8" />
+                    <YAxis tick={{ fontSize: 6 }} domain={[50, 100]} stroke="#94a3b8" />
+                    <Bar dataKey="pct" fill="#3b82f6" radius={[2, 2, 0, 0]} />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
+
+            {/* Attendance Distribution Card */}
+            <div className="t-card" style={{ height: '100%', padding: '10px' }}>
+              <div className="t-card-title">Attendance Distribution <span style={{ fontSize: '7px', color: '#64748b', textTransform: 'none', fontWeight: 500 }}>(Class)</span></div>
+              <div style={{ display: 'flex', alignItems: 'center', flex: 1, gap: '6px' }}>
+                <div style={{ width: '60px', height: '60px', flexShrink: 0 }}>
+                  <ResponsiveContainer width="100%" height="100%">
+                    <PieChart>
+                      <Pie
+                        data={attendanceDistribution}
+                        cx="50%"
+                        cy="50%"
+                        outerRadius={26}
+                        dataKey="value"
+                      >
+                        {attendanceDistribution.map((entry, index) => (
+                          <Cell key={`cell-${index}`} fill={entry.color} />
+                        ))}
+                      </Pie>
+                    </PieChart>
+                  </ResponsiveContainer>
+                </div>
+                <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '1px', fontSize: '8px', fontWeight: 600 }}>
+                  {attendanceDistribution.map((item, idx) => (
+                    <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: '3px' }}>
+                      <span style={{ width: '6px', height: '6px', borderRadius: '1.5px', background: item.color, flexShrink: 0 }} />
+                      <span style={{ color: '#475569', whiteSpace: 'nowrap' }}>{item.label}</span>
+                      <span style={{ color: '#0f172a', marginLeft: 'auto' }}>{item.value}%</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Row 4: Behavioural Observations + Learning Skills + Performance vs Class Average + Grade Distribution */}
+          <div style={{ display: 'grid', gridTemplateColumns: '190px 200px 240px 188px', gap: '9px', height: '150px' }}>
+            
+            {/* Behavioural Observations Card */}
+            <div className="t-card" style={{ height: '100%', padding: '10px' }}>
+              <div className="t-card-title">Behavioural Observations</div>
+              <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '3.5px', fontSize: '8.5px', justifyContent: 'center' }}>
+                {behaviouralItems.map((item, idx) => (
+                  <div key={idx} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                    <span style={{ color: '#475569', fontWeight: 500 }}>{item.label}</span>
+                    <div style={{ display: 'flex', gap: '1px' }}>
+                      {[1, 2, 3, 4, 5].map(star => (
+                        <span key={star} style={{ fontSize: '9px', color: star <= item.stars ? '#fbbf24' : '#e2e8f0' }}>★</span>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+                <div style={{ borderTop: '1px solid #f1f5f9', paddingTop: '4px', marginTop: '2px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <span style={{ fontWeight: 700, color: '#0f172a' }}>Overall Behaviour</span>
+                  <span style={{ background: '#f0fdf4', color: '#166534', border: '1px solid #bbf7d0', borderRadius: '4px', padding: '1px 6px', fontSize: '8px', fontWeight: 800 }}>{overallBehaviour}</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Learning Skills Radar Card */}
+            <div className="t-card" style={{ height: '100%', padding: '10px' }}>
+              <div className="t-card-title">Learning Skills</div>
+              <div style={{ flex: 1, height: '100%', overflow: 'hidden' }}>
+                <ResponsiveContainer width="100%" height="100%">
+                  <RadarChart cx="50%" cy="50%" outerRadius="70%" data={learningSkills}>
+                    <PolarGrid stroke="#e2e8f0" />
+                    <PolarAngleAxis dataKey="label" tick={{ fontSize: 5, fill: '#475569', fontWeight: 700 }} />
+                    <Radar name="Aarav" dataKey="value" stroke="#1e3a8a" fill="#3b82f6" fillOpacity={0.4} />
+                  </RadarChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
+
+            {/* Performance vs Class Average Bar Card */}
+            <div className="t-card" style={{ height: '100%', padding: '10px' }}>
+              <div className="t-card-title">Performance vs Class Average</div>
+              <div style={{ flex: 1, height: '100%' }}>
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={doubleBarData} margin={{ top: 5, right: 5, left: -25, bottom: 0 }}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
+                    <XAxis dataKey="subject" tick={{ fontSize: 7, fontWeight: 700 }} stroke="#94a3b8" />
+                    <YAxis tick={{ fontSize: 6 }} domain={[0, 100]} stroke="#94a3b8" />
+                    <Bar dataKey="Student" fill="#1e3a8a" radius={[1.5, 1.5, 0, 0]} />
+                    <Bar dataKey="ClassAvg" fill="#cbd5e1" radius={[1.5, 1.5, 0, 0]} />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+              <div style={{ display: 'flex', gap: '6px', fontSize: '6.5px', fontWeight: 700, justifyContent: 'center', marginTop: '2px' }}>
+                <span style={{ display: 'flex', alignItems: 'center', gap: '2px', color: '#1e3a8a' }}><span style={{ width: '4px', height: '4px', background: '#1e3a8a' }} />Aarav Sharma</span>
+                <span style={{ display: 'flex', alignItems: 'center', gap: '2px', color: '#475569' }}><span style={{ width: '4px', height: '4px', background: '#cbd5e1' }} />Class Average</span>
+              </div>
+            </div>
+
+            {/* Grade Distribution Card */}
+            <div className="t-card" style={{ height: '100%', padding: '10px' }}>
+              <div className="t-card-title">Grade Distribution <span style={{ fontSize: '7px', color: '#64748b', textTransform: 'none', fontWeight: 500 }}>(Class)</span></div>
+              <div style={{ display: 'flex', alignItems: 'center', flex: 1, gap: '6px' }}>
+                <div style={{ width: '55px', height: '55px', flexShrink: 0 }}>
+                  <ResponsiveContainer width="100%" height="100%">
+                    <PieChart>
+                      <Pie
+                        data={gradeDistData}
+                        cx="50%"
+                        cy="50%"
+                        innerRadius={15}
+                        outerRadius={23}
+                        dataKey="value"
+                      >
+                        {gradeDistData.map((entry, index) => (
+                          <Cell key={`cell-${index}`} fill={entry.color} />
+                        ))}
+                      </Pie>
+                    </PieChart>
+                  </ResponsiveContainer>
+                </div>
+                <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '1px', fontSize: '7.5px', fontWeight: 600 }}>
+                  {gradeDistData.map((item, idx) => (
+                    <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: '3px' }}>
+                      <span style={{ width: '6px', height: '6px', borderRadius: '1.5px', background: item.color, flexShrink: 0 }} />
+                      <span style={{ color: '#475569' }}>{item.grade}</span>
+                      <span style={{ color: '#0f172a', marginLeft: 'auto' }}>{item.value}%</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Row 5: Achievements + Learning Insights (AI Generated) + Badges (Strengths / Improve) */}
+          <div style={{ display: 'grid', gridTemplateColumns: '200px 398px 230px', gap: '9px', height: '150px' }}>
+            
+            {/* Achievements Card */}
+            <div className="t-card" style={{ height: '100%', padding: '10px' }}>
+              <div className="t-card-title">Achievements</div>
+              <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '6px', justifyContent: 'center' }}>
+                {achievementsList.map((ach, idx) => (
+                  <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '9px', fontWeight: 600, color: '#0f172a' }}>
+                    <span style={{ width: '12px', height: '12px', borderRadius: '50%', background: '#dcfce7', color: '#15803d', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '8px', flexShrink: 0 }}>✓</span>
+                    <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{ach}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Learning Insights Card */}
+            <div className="t-card" style={{ height: '100%', padding: '10px' }}>
+              <div className="t-card-title">Learning Insights <span style={{ fontSize: '7px', color: '#3b82f6', textTransform: 'none', fontWeight: 600 }}>[AI Generated]</span></div>
+              <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '4.5px', justifyContent: 'center' }}>
+                {learningInsights.map((ins, idx) => {
+                  const icons = ['⚡', '👤', '📈', '🔬', '🎯'];
+                  return (
+                    <div key={idx} style={{ display: 'flex', gap: '6px', alignItems: 'flex-start', fontSize: '8.5px', lineHeight: 1.3 }}>
+                      <span style={{ fontSize: '9px', flexShrink: 0 }}>{icons[idx % icons.length]}</span>
+                      <span style={{ color: '#334155', fontWeight: 500 }}>{ins}</span>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Badges Card (Strengths & Areas to Improve) */}
+            <div className="t-card" style={{ height: '100%', padding: '10px', justifyContent: 'space-between' }}>
+              <div>
+                <div style={{ fontSize: '8px', color: '#64748b', fontWeight: 800, textTransform: 'uppercase', marginBottom: '4px' }}>Strengths</div>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px' }}>
+                  {strengths.map((str, idx) => (
+                    <span key={idx} style={{ background: '#f0fdf4', color: '#166534', border: '1px solid #bbf7d0', borderRadius: '12px', padding: '1px 6px', fontSize: '8px', fontWeight: 700 }}>{str}</span>
+                  ))}
+                </div>
+              </div>
+              <div style={{ borderTop: '1px solid #f1f5f9', paddingTop: '6px', marginTop: '6px' }}>
+                <div style={{ fontSize: '8px', color: '#64748b', fontWeight: 800, textTransform: 'uppercase', marginBottom: '4px' }}>Areas to Improve</div>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px' }}>
+                  {areasToImprove.map((area, idx) => (
+                    <span key={idx} style={{ background: '#fef2f2', color: '#991b1b', border: '1px solid #fecaca', borderRadius: '12px', padding: '1px 6px', fontSize: '8px', fontWeight: 700 }}>{area}</span>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Row 6: Class Teacher Remarks + PTM Discussion Notes + Action Plan + Signatures */}
+          <div style={{ display: 'grid', gridTemplateColumns: '220px 200px 200px 188px', gap: '9px', height: '200px' }}>
+            
+            {/* Class Teacher Remarks Card */}
+            <div className="t-card" style={{ height: '100%', padding: '10px' }}>
+              <div className="t-card-title">Class Teacher Remarks</div>
+              <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                <p style={{ margin: 0, fontSize: '9px', lineHeight: 1.4, color: '#334155', fontStyle: 'italic', fontWeight: 500 }}>
+                  &ldquo;Aarav is a bright and responsible student with a positive attitude. He participates actively in class and shows great potential. He should focus on improving his written presentation.&rdquo;
+                </p>
+                <div style={{ borderTop: '1px solid #f1f5f9', paddingTop: '4px', fontSize: '8.5px', color: '#1e3a8a', fontWeight: 700 }}>
+                  Ms. Neha Verma
+                  <span style={{ display: 'block', fontSize: '7px', color: '#64748b', fontWeight: 600 }}>Class Teacher</span>
+                </div>
+              </div>
+            </div>
+
+            {/* PTM Discussion Notes Card */}
+            <div className="t-card" style={{ height: '100%', padding: '10px' }}>
+              <div className="t-card-title">PTM Discussion Notes</div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginTop: '6px', flex: 1 }}>
+                {[1, 2, 3, 4].map(i => (
+                  <div key={i} style={{ borderBottom: '1px solid #cbd5e1', height: '16px' }} />
+                ))}
+              </div>
+            </div>
+
+            {/* Action Plan Card */}
+            <div className="t-card" style={{ height: '100%', padding: '10px' }}>
+              <div className="t-card-title">Action Plan</div>
+              <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '6px', justifyContent: 'center' }}>
+                {[
+                  { label: 'Improve written presentation', checked: true },
+                  { label: 'Increase practice in Mathematics', checked: true },
+                  { label: 'Enhance time management', checked: true },
+                  { label: 'Participate in more activities', checked: true },
+                  { label: 'Other: _______________________', checked: false }
+                ].map((plan, idx) => (
+                  <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '8.5px', fontWeight: 600, color: '#334155' }}>
+                    {plan.checked ? (
+                      <span style={{ width: '10px', height: '10px', border: '1px solid #1e3a8a', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#3b82f6', color: '#ffffff', fontSize: '7px', fontWeight: 'bold', borderRadius: '1.5px', flexShrink: 0 }}>✓</span>
+                    ) : (
+                      <span style={{ width: '10px', height: '10px', border: '1px solid #94a3b8', display: 'inline-block', borderRadius: '1.5px', flexShrink: 0 }} />
+                    )}
+                    <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{plan.label}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Signatures Card */}
+            <div className="t-card" style={{ height: '100%', padding: '10px', justifyContent: 'space-between' }}>
+              <div className="t-card-title">Signatures</div>
+              
+              {/* Class Teacher Signature */}
+              <div style={{ textAlign: 'center', marginTop: '4px' }}>
+                <span style={{ fontFamily: "'Caveat', cursive, 'Brush Script MT', serif", fontSize: '18px', color: '#1e40af', display: 'block', height: '20px', lineHeight: 1 }}>Jael</span>
+                <div style={{ borderBottom: '1px solid #475569', width: '100px', margin: '2px auto 2px auto' }} />
+                <span style={{ fontSize: '7.5px', color: '#475569', fontWeight: 700 }}>Class Teacher Signature</span>
+              </div>
+
+              {/* Parent Signature */}
+              <div style={{ textAlign: 'center' }}>
+                <div style={{ height: '20px' }} />
+                <div style={{ borderBottom: '1px solid #475569', width: '100px', margin: '0 auto 2px auto' }} />
+                <span style={{ fontSize: '7.5px', color: '#475569', fontWeight: 700 }}>Parent Signature</span>
+              </div>
+
+              {/* Date */}
+              <div style={{ textAlign: 'center', fontSize: '8px', color: '#0f172a', fontWeight: 800, background: '#f8fafc', padding: '2px', borderRadius: '4px', border: '1px solid #e2e8f0' }}>
+                Date: {dateStr}
+              </div>
+            </div>
+          </div>
+
+          {/* Footer Bar */}
+          <div style={{
+            height: '25px',
+            background: '#1e3a8a',
+            color: '#ffffff',
+            borderRadius: '6px',
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            padding: '0 12px',
+            fontSize: '8px',
+            fontWeight: 700,
+            marginTop: 'auto'
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+              <span style={{ fontSize: '10px' }}>⚙</span>
+              Generated by Acadex School Operating System
+            </div>
+            <div>Generated On: {dateStr}</div>
+            <div>Profile Version: V3.2</div>
+          </div>
+
+        </div>
+
+        {/* RIGHT COLUMN: Vertical Dark Blue Accent Ribbon */}
+        <div style={{
+          width: '40px',
+          height: '100%',
+          background: '#1e3a8a',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          flexShrink: 0,
+          borderLeft: '1.5px solid #10b981'
+        }}>
+          <div style={{
+            color: '#ffffff',
+            fontWeight: 800,
+            fontSize: '11px',
+            letterSpacing: '2.5px',
+            textTransform: 'uppercase',
+            whiteSpace: 'nowrap',
+            transform: 'rotate(180deg)',
+            writingMode: 'vertical-rl',
+            fontFamily: "'Outfit', 'Inter', sans-serif"
+          }}>
+            ACADEX STUDENT INSIGHT REPORT
+          </div>
+        </div>
+
+      </div>
     </div>
   );
 }

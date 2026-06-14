@@ -18,6 +18,7 @@ import TransferAdmissionWizard from '@/components/TransferAdmissionWizard';
 import TransfersView from '@/components/TransfersView';
 import CasesView from '@/components/CasesView';
 import SettingsView from '@/components/SettingsView';
+import EditStudentDataWizard from '@/components/EditStudentDataWizard';
 import { 
   TeachersView, DocumentsView, AttendanceView, 
   InstitutionView, AuditView, SearchView,
@@ -25,7 +26,7 @@ import {
   TimetableView, GradebookView, LibraryView, CommunicationView,
   FinanceView, FacilitiesView, ReportsView, SystemLogsView,
   ProfileView, NotificationsView, StudentProfileView, TeacherProfileView,
-  ManageWidgetsView, AcademicCalendarView, StudentReportCardView
+  ManageWidgetsView, AcademicCalendarView, StudentReportCardView, StudentTranscriptView
 } from '@/components/OtherViews';
 
 export default function Page() {
@@ -117,6 +118,10 @@ export default function Page() {
         return <AcademicCalendarView />;
       case 'student-report-card':
         return <StudentReportCardView />;
+      case 'student-transcript':
+        return <StudentTranscriptView />;
+      case 'edit-student-data':
+        return <EditStudentDataWizard studentId={activeTabId.replace('edit-student-', '')} />;
       default:
         return <Dashboard />;
     }

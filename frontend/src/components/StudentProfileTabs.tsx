@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { 
-  BarChart3, Calendar, ArrowUpRight, ArrowDownRight, TrendingUp, Award, CalendarCheck, CalendarX, Clock, ShieldCheck, CheckCircle2, CalendarDays,
+  BarChart3, Calendar, ArrowUpRight, ArrowDownRight, ArrowLeft, TrendingUp, Award, CalendarCheck, CalendarX, Clock, ShieldCheck, CheckCircle2, CalendarDays,
   DollarSign, AlertTriangle, Plus, Search, Filter, ChevronRight, CreditCard, Download, Eye, MoreVertical, X, Percent, Trophy, Star, Trash2, Building,
-  FileSpreadsheet, FileText, UserCheck, Printer, Folder, CheckCircle, Shield, ShieldAlert, MessageSquare, LogOut, HelpCircle, Layers
+  FileSpreadsheet, FileText, UserCheck, Printer, Folder, CheckCircle, Shield, ShieldAlert, MessageSquare, LogOut, HelpCircle, Layers, Medal, Target, Users, Hash, MapPin, Zap
 } from 'lucide-react';
 import {
   LineChart, Line, BarChart, Bar, AreaChart, Area, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend,
@@ -728,6 +728,76 @@ export function StudentAttendanceTab({ studentId }: { studentId: string }) {
 // =====================================================
 export function StudentAchievementsTab({ studentId, sData }: { studentId: string; sData: any }) {
   const [activeCarousel, setActiveCarousel] = useState(0);
+  const [activeKpiView, setActiveKpiView] = useState<string | null>(null);
+  const [achievementsSearch, setAchievementsSearch] = useState('');
+  const [achievementsFilter, setAchievementsFilter] = useState('All');
+  const [certSearch, setCertSearch] = useState('');
+  const [certFilter, setCertFilter] = useState('All');
+  const [compFilter, setCompFilter] = useState('All');
+
+  const achievementsList = [
+    { id: 1, title: 'First Prize in Science Exhibition', category: 'Academic Excellence', level: 'Inter School', date: '20 Mar 2025', points: 150, description: 'Designed a working model of a smart solar grid that won first prize among 40 participating schools.' },
+    { id: 2, title: 'Best Speaker Award', category: 'Co-Curricular', level: 'District', date: '15 Feb 2025', points: 120, description: 'Awarded best speaker at the annual inter-school English debate competition on sustainable future.' },
+    { id: 3, title: 'Chess Tournament Winner', category: 'Sports', level: 'Zonal', date: '28 Jan 2025', points: 100, description: 'Secured first place in the under-17 zonal chess championship without dropping a single game.' },
+    { id: 4, title: 'Academic Topper Award', category: 'Academic Excellence', level: 'School', date: '10 Jan 2025', points: 100, description: 'Awarded for scoring 95%+ across all major subjects in the second term examination.' },
+    { id: 5, title: 'Second Prize in Painting', category: 'Co-Curricular', level: 'Inter School', date: '05 Dec 2024', points: 80, description: 'Received second prize for watercolor painting in the category of nature preservation.' },
+    { id: 6, title: 'Blood Donation Camp Coordinator', category: 'Community Service', level: 'School', date: '20 Nov 2024', points: 50, description: 'Led the student council coordination team for the school blood donation drive, securing over 150 donors.' },
+    { id: 7, title: 'Zonal Olympiad Gold Medal', category: 'Academic Excellence', level: 'State', date: '15 Oct 2024', points: 200, description: 'Placed 8th in the state mathematics Olympiad, earning a gold medal and certificate of excellence.' },
+    { id: 8, title: 'Football Championship Runner Up', category: 'Sports', level: 'Zonal', date: '12 Sep 2024', points: 80, description: 'Vice-captain of the school football team that reached the finals of the zonal football federation tournament.' },
+    { id: 9, title: 'Best Student Leader of the Year', category: 'Leadership', level: 'School', date: '15 Aug 2024', points: 150, description: 'Recognized for excellent administrative performance and peer guidance as the Head Boy.' },
+    { id: 10, title: 'Tree Plantation Drive Leader', category: 'Community Service', level: 'School', date: '05 Jun 2024', points: 60, description: 'Organized and executed a plantation drive planting 500 saplings in and around the school campus.' }
+  ];
+
+  const certificatesList = [
+    { id: 1, title: 'Science Exhibition Excellence', authority: 'State Science Forum', date: '20 Mar 2025', credId: 'SSF-2025-0849', category: 'Academic Excellence', size: '156 KB', status: 'Verified' },
+    { id: 2, title: 'Debate Champion Certificate', authority: 'National Debating Society', date: '15 Feb 2025', credId: 'NDS-D-8841', category: 'Co-Curricular', size: '142 KB', status: 'Verified' },
+    { id: 3, title: 'Chess Championship Certificate', authority: 'Zonal Sports Authority', date: '28 Jan 2025', credId: 'ZSA-C-9920', category: 'Sports', size: '204 KB', status: 'Verified' },
+    { id: 4, title: 'Academic Topper Award', authority: 'Board of Secondary Education', date: '10 Jan 2025', credId: 'BSE-TERM2-881', category: 'Academic Excellence', size: '310 KB', status: 'Verified' },
+    { id: 5, title: 'Clean and Green Initiative', authority: 'Eco Green Club India', date: '05 Jun 2024', credId: 'EGC-2024-4411', category: 'Community Service', size: '98 KB', status: 'Pending' },
+    { id: 6, title: 'Student Council Leadership Cert', authority: 'Akedex Education Foundation', date: '15 Aug 2024', credId: 'AEF-LEAD-3312', category: 'Leadership', size: '188 KB', status: 'Verified' }
+  ];
+
+  const awardsList = [
+    { id: 1, title: 'Academic Excellence Trophy', type: 'Trophy', rank: 'Gold', subtitle: 'Quarterly Exam Topper', date: '10 Jan 2025', iconColor: 'var(--accent-amber)', bg: 'rgba(245, 158, 11, 0.08)' },
+    { id: 2, title: 'Inter-School Science Shield', type: 'Shield', rank: 'Gold', subtitle: 'First Place Presentation', date: '20 Mar 2025', iconColor: 'var(--accent-amber)', bg: 'rgba(245, 158, 11, 0.08)' },
+    { id: 3, title: 'Best Debate Orator Medal', type: 'Medal', rank: 'Gold', subtitle: 'Best Speaker overall', date: '15 Feb 2025', iconColor: 'var(--accent-amber)', bg: 'rgba(245, 158, 11, 0.08)' },
+    { id: 4, title: 'Zonal Chess Tournament Medal', type: 'Medal', rank: 'Gold', subtitle: 'Winner Under-17 Category', date: '28 Jan 2025', iconColor: 'var(--accent-amber)', bg: 'rgba(245, 158, 11, 0.08)' },
+    { id: 5, title: 'Regional Mathematics Silver Medal', type: 'Medal', rank: 'Silver', subtitle: '8th State Rank Olympiad', date: '15 Oct 2024', iconColor: '#94a3b8', bg: 'rgba(148, 163, 184, 0.08)' },
+    { id: 6, title: 'Zonal Football Cup (Runner Up)', type: 'Trophy', rank: 'Silver', subtitle: 'Tournament Finalist', date: '12 Sep 2024', iconColor: '#94a3b8', bg: 'rgba(148, 163, 184, 0.08)' },
+    { id: 7, title: 'Outstanding Leader Badge', type: 'Badge', rank: 'Honor Roll', subtitle: 'Head Boy Contribution', date: '15 Aug 2024', iconColor: 'var(--accent-purple)', bg: 'rgba(139, 92, 246, 0.08)' },
+    { id: 8, title: 'Green Earth Activist Star', type: 'Star', rank: 'Special Mention', subtitle: 'Planted 500 Saplings', date: '05 Jun 2024', iconColor: 'var(--accent-green)', bg: 'var(--accent-green-dim)' }
+  ];
+
+  const competitionsList = [
+    { id: 1, name: 'State Science Fair 2025', organizer: 'Dept. of Science & Tech', date: '20 Mar 2025', level: 'State', position: '1st Place', result: 'Won', score: '98/100' },
+    { id: 2, name: 'Annual English Inter-School Debate', organizer: 'St. Xavier Academy', date: '15 Feb 2025', level: 'Inter School', position: 'Best Speaker', result: 'Won', score: '95/100' },
+    { id: 3, name: 'Zonal U-17 Chess Championship', organizer: 'Zonal Sports Council', date: '28 Jan 2025', level: 'Zonal', position: '1st Place', result: 'Won', score: '7.0/7.0 pts' },
+    { id: 4, name: 'State Math Olympiad 2024', organizer: 'Math Olympiad Foundation', date: '15 Oct 2024', level: 'State', position: '8th Rank', result: 'Runner Up', score: '185/200' },
+    { id: 5, name: 'Zonal Football Federation Cup', organizer: 'Zonal Football Club', date: '12 Sep 2024', level: 'Zonal', position: 'Runner Up', result: 'Runner Up', score: '3-1 in Finals' },
+    { id: 6, name: 'Inter-School Painting Competition', organizer: 'Art & Culture Society', date: '05 Dec 2024', level: 'Inter School', position: '2nd Place', result: 'Runner Up', score: '90/100' },
+    { id: 7, name: 'District Spell Bee 2024', organizer: 'Literary Club', date: '10 Nov 2024', level: 'District', position: 'Finalist', result: 'Participated', score: '88/100' },
+    { id: 8, name: 'Akedex Zonal Hackathon', organizer: 'Akedex Edu Tech', date: '18 Jul 2024', level: 'National', position: 'Top 10', result: 'Participated', score: '84/100' },
+    { id: 9, name: 'Annual Inter-House Essay Writing', organizer: 'School Literary Society', date: '10 Aug 2024', level: 'School', position: '1st Place', result: 'Won', score: '92/100' },
+    { id: 10, name: 'District Science Quiz Bowl', organizer: 'District Board of Ed', date: '15 Nov 2024', level: 'District', position: 'Semifinalist', result: 'Participated', score: '76/100' },
+    { id: 11, name: 'Zonal Quiz Competition', organizer: 'Zonal Quiz Club', date: '04 Oct 2024', level: 'Zonal', position: '3rd Place', result: 'Participated', score: '82/100' },
+    { id: 12, name: 'State Level Drama Competition', organizer: 'National School of Drama', date: '18 Dec 2024', level: 'State', position: 'Consolation Prize', result: 'Participated', score: '85/100' }
+  ];
+
+  const leaderboardData = [
+    { rank: 1, name: 'Rohan Mehta', class: '10-A', score: 910, achievements: 32, avatar: 'RM' },
+    { rank: 2, name: 'Aditi Rao', class: '10-B', score: 875, achievements: 30, avatar: 'AR' },
+    { rank: 3, name: 'Priya Sharma (You)', class: '10-A', score: 845, achievements: 28, avatar: 'PS', isSelf: true },
+    { rank: 4, name: 'Aravind Swamy', class: '10-A', score: 810, achievements: 25, avatar: 'AS' },
+    { rank: 5, name: 'Sneha Gupta', class: '10-C', score: 790, achievements: 24, avatar: 'SG' }
+  ];
+
+  const rankHistoryData = [
+    { term: 'Term 1 2023', schoolRank: 15, classRank: 4 },
+    { term: 'Term 2 2023', schoolRank: 12, classRank: 3 },
+    { term: 'Term 1 2024', schoolRank: 8, classRank: 2 },
+    { term: 'Term 2 2024', schoolRank: 5, classRank: 2 },
+    { term: 'Term 1 2025', schoolRank: 3, classRank: 1 }
+  ];
 
   const mockOverviewData = [
     { month: 'Apr', achievements: 3, certificates: 2, score: 200 },
@@ -765,18 +835,19 @@ export function StudentAchievementsTab({ studentId, sData }: { studentId: string
       {/* 6-CARD KPI METRICS STRIP */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(6, 1fr)', gap: '16px' }}>
         {[
-          { label: 'Total Achievements', val: '28', desc: 'All Time', trend: '7 this year', icon: <Trophy size={18} />, color: 'var(--accent-purple)', bg: 'rgba(139, 92, 246, 0.08)' },
-          { label: 'Certificates Earned', val: '16', desc: 'All Time', trend: '5 this year', icon: <FileText size={18} />, color: 'var(--accent-blue)', bg: 'rgba(59, 130, 246, 0.08)' },
-          { label: 'Awards Won', val: '8', desc: 'All Time', trend: '2 this year', icon: <Award size={18} />, color: 'var(--accent-amber)', bg: 'rgba(245, 158, 11, 0.08)' },
-          { label: 'Competitions', val: '12', desc: 'Participated', trend: '3 this year', icon: <Calendar size={18} />, color: 'var(--accent-green)', bg: 'var(--accent-green-dim)' },
-          { label: 'Achievement Score', val: '845/1000', desc: 'Excellent', trend: '65 pts', icon: <TrendingUp size={18} />, color: 'var(--accent-purple)', bg: 'rgba(139, 92, 246, 0.08)' },
-          { label: 'Rank (School)', val: '3 / 842', desc: 'Top Performer', trend: '2 positions', icon: <Star size={18} />, color: '#f43f5e', bg: 'rgba(244, 63, 94, 0.08)' }
+          { id: 'achievements', label: 'Total Achievements', val: '28', desc: 'All Time', trend: '7 this year', icon: <Trophy size={18} />, color: 'var(--accent-purple)', bg: 'rgba(139, 92, 246, 0.08)' },
+          { id: 'certificates', label: 'Certificates Earned', val: '16', desc: 'All Time', trend: '5 this year', icon: <FileText size={18} />, color: 'var(--accent-blue)', bg: 'rgba(59, 130, 246, 0.08)' },
+          { id: 'awards', label: 'Awards Won', val: '8', desc: 'All Time', trend: '2 this year', icon: <Award size={18} />, color: 'var(--accent-amber)', bg: 'rgba(245, 158, 11, 0.08)' },
+          { id: 'competitions', label: 'Competitions', val: '12', desc: 'Participated', trend: '3 this year', icon: <Calendar size={18} />, color: 'var(--accent-green)', bg: 'var(--accent-green-dim)' },
+          { id: 'score', label: 'Achievement Score', val: '845/1000', desc: 'Excellent', trend: '65 pts', icon: <TrendingUp size={18} />, color: 'var(--accent-purple)', bg: 'rgba(139, 92, 246, 0.08)' },
+          { id: 'rank', label: 'Rank (School)', val: '3 / 842', desc: 'Top Performer', trend: '2 positions', icon: <Star size={18} />, color: '#f43f5e', bg: 'rgba(244, 63, 94, 0.08)' }
         ].map((card, idx) => (
           <div 
-            key={idx} 
+            key={card.id} 
+            onClick={() => setActiveKpiView(card.id)}
             style={{ 
-              background: '#ffffff', 
-              border: '1px solid var(--border-primary)', 
+              background: activeKpiView === card.id ? card.bg : '#ffffff', 
+              border: activeKpiView === card.id ? `1px solid ${card.color}` : '1px solid var(--border-primary)', 
               borderRadius: '12px', 
               padding: '16px', 
               display: 'flex', 
@@ -784,15 +855,18 @@ export function StudentAchievementsTab({ studentId, sData }: { studentId: string
               alignItems: 'center', 
               gap: '14px', 
               boxShadow: '0 1px 3px rgba(0,0,0,0.05)',
-              transition: 'transform 0.2s ease, box-shadow 0.2s ease'
+              transition: 'all 0.2s ease',
+              cursor: 'pointer'
             }}
             onMouseEnter={(e) => {
               e.currentTarget.style.transform = 'translateY(-2px)';
-              e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.05)';
+              e.currentTarget.style.boxShadow = `0 4px 16px rgba(0,0,0,0.08)`;
+              e.currentTarget.style.borderColor = card.color;
             }}
             onMouseLeave={(e) => {
               e.currentTarget.style.transform = 'none';
               e.currentTarget.style.boxShadow = '0 1px 3px rgba(0,0,0,0.05)';
+              if (activeKpiView !== card.id) e.currentTarget.style.borderColor = 'var(--border-primary)';
             }}
           >
             <div style={{ width: '44px', height: '44px', borderRadius: '50%', background: card.bg, color: card.color, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
@@ -808,246 +882,922 @@ export function StudentAchievementsTab({ studentId, sData }: { studentId: string
                 </span>
               </div>
             </div>
+            <ChevronRight size={14} style={{ color: 'var(--text-tertiary)', flexShrink: 0, opacity: 0.5 }} />
           </div>
         ))}
       </div>
 
-      {/* Row 2: Overview Composed Chart, Categories Pie, Timeline */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1.8fr 1.2fr 1fr', gap: '20px', alignItems: 'stretch' }}>
-        
-        {/* Composed Chart */}
-        <div style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-primary)', borderRadius: '12px', padding: '24px', display: 'flex', flexDirection: 'column', boxShadow: '0 1px 3px rgba(0,0,0,0.04)' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
-            <div>
-              <h3 style={{ fontSize: '13px', fontWeight: 700, margin: 0 }}>Achievement Overview</h3>
-              <span style={{ fontSize: '10px', color: 'var(--text-secondary)' }}>Monthly achievements earned over time</span>
-            </div>
-            <select style={{ border: '1px solid var(--border-primary)', borderRadius: '6px', fontSize: '10px', padding: '4px 8px', outline: 'none', background: 'transparent', color: 'var(--text-secondary)' }}>
-              <option>This Year</option>
-            </select>
-          </div>
-          <div style={{ flex: 1, minHeight: '260px', width: '100%' }}>
-            <ResponsiveContainer width="100%" height="100%">
-              <ComposedChart data={mockOverviewData} margin={{ top: 10, right: -15, left: -25, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--border-secondary)" />
-                <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: 'var(--text-secondary)', fontWeight: 500 }} dy={8} />
-                <YAxis yAxisId="left" axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: 'var(--text-secondary)', fontWeight: 500 }} ticks={[0, 2, 4, 6, 8, 10]} />
-                <YAxis yAxisId="right" orientation="right" axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: 'var(--text-secondary)', fontWeight: 500 }} ticks={[0, 200, 400, 600, 800, 1000]} />
-                <Tooltip content={<CustomTooltip />} />
-                <Legend verticalAlign="top" height={36} iconType="circle" iconSize={8} wrapperStyle={{ fontSize: '11px', fontWeight: 600, color: 'var(--text-secondary)' }} />
-                <Bar yAxisId="left" name="Achievements" dataKey="achievements" fill="#8b5cf6" radius={[4, 4, 0, 0]} maxBarSize={12} isAnimationActive={false} />
-                <Bar yAxisId="left" name="Certificates" dataKey="certificates" fill="#c4b5fd" radius={[4, 4, 0, 0]} maxBarSize={12} isAnimationActive={false} />
-                <Line yAxisId="right" name="Score" dataKey="score" stroke="#8b5cf6" strokeWidth={2} dot={{ r: 3, fill: '#ffffff', stroke: '#8b5cf6', strokeWidth: 1.5 }} isAnimationActive={false} />
-              </ComposedChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
-
-        {/* Categories Pie Chart */}
-        <div style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-primary)', borderRadius: '12px', padding: '24px', display: 'flex', flexDirection: 'column', boxShadow: '0 1px 3px rgba(0,0,0,0.04)' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
-            <div>
-              <h3 style={{ fontSize: '13px', fontWeight: 700, margin: 0 }}>Achievements by Category</h3>
-              <span style={{ fontSize: '10px', color: 'var(--text-secondary)' }}>This Year</span>
-            </div>
-          </div>
-          <div style={{ flex: 1, display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: '20px', width: '100%' }}>
-            <div style={{ position: 'relative', width: '120px', height: '120px', flexShrink: 0 }}>
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie data={categoryPieData} cx="50%" cy="50%" innerRadius={38} outerRadius={50} dataKey="value" stroke="none" isAnimationActive={false}>
-                    {categoryPieData.map((entry, index) => <Cell key={`cell-${index}`} fill={entry.color} />)}
-                  </Pie>
-                  <Tooltip content={<CustomTooltip />} />
-                </PieChart>
-              </ResponsiveContainer>
-              <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-                <span style={{ fontSize: '18px', fontWeight: 800 }}>28</span>
-                <span style={{ fontSize: '8px', color: 'var(--text-secondary)', fontWeight: 600 }}>Total</span>
+      {!activeKpiView && (
+        <>
+          {/* Row 2: Overview Composed Chart, Categories Pie, Timeline */}
+          <div style={{ display: 'grid', gridTemplateColumns: '1.8fr 1.2fr 1fr', gap: '20px', alignItems: 'stretch' }}>
+            
+            {/* Composed Chart */}
+            <div style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-primary)', borderRadius: '12px', padding: '24px', display: 'flex', flexDirection: 'column', boxShadow: '0 1px 3px rgba(0,0,0,0.04)' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
+                <div>
+                  <h3 style={{ fontSize: '13px', fontWeight: 700, margin: 0 }}>Achievement Overview</h3>
+                  <span style={{ fontSize: '10px', color: 'var(--text-secondary)' }}>Monthly achievements earned over time</span>
+                </div>
+                <select style={{ border: '1px solid var(--border-primary)', borderRadius: '6px', fontSize: '10px', padding: '4px 8px', outline: 'none', background: 'transparent', color: 'var(--text-secondary)' }}>
+                  <option>This Year</option>
+                </select>
+              </div>
+              <div style={{ flex: 1, minHeight: '260px', width: '100%' }}>
+                <ResponsiveContainer width="100%" height="100%">
+                  <ComposedChart data={mockOverviewData} margin={{ top: 10, right: -15, left: -25, bottom: 0 }}>
+                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--border-secondary)" />
+                    <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: 'var(--text-secondary)', fontWeight: 500 }} dy={8} />
+                    <YAxis yAxisId="left" axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: 'var(--text-secondary)', fontWeight: 500 }} ticks={[0, 2, 4, 6, 8, 10]} />
+                    <YAxis yAxisId="right" orientation="right" axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: 'var(--text-secondary)', fontWeight: 500 }} ticks={[0, 200, 400, 600, 800, 1000]} />
+                    <Tooltip content={<CustomTooltip />} />
+                    <Legend verticalAlign="top" height={36} iconType="circle" iconSize={8} wrapperStyle={{ fontSize: '11px', fontWeight: 600, color: 'var(--text-secondary)' }} />
+                    <Bar yAxisId="left" name="Achievements" dataKey="achievements" fill="#8b5cf6" radius={[4, 4, 0, 0]} maxBarSize={12} isAnimationActive={false} />
+                    <Bar yAxisId="left" name="Certificates" dataKey="certificates" fill="#c4b5fd" radius={[4, 4, 0, 0]} maxBarSize={12} isAnimationActive={false} />
+                    <Line yAxisId="right" name="Score" dataKey="score" stroke="#8b5cf6" strokeWidth={2} dot={{ r: 3, fill: '#ffffff', stroke: '#8b5cf6', strokeWidth: 1.5 }} isAnimationActive={false} />
+                  </ComposedChart>
+                </ResponsiveContainer>
               </div>
             </div>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', flex: 1, minWidth: 0 }}>
-              {categoryPieData.map((item, idx) => (
-                <div key={idx} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '10.5px', fontWeight: 600 }}>
-                  <span style={{ display: 'flex', alignItems: 'center', gap: '6px', minWidth: 0 }}>
-                    <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: item.color, flexShrink: 0 }}></span>
-                    <span style={{ color: 'var(--text-secondary)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{item.name}</span>
-                  </span>
-                  <span style={{ color: 'var(--text-primary)', paddingLeft: '4px', flexShrink: 0 }}>{item.value} ({item.percentage})</span>
-                </div>
-              ))}
-            </div>
-          </div>
-          <div style={{ textAlign: 'center', marginTop: '12px', borderTop: '1px solid var(--border-secondary)', paddingTop: '10px' }}>
-            <span style={{ fontSize: '11px', color: 'var(--accent-purple)', fontWeight: 600, cursor: 'pointer' }}>View all categories →</span>
-          </div>
-        </div>
-
-        {/* Timeline */}
-        <div style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-primary)', borderRadius: '12px', padding: '24px', display: 'flex', flexDirection: 'column', boxShadow: '0 1px 3px rgba(0,0,0,0.04)' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-            <h3 style={{ fontSize: '13px', fontWeight: 700, margin: 0 }}>Achievement Timeline</h3>
-            <span style={{ fontSize: '10px', color: 'var(--accent-purple)', fontWeight: 600, cursor: 'pointer' }}>View full timeline</span>
-          </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', flex: 1, paddingLeft: '8px', position: 'relative' }}>
-            {/* Vertical line running behind dots */}
-            <div style={{ position: 'absolute', left: '11.5px', top: '4px', bottom: '4px', width: '1px', background: 'var(--border-primary)' }}></div>
-            {[
-              { date: '20 Mar 2025', title: 'First Prize in Science Exhibition', desc: 'Inter School Competition' },
-              { date: '15 Feb 2025', title: 'Best Speaker Award', desc: 'English Debate Competition' },
-              { date: '28 Jan 2025', title: 'Chess Tournament Winner', desc: 'Zonal Level Competition' },
-              { date: '10 Jan 2025', title: 'Academic Excellence Award', desc: 'Quarterly Recognition' },
-              { date: '05 Dec 2024', title: 'Second Prize in Painting', desc: 'Inter School Competition' }
-            ].map((evt, idx) => (
-              <div key={idx} style={{ display: 'flex', gap: '16px', position: 'relative' }}>
-                <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--accent-purple)', border: '2px solid var(--bg-secondary)', zIndex: 1, marginTop: '4px', flexShrink: 0 }} />
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
-                  <span style={{ fontSize: '9px', fontWeight: 600, color: 'var(--text-tertiary)', fontFamily: 'var(--font-mono)' }}>{evt.date}</span>
-                  <span style={{ fontSize: '11px', fontWeight: 700, color: 'var(--text-primary)' }}>{evt.title}</span>
-                  <span style={{ fontSize: '9.5px', color: 'var(--text-secondary)' }}>{evt.desc}</span>
+            {/* Categories Pie Chart */}
+            <div style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-primary)', borderRadius: '12px', padding: '24px', display: 'flex', flexDirection: 'column', boxShadow: '0 1px 3px rgba(0,0,0,0.04)' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
+                <div>
+                  <h3 style={{ fontSize: '13px', fontWeight: 700, margin: 0 }}>Achievements by Category</h3>
+                  <span style={{ fontSize: '10px', color: 'var(--text-secondary)' }}>This Year</span>
                 </div>
               </div>
-            ))}
-          </div>
-          <div style={{ textAlign: 'center', marginTop: '16px', borderTop: '1px solid var(--border-secondary)', paddingTop: '10px' }}>
-            <span style={{ fontSize: '11px', color: 'var(--accent-purple)', fontWeight: 600, cursor: 'pointer' }}>View all achievements →</span>
-          </div>
-        </div>
-
-      </div>
-
-      {/* Row 3: Recent Achievements, Awards & Recognitions, Certificate Highlights */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr 1.2fr', gap: '20px', alignItems: 'stretch' }}>
-        
-        {/* Recent Achievements */}
-        <div style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-primary)', borderRadius: '12px', padding: '24px', display: 'flex', flexDirection: 'column', boxShadow: '0 1px 3px rgba(0,0,0,0.04)' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-            <h3 style={{ fontSize: '13px', fontWeight: 700, margin: 0 }}>Recent Achievements</h3>
-            <span style={{ fontSize: '10px', color: 'var(--accent-purple)', fontWeight: 600, cursor: 'pointer' }}>View all</span>
-          </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', flex: 1 }}>
-            {[
-              { title: 'First Prize in Science Exhibition', desc: 'Inter School Competition', date: '20 Mar 2025', bg: 'rgba(139, 92, 246, 0.08)', color: 'var(--accent-purple)', icon: <Trophy size={14} /> },
-              { title: 'Best Speaker Award', desc: 'English Debate Competition', date: '15 Feb 2025', bg: 'rgba(59, 130, 246, 0.08)', color: 'var(--accent-blue)', icon: <Award size={14} /> },
-              { title: 'Chess Tournament Winner', desc: 'Zonal Level Competition', date: '28 Jan 2025', bg: 'var(--accent-green-dim)', color: 'var(--accent-green)', icon: <Award size={14} /> },
-              { title: 'Academic Excellence Award', desc: 'Quarterly Recognition', date: '10 Jan 2025', bg: 'rgba(245, 158, 11, 0.08)', color: 'var(--accent-amber)', icon: <Trophy size={14} /> }
-            ].map((item, idx) => (
-              <div key={idx} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingBottom: '10px', borderBottom: idx < 3 ? '1px solid var(--border-secondary)' : 'none', gap: '12px' }}>
-                <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
-                  <span style={{ width: '28px', height: '28px', borderRadius: '6px', background: item.bg, color: item.color, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>{item.icon}</span>
-                  <div>
-                    <div style={{ fontSize: '11px', fontWeight: 700, color: 'var(--text-primary)', lineHeight: '1.3' }}>{item.title}</div>
-                    <div style={{ fontSize: '9px', color: 'var(--text-secondary)' }}>{item.desc}</div>
+              <div style={{ flex: 1, display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: '20px', width: '100%' }}>
+                <div style={{ position: 'relative', width: '120px', height: '120px', flexShrink: 0 }}>
+                  <ResponsiveContainer width="100%" height="100%">
+                    <PieChart>
+                      <Pie data={categoryPieData} cx="50%" cy="50%" innerRadius={38} outerRadius={50} dataKey="value" stroke="none" isAnimationActive={false}>
+                        {categoryPieData.map((entry, index) => <Cell key={`cell-${index}`} fill={entry.color} />)}
+                      </Pie>
+                      <Tooltip content={<CustomTooltip />} />
+                    </PieChart>
+                  </ResponsiveContainer>
+                  <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+                    <span style={{ fontSize: '18px', fontWeight: 800 }}>28</span>
+                    <span style={{ fontSize: '8px', color: 'var(--text-secondary)', fontWeight: 600 }}>Total</span>
                   </div>
                 </div>
-                <div style={{ fontSize: '9px', color: 'var(--text-tertiary)', fontFamily: 'var(--font-mono)', whiteSpace: 'nowrap' }}>{item.date}</div>
-              </div>
-            ))}
-          </div>
-        </div>
 
-        {/* Awards & Recognitions */}
-        <div style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-primary)', borderRadius: '12px', padding: '24px', display: 'flex', flexDirection: 'column', boxShadow: '0 1px 3px rgba(0,0,0,0.04)' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-            <h3 style={{ fontSize: '13px', fontWeight: 700, margin: 0 }}>Awards & Recognitions</h3>
-            <span style={{ fontSize: '10px', color: 'var(--accent-purple)', fontWeight: 600, cursor: 'pointer' }}>View all</span>
-          </div>
-          <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%' }}>
-            <div style={{ 
-              width: '100%', 
-              border: '1px solid var(--border-primary)', 
-              borderRadius: '10px', 
-              padding: '16px 12px', 
-              background: 'var(--bg-tertiary)', 
-              display: 'flex', 
-              flexDirection: 'row', 
-              justifyContent: 'space-between',
-              alignItems: 'center', 
-              gap: '8px', 
-              minHeight: '150px' 
-            }}>
-              {[
-                { title: 'Academic Excellence', date: '10 Jan 2025', icon: <Trophy size={18} />, bg: 'rgba(245, 158, 11, 0.08)', color: 'var(--accent-amber)' },
-                { title: 'Best Speaker', date: '15 Feb 2025', icon: <Award size={18} />, bg: 'rgba(59, 130, 246, 0.08)', color: 'var(--accent-blue)' },
-                { title: 'Science Winner', date: '20 Mar 2025', icon: <Trophy size={18} />, bg: 'rgba(245, 158, 11, 0.08)', color: 'var(--accent-amber)' },
-                { title: 'Chess Champion', date: '28 Jan 2025', icon: <Award size={18} />, bg: 'var(--accent-green-dim)', color: 'var(--accent-green)' }
-              ].map((award, idx) => (
-                <div key={idx} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', gap: '8px', flex: 1, minWidth: 0 }}>
-                  <span style={{ 
-                    width: '36px', 
-                    height: '36px', 
-                    borderRadius: '50%', 
-                    background: award.bg, 
-                    color: award.color, 
-                    display: 'flex', 
-                    alignItems: 'center', 
-                    justifyContent: 'center',
-                    flexShrink: 0
-                  }}>
-                    {award.icon}
-                  </span>
-                  <div>
-                    <h4 style={{ 
-                      fontSize: '10px', 
-                      fontWeight: 800, 
-                      margin: 0, 
-                      color: 'var(--text-primary)', 
-                      lineHeight: '1.2',
-                      overflow: 'hidden',
-                      textOverflow: 'ellipsis',
-                      display: '-webkit-box',
-                      WebkitLineClamp: 2,
-                      WebkitBoxOrient: 'vertical',
-                      height: '24px'
-                    }} title={award.title}>
-                      {award.title}
-                    </h4>
-                    <span style={{ fontSize: '8.5px', color: 'var(--text-tertiary)', display: 'block', marginTop: '2px', fontFamily: 'var(--font-mono)' }}>{award.date}</span>
-                  </div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', flex: 1, minWidth: 0 }}>
+                  {categoryPieData.map((item, idx) => (
+                    <div key={idx} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '10.5px', fontWeight: 600 }}>
+                      <span style={{ display: 'flex', alignItems: 'center', gap: '6px', minWidth: 0 }}>
+                        <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: item.color, flexShrink: 0 }}></span>
+                        <span style={{ color: 'var(--text-secondary)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{item.name}</span>
+                      </span>
+                      <span style={{ color: 'var(--text-primary)', paddingLeft: '4px', flexShrink: 0 }}>{item.value} ({item.percentage})</span>
+                    </div>
+                  ))}
                 </div>
-              ))}
+              </div>
+              <div style={{ textAlign: 'center', marginTop: '12px', borderTop: '1px solid var(--border-secondary)', paddingTop: '10px' }}>
+                <span style={{ fontSize: '11px', color: 'var(--accent-purple)', fontWeight: 600, cursor: 'pointer' }} onClick={() => setActiveKpiView('achievements')}>View all categories →</span>
+              </div>
             </div>
-          </div>
-        </div>
 
-        {/* Certificate Highlights */}
-        <div style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-primary)', borderRadius: '12px', padding: '24px', display: 'flex', flexDirection: 'column', boxShadow: '0 1px 3px rgba(0,0,0,0.04)' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-            <h3 style={{ fontSize: '13px', fontWeight: 700, margin: 0 }}>Certificate Highlights</h3>
-            <span style={{ fontSize: '10px', color: 'var(--accent-purple)', fontWeight: 600, cursor: 'pointer' }}>View all</span>
-          </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', flex: 1 }}>
-            {[
-              { title: 'Science Exhibition Certificate', desc: 'Inter School Competition', date: '20 Mar 2025' },
-              { title: 'Debate Competition Certificate', desc: 'English Debate', date: '15 Feb 2025' },
-              { title: 'Chess Tournament Certificate', desc: 'Zonal Level Competition', date: '28 Jan 2025' }
-            ].map((cert, idx) => (
-              <div key={idx} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', border: '1px solid var(--border-primary)', borderRadius: '8px', padding: '8px 12px', background: 'var(--bg-tertiary)', gap: '12px' }}>
-                <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-                  {/* Miniature certificate frame */}
-                  <div style={{ width: '38px', height: '26px', border: '1.5px double #d97706', borderRadius: '2px', background: '#ffffff', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, padding: '1px' }}>
-                    <div style={{ width: '100%', height: '100%', border: '0.5px solid #d97706', background: '#fffefb', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-                      <span style={{ fontSize: '4px', transform: 'scale(0.8)', color: '#d97706', fontWeight: 700 }}>CERT</span>
+            {/* Timeline */}
+            <div style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-primary)', borderRadius: '12px', padding: '24px', display: 'flex', flexDirection: 'column', boxShadow: '0 1px 3px rgba(0,0,0,0.04)' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+                <h3 style={{ fontSize: '13px', fontWeight: 700, margin: 0 }}>Achievement Timeline</h3>
+                <span style={{ fontSize: '10px', color: 'var(--accent-purple)', fontWeight: 600, cursor: 'pointer' }} onClick={() => setActiveKpiView('achievements')}>View full timeline</span>
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', flex: 1, paddingLeft: '8px', position: 'relative' }}>
+                {/* Vertical line running behind dots */}
+                <div style={{ position: 'absolute', left: '11.5px', top: '4px', bottom: '4px', width: '1px', background: 'var(--border-primary)' }}></div>
+                {[
+                  { date: '20 Mar 2025', title: 'First Prize in Science Exhibition', desc: 'Inter School Competition' },
+                  { date: '15 Feb 2025', title: 'Best Speaker Award', desc: 'English Debate Competition' },
+                  { date: '28 Jan 2025', title: 'Chess Tournament Winner', desc: 'Zonal Level Competition' },
+                  { date: '10 Jan 2025', title: 'Academic Excellence Award', desc: 'Quarterly Recognition' },
+                  { date: '05 Dec 2024', title: 'Second Prize in Painting', desc: 'Inter School Competition' }
+                ].map((evt, idx) => (
+                  <div key={idx} style={{ display: 'flex', gap: '16px', position: 'relative' }}>
+                    <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--accent-purple)', border: '2px solid var(--bg-secondary)', zIndex: 1, marginTop: '4px', flexShrink: 0 }} />
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                      <span style={{ fontSize: '9px', fontWeight: 600, color: 'var(--text-tertiary)', fontFamily: 'var(--font-mono)' }}>{evt.date}</span>
+                      <span style={{ fontSize: '11px', fontWeight: 700, color: 'var(--text-primary)' }}>{evt.title}</span>
+                      <span style={{ fontSize: '9.5px', color: 'var(--text-secondary)' }}>{evt.desc}</span>
                     </div>
                   </div>
-                  <div>
-                    <div style={{ fontSize: '10.5px', fontWeight: 700, color: 'var(--text-primary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '160px' }}>{cert.title}</div>
-                    <div style={{ fontSize: '9px', color: 'var(--text-secondary)' }}>{cert.date}</div>
+                ))}
+              </div>
+              <div style={{ textAlign: 'center', marginTop: '16px', borderTop: '1px solid var(--border-secondary)', paddingTop: '10px' }}>
+                <span style={{ fontSize: '11px', color: 'var(--accent-purple)', fontWeight: 600, cursor: 'pointer' }} onClick={() => setActiveKpiView('achievements')}>View all achievements →</span>
+              </div>
+            </div>
+
+          </div>
+
+          {/* Row 3: Recent Achievements, Awards & Recognitions, Certificate Highlights */}
+          <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr 1.2fr', gap: '20px', alignItems: 'stretch' }}>
+            
+            {/* Recent Achievements */}
+            <div style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-primary)', borderRadius: '12px', padding: '24px', display: 'flex', flexDirection: 'column', boxShadow: '0 1px 3px rgba(0,0,0,0.04)' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+                <h3 style={{ fontSize: '13px', fontWeight: 700, margin: 0 }}>Recent Achievements</h3>
+                <span style={{ fontSize: '10px', color: 'var(--accent-purple)', fontWeight: 600, cursor: 'pointer' }} onClick={() => setActiveKpiView('achievements')}>View all</span>
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', flex: 1 }}>
+                {[
+                  { title: 'First Prize in Science Exhibition', desc: 'Inter School Competition', date: '20 Mar 2025', bg: 'rgba(139, 92, 246, 0.08)', color: 'var(--accent-purple)', icon: <Trophy size={14} /> },
+                  { title: 'Best Speaker Award', desc: 'English Debate Competition', date: '15 Feb 2025', bg: 'rgba(59, 130, 246, 0.08)', color: 'var(--accent-blue)', icon: <Award size={14} /> },
+                  { title: 'Chess Tournament Winner', desc: 'Zonal Level Competition', date: '28 Jan 2025', bg: 'var(--accent-green-dim)', color: 'var(--accent-green)', icon: <Award size={14} /> },
+                  { title: 'Academic Excellence Award', desc: 'Quarterly Recognition', date: '10 Jan 2025', bg: 'rgba(245, 158, 11, 0.08)', color: 'var(--accent-amber)', icon: <Trophy size={14} /> }
+                ].map((item, idx) => (
+                  <div key={idx} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingBottom: '10px', borderBottom: idx < 3 ? '1px solid var(--border-secondary)' : 'none', gap: '12px' }}>
+                    <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+                      <span style={{ width: '28px', height: '28px', borderRadius: '6px', background: item.bg, color: item.color, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>{item.icon}</span>
+                      <div>
+                        <div style={{ fontSize: '11px', fontWeight: 700, color: 'var(--text-primary)', lineHeight: '1.3' }}>{item.title}</div>
+                        <div style={{ fontSize: '9px', color: 'var(--text-secondary)' }}>{item.desc}</div>
+                      </div>
+                    </div>
+                    <div style={{ fontSize: '9px', color: 'var(--text-tertiary)', fontFamily: 'var(--font-mono)', whiteSpace: 'nowrap' }}>{item.date}</div>
                   </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Awards & Recognitions */}
+            <div style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-primary)', borderRadius: '12px', padding: '24px', display: 'flex', flexDirection: 'column', boxShadow: '0 1px 3px rgba(0,0,0,0.04)' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+                <h3 style={{ fontSize: '13px', fontWeight: 700, margin: 0 }}>Awards & Recognitions</h3>
+                <span style={{ fontSize: '10px', color: 'var(--accent-purple)', fontWeight: 600, cursor: 'pointer' }} onClick={() => setActiveKpiView('awards')}>View all</span>
+              </div>
+              <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%' }}>
+                <div style={{ 
+                  width: '100%', 
+                  border: '1px solid var(--border-primary)', 
+                  borderRadius: '10px', 
+                  padding: '16px 12px', 
+                  background: 'var(--bg-tertiary)', 
+                  display: 'flex', 
+                  flexDirection: 'row', 
+                  justifyContent: 'space-between',
+                  alignItems: 'center', 
+                  gap: '8px', 
+                  minHeight: '150px' 
+                }}>
+                  {[
+                    { title: 'Academic Excellence', date: '10 Jan 2025', icon: <Trophy size={18} />, bg: 'rgba(245, 158, 11, 0.08)', color: 'var(--accent-amber)' },
+                    { title: 'Best Speaker', date: '15 Feb 2025', icon: <Award size={18} />, bg: 'rgba(59, 130, 246, 0.08)', color: 'var(--accent-blue)' },
+                    { title: 'Science Winner', date: '20 Mar 2025', icon: <Trophy size={18} />, bg: 'rgba(245, 158, 11, 0.08)', color: 'var(--accent-amber)' },
+                    { title: 'Chess Champion', date: '28 Jan 2025', icon: <Award size={18} />, bg: 'var(--accent-green-dim)', color: 'var(--accent-green)' }
+                  ].map((award, idx) => (
+                    <div key={idx} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', gap: '8px', flex: 1, minWidth: 0 }}>
+                      <span style={{ 
+                        width: '36px', 
+                        height: '36px', 
+                        borderRadius: '50%', 
+                        background: award.bg, 
+                        color: award.color, 
+                        display: 'flex', 
+                        alignItems: 'center', 
+                        justifyContent: 'center',
+                        flexShrink: 0
+                      }}>
+                        {award.icon}
+                      </span>
+                      <div>
+                        <h4 style={{ 
+                          fontSize: '10px', 
+                          fontWeight: 800, 
+                          margin: 0, 
+                          color: 'var(--text-primary)', 
+                          lineHeight: '1.2',
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis',
+                          display: '-webkit-box',
+                          WebkitLineClamp: 2,
+                          WebkitBoxOrient: 'vertical',
+                          height: '24px'
+                        }} title={award.title}>
+                          {award.title}
+                        </h4>
+                        <span style={{ fontSize: '8.5px', color: 'var(--text-tertiary)', display: 'block', marginTop: '2px', fontFamily: 'var(--font-mono)' }}>{award.date}</span>
+                      </div>
+                    </div>
+                  ))}
                 </div>
-                <button style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: 'var(--text-tertiary)', padding: '4px' }}>
-                  <Download size={14} />
-                </button>
+              </div>
+            </div>
+
+            {/* Certificate Highlights */}
+            <div style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-primary)', borderRadius: '12px', padding: '24px', display: 'flex', flexDirection: 'column', boxShadow: '0 1px 3px rgba(0,0,0,0.04)' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+                <h3 style={{ fontSize: '13px', fontWeight: 700, margin: 0 }}>Certificate Highlights</h3>
+                <span style={{ fontSize: '10px', color: 'var(--accent-purple)', fontWeight: 600, cursor: 'pointer' }} onClick={() => setActiveKpiView('certificates')}>View all</span>
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', flex: 1 }}>
+                {[
+                  { title: 'Science Exhibition Certificate', desc: 'Inter School Competition', date: '20 Mar 2025' },
+                  { title: 'Debate Competition Certificate', desc: 'English Debate', date: '15 Feb 2025' },
+                  { title: 'Chess Tournament Certificate', desc: 'Zonal Level Competition', date: '28 Jan 2025' }
+                ].map((cert, idx) => (
+                  <div key={idx} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', border: '1px solid var(--border-primary)', borderRadius: '8px', padding: '8px 12px', background: 'var(--bg-tertiary)', gap: '12px' }}>
+                    <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                      {/* Miniature certificate frame */}
+                      <div style={{ width: '38px', height: '26px', border: '1.5px double #d97706', borderRadius: '2px', background: '#ffffff', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, padding: '1px' }}>
+                        <div style={{ width: '100%', height: '100%', border: '0.5px solid #d97706', background: '#fffefb', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+                          <span style={{ fontSize: '4px', transform: 'scale(0.8)', color: '#d97706', fontWeight: 700 }}>CERT</span>
+                        </div>
+                      </div>
+                      <div>
+                        <div style={{ fontSize: '10.5px', fontWeight: 700, color: 'var(--text-primary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '160px' }}>{cert.title}</div>
+                        <div style={{ fontSize: '9px', color: 'var(--text-secondary)' }}>{cert.date}</div>
+                      </div>
+                    </div>
+                    <button style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: 'var(--text-tertiary)', padding: '4px' }}>
+                      <Download size={14} />
+                    </button>
+                  </div>
+                ))}
+              </div>
+              <div style={{ textAlign: 'center', marginTop: '16px', borderTop: '1px solid var(--border-secondary)', paddingTop: '10px' }}>
+                <span style={{ fontSize: '11px', color: 'var(--accent-purple)', fontWeight: 600, cursor: 'pointer' }} onClick={() => setActiveKpiView('certificates')}>View all certificates →</span>
+              </div>
+            </div>
+
+          </div>
+        </>
+      )}
+
+      {/* DETAILED KPI SUB-PAGES */}
+      {activeKpiView === 'achievements' && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', animation: 'fadeIn 0.3s ease' }}>
+          {/* Header */}
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+              <button 
+                onClick={() => setActiveKpiView(null)}
+                style={{ display: 'flex', alignItems: 'center', gap: '6px', background: 'none', border: 'none', color: 'var(--accent-purple)', fontWeight: 700, fontSize: '12px', cursor: 'pointer', padding: 0 }}
+              >
+                <ArrowLeft size={14} /> Back to Achievements
+              </button>
+              <h2 style={{ fontSize: '18px', fontWeight: 800, margin: 0, display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <Trophy size={20} style={{ color: 'var(--accent-purple)' }} /> Total Achievements Detail
+              </h2>
+            </div>
+            <div style={{ display: 'flex', gap: '10px', fontSize: '11px', background: 'var(--bg-secondary)', border: '1px solid var(--border-primary)', borderRadius: '8px', padding: '8px 16px', fontWeight: 600 }}>
+              <span style={{ color: 'var(--text-secondary)' }}>Total: <strong style={{ color: 'var(--text-primary)' }}>28</strong></span>
+              <span style={{ color: 'var(--border-primary)', borderLeft: '1px solid' }}></span>
+              <span style={{ color: 'var(--text-secondary)' }}>National/State: <strong style={{ color: 'var(--text-primary)' }}>3</strong></span>
+              <span style={{ color: 'var(--border-primary)', borderLeft: '1px solid' }}></span>
+              <span style={{ color: 'var(--text-secondary)' }}>Zonal: <strong style={{ color: 'var(--text-primary)' }}>3</strong></span>
+            </div>
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '20px' }}>
+            {/* Left Column: List, Search, Filter */}
+            <div style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-primary)', borderRadius: '12px', padding: '20px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+                <div style={{ position: 'relative', flex: 1 }}>
+                  <Search size={14} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-tertiary)' }} />
+                  <input 
+                    type="text" 
+                    placeholder="Search achievements..." 
+                    value={achievementsSearch}
+                    onChange={(e) => setAchievementsSearch(e.target.value)}
+                    style={{ width: '100%', padding: '8px 12px 8px 34px', fontSize: '12px', borderRadius: '8px', border: '1px solid var(--border-primary)', background: 'var(--bg-tertiary)', color: 'var(--text-primary)', outline: 'none' }}
+                  />
+                </div>
+                <select 
+                  value={achievementsFilter} 
+                  onChange={(e) => setAchievementsFilter(e.target.value)}
+                  style={{ padding: '8px 12px', fontSize: '12px', borderRadius: '8px', border: '1px solid var(--border-primary)', background: 'var(--bg-tertiary)', color: 'var(--text-primary)', outline: 'none' }}
+                >
+                  <option value="All">All Categories</option>
+                  <option value="Academic Excellence">Academic Excellence</option>
+                  <option value="Co-Curricular">Co-Curricular</option>
+                  <option value="Sports">Sports</option>
+                  <option value="Community Service">Community Service</option>
+                  <option value="Leadership">Leadership</option>
+                </select>
+              </div>
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', maxHeight: '420px', overflowY: 'auto', paddingRight: '4px' }}>
+                {achievementsList
+                  .filter(item => {
+                    const matchesSearch = item.title.toLowerCase().includes(achievementsSearch.toLowerCase()) || 
+                                          item.description.toLowerCase().includes(achievementsSearch.toLowerCase());
+                    const matchesFilter = achievementsFilter === 'All' || item.category === achievementsFilter;
+                    return matchesSearch && matchesFilter;
+                  })
+                  .map((item) => (
+                    <div key={item.id} style={{ padding: '14px', border: '1px solid var(--border-primary)', borderRadius: '10px', background: 'var(--bg-tertiary)', display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                          <span style={{ fontSize: '10px', fontWeight: 600, color: 'var(--accent-purple)' }}>{item.category} • {item.level}</span>
+                          <h4 style={{ fontSize: '12px', fontWeight: 700, margin: 0, color: 'var(--text-primary)' }}>{item.title}</h4>
+                        </div>
+                        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '2px' }}>
+                          <span style={{ fontSize: '9px', fontWeight: 600, color: 'var(--text-tertiary)' }}>{item.date}</span>
+                          <span style={{ fontSize: '10px', fontWeight: 700, color: 'var(--accent-green)', background: 'var(--accent-green-dim)', padding: '2px 6px', borderRadius: '4px' }}>+{item.points} pts</span>
+                        </div>
+                      </div>
+                      <p style={{ fontSize: '11px', color: 'var(--text-secondary)', margin: 0, lineHeight: 1.4 }}>{item.description}</p>
+                    </div>
+                  ))}
+              </div>
+            </div>
+
+            {/* Right Column: Trend & Distribution */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+              <div style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-primary)', borderRadius: '12px', padding: '20px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                <h3 style={{ fontSize: '12px', fontWeight: 700, margin: 0 }}>Monthly Trend</h3>
+                <div style={{ height: '160px', width: '100%' }}>
+                  <ResponsiveContainer width="100%" height="100%">
+                    <LineChart data={mockOverviewData.slice(-6)} margin={{ top: 5, right: 5, left: -25, bottom: 0 }}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="var(--border-secondary)" vertical={false} />
+                      <XAxis dataKey="month" tick={{ fontSize: 9, fill: 'var(--text-secondary)' }} axisLine={false} tickLine={false} />
+                      <YAxis tick={{ fontSize: 9, fill: 'var(--text-secondary)' }} axisLine={false} tickLine={false} ticks={[0, 2, 4, 6, 8, 10]} />
+                      <Tooltip content={<CustomTooltip />} />
+                      <Line dataKey="achievements" name="Achievements" stroke="#8b5cf6" strokeWidth={2} dot={{ r: 3 }} isAnimationActive={false} />
+                    </LineChart>
+                  </ResponsiveContainer>
+                </div>
+              </div>
+
+              <div style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-primary)', borderRadius: '12px', padding: '20px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                <h3 style={{ fontSize: '12px', fontWeight: 700, margin: 0 }}>Points Breakdown</h3>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                  {[
+                    { label: 'State & Higher Level', count: 2, points: '350 pts', pct: '41%' },
+                    { label: 'Inter School / Zonal', count: 4, points: '380 pts', pct: '45%' },
+                    { label: 'School Level', count: 4, points: '250 pts', pct: '30%' }
+                  ].map((level, idx) => (
+                    <div key={idx} style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', fontWeight: 600, paddingBottom: '6px', borderBottom: idx < 2 ? '1px solid var(--border-secondary)' : 'none' }}>
+                      <span style={{ color: 'var(--text-secondary)' }}>{level.label} ({level.count})</span>
+                      <span style={{ color: 'var(--text-primary)' }}>{level.points}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {activeKpiView === 'certificates' && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', animation: 'fadeIn 0.3s ease' }}>
+          {/* Header */}
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+              <button 
+                onClick={() => setActiveKpiView(null)}
+                style={{ display: 'flex', alignItems: 'center', gap: '6px', background: 'none', border: 'none', color: 'var(--accent-blue)', fontWeight: 700, fontSize: '12px', cursor: 'pointer', padding: 0 }}
+              >
+                <ArrowLeft size={14} /> Back to Achievements
+              </button>
+              <h2 style={{ fontSize: '18px', fontWeight: 800, margin: 0, display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <FileText size={20} style={{ color: 'var(--accent-blue)' }} /> Certificates Earned
+              </h2>
+            </div>
+            <div style={{ display: 'flex', gap: '10px', fontSize: '11px', background: 'var(--bg-secondary)', border: '1px solid var(--border-primary)', borderRadius: '8px', padding: '8px 16px', fontWeight: 600 }}>
+              <span style={{ color: 'var(--text-secondary)' }}>Total: <strong style={{ color: 'var(--text-primary)' }}>16</strong></span>
+              <span style={{ color: 'var(--border-primary)', borderLeft: '1px solid' }}></span>
+              <span style={{ color: '#10b981' }}>Verified: <strong style={{ color: 'var(--text-primary)' }}>14</strong></span>
+              <span style={{ color: 'var(--border-primary)', borderLeft: '1px solid' }}></span>
+              <span style={{ color: '#f59e0b' }}>Pending: <strong style={{ color: 'var(--text-primary)' }}>2</strong></span>
+            </div>
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: '3fr 1.2fr', gap: '20px' }}>
+            {/* Left Panel: Search & Cards */}
+            <div style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-primary)', borderRadius: '12px', padding: '20px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+                <div style={{ position: 'relative', flex: 1 }}>
+                  <Search size={14} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-tertiary)' }} />
+                  <input 
+                    type="text" 
+                    placeholder="Search certificates..." 
+                    value={certSearch}
+                    onChange={(e) => setCertSearch(e.target.value)}
+                    style={{ width: '100%', padding: '8px 12px 8px 34px', fontSize: '12px', borderRadius: '8px', border: '1px solid var(--border-primary)', background: 'var(--bg-tertiary)', color: 'var(--text-primary)', outline: 'none' }}
+                  />
+                </div>
+                <select 
+                  value={certFilter} 
+                  onChange={(e) => setCertFilter(e.target.value)}
+                  style={{ padding: '8px 12px', fontSize: '12px', borderRadius: '8px', border: '1px solid var(--border-primary)', background: 'var(--bg-tertiary)', color: 'var(--text-primary)', outline: 'none' }}
+                >
+                  <option value="All">All Categories</option>
+                  <option value="Academic Excellence">Academic Excellence</option>
+                  <option value="Co-Curricular">Co-Curricular</option>
+                  <option value="Sports">Sports</option>
+                  <option value="Community Service">Community Service</option>
+                  <option value="Leadership">Leadership</option>
+                </select>
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '14px', maxHeight: '420px', overflowY: 'auto', paddingRight: '4px' }}>
+                {certificatesList
+                  .filter(item => {
+                    const matchesSearch = item.title.toLowerCase().includes(certSearch.toLowerCase()) || 
+                                          item.authority.toLowerCase().includes(certSearch.toLowerCase());
+                    const matchesFilter = certFilter === 'All' || item.category === certFilter;
+                    return matchesSearch && matchesFilter;
+                  })
+                  .map((item) => (
+                    <div key={item.id} style={{ display: 'flex', flexDirection: 'column', border: '1px solid var(--border-primary)', borderRadius: '10px', padding: '14px', background: 'var(--bg-tertiary)', gap: '12px', justifyContent: 'space-between' }}>
+                      <div style={{ display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
+                        {/* Cert Miniature Frame */}
+                        <div style={{ width: '56px', height: '38px', border: '2px double #d97706', borderRadius: '3px', background: '#ffffff', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, padding: '2px' }}>
+                          <div style={{ width: '100%', height: '100%', border: '0.5px solid #d97706', background: '#fffefb', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+                            <span style={{ fontSize: '5px', transform: 'scale(0.8)', color: '#d97706', fontWeight: 800, whiteSpace: 'nowrap' }}>COE CERT</span>
+                          </div>
+                        </div>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', minWidth: 0 }}>
+                          <h4 style={{ fontSize: '11.5px', fontWeight: 700, margin: 0, color: 'var(--text-primary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{item.title}</h4>
+                          <span style={{ fontSize: '9px', color: 'var(--text-secondary)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{item.authority}</span>
+                          <span style={{ fontSize: '8.5px', color: 'var(--text-tertiary)', fontFamily: 'var(--font-mono)' }}>ID: {item.credId}</span>
+                        </div>
+                      </div>
+
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid var(--border-secondary)', paddingTop: '10px', fontSize: '9.5px', fontWeight: 600 }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                          <span style={{ color: item.status === 'Verified' ? '#10b981' : '#f59e0b', background: item.status === 'Verified' ? 'var(--accent-green-dim)' : 'rgba(245, 158, 11, 0.08)', padding: '2px 6px', borderRadius: '4px' }}>
+                            {item.status}
+                          </span>
+                          <span style={{ color: 'var(--text-muted)' }}>{item.date}</span>
+                        </div>
+                        <button style={{ display: 'flex', alignItems: 'center', gap: '4px', border: 'none', background: 'none', color: 'var(--accent-blue)', cursor: 'pointer', padding: 0, fontWeight: 700 }}>
+                          <Download size={12} /> {item.size}
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+              </div>
+            </div>
+
+            {/* Right Panel: Actions / Upload */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+              {/* Dropzone mock */}
+              <div style={{ background: 'var(--bg-secondary)', border: '2px dashed var(--border-primary)', borderRadius: '12px', padding: '24px', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '12px', cursor: 'pointer' }}>
+                <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'rgba(59, 130, 246, 0.08)', color: 'var(--accent-blue)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <Plus size={20} />
+                </div>
+                <div>
+                  <h4 style={{ fontSize: '12px', fontWeight: 700, margin: '0 0 4px 0', color: 'var(--text-primary)' }}>Upload Certificate</h4>
+                  <p style={{ fontSize: '9px', color: 'var(--text-secondary)', margin: 0 }}>PDF, PNG, JPG up to 5MB</p>
+                </div>
+              </div>
+
+              {/* Stats breakdown */}
+              <div style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-primary)', borderRadius: '12px', padding: '20px', display: 'flex', flexDirection: 'column', gap: '14px' }}>
+                <h3 style={{ fontSize: '12px', fontWeight: 700, margin: 0 }}>Certificate Issuers</h3>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                  {[
+                    { issuer: 'National Boards & Govt', count: 5 },
+                    { issuer: 'Inter-School Forums', count: 6 },
+                    { issuer: 'Zonal Athletic Board', count: 3 },
+                    { issuer: 'School Internal Boards', count: 2 }
+                  ].map((x, idx) => (
+                    <div key={idx} style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', fontWeight: 600, paddingBottom: '6px', borderBottom: idx < 3 ? '1px solid var(--border-secondary)' : 'none' }}>
+                      <span style={{ color: 'var(--text-secondary)' }}>{x.issuer}</span>
+                      <span style={{ color: 'var(--text-primary)' }}>{x.count}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {activeKpiView === 'awards' && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', animation: 'fadeIn 0.3s ease' }}>
+          {/* Header */}
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+              <button 
+                onClick={() => setActiveKpiView(null)}
+                style={{ display: 'flex', alignItems: 'center', gap: '6px', background: 'none', border: 'none', color: 'var(--accent-amber)', fontWeight: 700, fontSize: '12px', cursor: 'pointer', padding: 0 }}
+              >
+                <ArrowLeft size={14} /> Back to Achievements
+              </button>
+              <h2 style={{ fontSize: '18px', fontWeight: 800, margin: 0, display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <Award size={20} style={{ color: 'var(--accent-amber)' }} /> Awards Won Showcase
+              </h2>
+            </div>
+            <div style={{ display: 'flex', gap: '10px', fontSize: '11px', background: 'var(--bg-secondary)', border: '1px solid var(--border-primary)', borderRadius: '8px', padding: '8px 16px', fontWeight: 600 }}>
+              <span style={{ color: 'var(--text-secondary)' }}>Total Awards: <strong style={{ color: 'var(--text-primary)' }}>8</strong></span>
+              <span style={{ color: 'var(--border-primary)', borderLeft: '1px solid' }}></span>
+              <span style={{ color: 'var(--accent-amber)' }}>Gold/1st: <strong style={{ color: 'var(--text-primary)' }}>4</strong></span>
+              <span style={{ color: 'var(--border-primary)', borderLeft: '1px solid' }}></span>
+              <span style={{ color: 'var(--text-secondary)' }}>Silver/2nd: <strong style={{ color: 'var(--text-primary)' }}>2</strong></span>
+            </div>
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: '2fr 1.2fr', gap: '20px' }}>
+            {/* Left: Trophy Case Visual Case */}
+            <div style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-primary)', borderRadius: '12px', padding: '24px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
+              <h3 style={{ fontSize: '13px', fontWeight: 700, margin: 0 }}>Trophy Case</h3>
+              
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px' }}>
+                {awardsList.map((item) => (
+                  <div 
+                    key={item.id} 
+                    style={{ 
+                      border: '1px solid var(--border-primary)', 
+                      borderRadius: '12px', 
+                      padding: '16px 12px', 
+                      background: 'var(--bg-tertiary)', 
+                      display: 'flex', 
+                      flexDirection: 'column', 
+                      alignItems: 'center', 
+                      textAlign: 'center', 
+                      gap: '12px',
+                      position: 'relative',
+                      overflow: 'hidden'
+                    }}
+                  >
+                    {/* Visual award color block top */}
+                    <div style={{ width: '100%', height: '4px', background: item.iconColor, position: 'absolute', top: 0, left: 0 }} />
+                    
+                    <div style={{ 
+                      width: '42px', 
+                      height: '42px', 
+                      borderRadius: '50%', 
+                      background: item.bg, 
+                      color: item.iconColor, 
+                      display: 'flex', 
+                      alignItems: 'center', 
+                      justifyContent: 'center',
+                      fontSize: '20px'
+                    }}>
+                      {item.type === 'Trophy' ? <Trophy size={20} /> : <Award size={20} />}
+                    </div>
+
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', flex: 1 }}>
+                      <h4 style={{ 
+                        fontSize: '10.5px', 
+                        fontWeight: 800, 
+                        margin: 0, 
+                        color: 'var(--text-primary)',
+                        lineHeight: 1.3,
+                        minHeight: '28px',
+                        display: '-webkit-box',
+                        WebkitLineClamp: 2,
+                        WebkitBoxOrient: 'vertical',
+                        overflow: 'hidden'
+                      }} title={item.title}>
+                        {item.title}
+                      </h4>
+                      <span style={{ fontSize: '8.5px', color: 'var(--text-secondary)', marginTop: '2px' }}>{item.subtitle}</span>
+                      <span style={{ fontSize: '9px', color: item.iconColor, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.5px', marginTop: '4px' }}>{item.rank}</span>
+                    </div>
+
+                    <div style={{ fontSize: '8px', color: 'var(--text-tertiary)', borderTop: '1px solid var(--border-secondary)', width: '100%', paddingTop: '8px', fontFamily: 'var(--font-mono)' }}>
+                      {item.date}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Right: Chronological Awards Timeline */}
+            <div style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-primary)', borderRadius: '12px', padding: '20px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              <h3 style={{ fontSize: '13px', fontWeight: 700, margin: 0 }}>Chronology</h3>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', maxHeight: '380px', overflowY: 'auto', paddingRight: '4px', position: 'relative' }}>
+                <div style={{ position: 'absolute', left: '13.5px', top: '8px', bottom: '8px', width: '1px', background: 'var(--border-primary)' }} />
+                {awardsList.map((item, idx) => (
+                  <div key={idx} style={{ display: 'flex', gap: '14px', position: 'relative' }}>
+                    <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: item.iconColor, border: '2px solid var(--bg-secondary)', zIndex: 1, marginTop: '5px', flexShrink: 0 }} />
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                      <span style={{ fontSize: '9px', color: 'var(--text-tertiary)', fontFamily: 'var(--font-mono)' }}>{item.date}</span>
+                      <span style={{ fontSize: '11px', fontWeight: 700, color: 'var(--text-primary)' }}>{item.title}</span>
+                      <span style={{ fontSize: '9.5px', color: 'var(--text-secondary)' }}>{item.subtitle} • {item.rank}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {activeKpiView === 'competitions' && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', animation: 'fadeIn 0.3s ease' }}>
+          {/* Header */}
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+              <button 
+                onClick={() => setActiveKpiView(null)}
+                style={{ display: 'flex', alignItems: 'center', gap: '6px', background: 'none', border: 'none', color: 'var(--accent-green)', fontWeight: 700, fontSize: '12px', cursor: 'pointer', padding: 0 }}
+              >
+                <ArrowLeft size={14} /> Back to Achievements
+              </button>
+              <h2 style={{ fontSize: '18px', fontWeight: 800, margin: 0, display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <Target size={20} style={{ color: 'var(--accent-green)' }} /> Competitions Log
+              </h2>
+            </div>
+            <div style={{ display: 'flex', gap: '10px', fontSize: '11px', background: 'var(--bg-secondary)', border: '1px solid var(--border-primary)', borderRadius: '8px', padding: '8px 16px', fontWeight: 600 }}>
+              <span style={{ color: 'var(--text-secondary)' }}>Participations: <strong style={{ color: 'var(--text-primary)' }}>12</strong></span>
+              <span style={{ color: 'var(--border-primary)', borderLeft: '1px solid' }}></span>
+              <span style={{ color: 'var(--accent-green)' }}>Won / 1st: <strong style={{ color: 'var(--text-primary)' }}>3</strong></span>
+              <span style={{ color: 'var(--border-primary)', borderLeft: '1px solid' }}></span>
+              <span style={{ color: 'var(--accent-blue)' }}>Runner Up: <strong style={{ color: 'var(--text-primary)' }}>3</strong></span>
+            </div>
+          </div>
+
+          {/* Quick Metrics Bar */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px' }}>
+            {[
+              { label: 'Win Rate', val: '25%', sub: '3 Wins out of 12', color: 'var(--accent-green)', bg: 'var(--accent-green-dim)' },
+              { label: 'State Events', val: '3', sub: 'Olympiad & Fairs', color: 'var(--accent-blue)', bg: 'rgba(59, 130, 246, 0.08)' },
+              { label: 'Zonal & District', val: '5', sub: 'Debate, Chess, Sports', color: 'var(--accent-amber)', bg: 'rgba(245, 158, 11, 0.08)' },
+              { label: 'Average Score', val: '87.4%', sub: 'Performance rating', color: 'var(--accent-purple)', bg: 'rgba(139, 92, 246, 0.08)' }
+            ].map((m, idx) => (
+              <div key={idx} style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-primary)', borderRadius: '10px', padding: '14px', display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                <span style={{ fontSize: '10px', color: 'var(--text-secondary)', fontWeight: 600 }}>{m.label}</span>
+                <span style={{ fontSize: '18px', fontWeight: 800, color: m.color }}>{m.val}</span>
+                <span style={{ fontSize: '9px', color: 'var(--text-tertiary)', marginTop: '2px' }}>{m.sub}</span>
               </div>
             ))}
           </div>
-          <div style={{ textAlign: 'center', marginTop: '16px', borderTop: '1px solid var(--border-secondary)', paddingTop: '10px' }}>
-            <span style={{ fontSize: '11px', color: 'var(--accent-purple)', fontWeight: 600, cursor: 'pointer' }}>View all certificates →</span>
+
+          {/* List/Table of Competitions */}
+          <div style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-primary)', borderRadius: '12px', padding: '20px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <h3 style={{ fontSize: '13px', fontWeight: 700, margin: 0 }}>Detailed Participation Record</h3>
+              <div style={{ display: 'flex', gap: '8px' }}>
+                {['All', 'Won', 'Runner Up', 'Participated'].map((f) => (
+                  <button
+                    key={f}
+                    onClick={() => setCompFilter(f)}
+                    style={{ 
+                      padding: '4px 10px', 
+                      borderRadius: '6px', 
+                      border: '1px solid var(--border-primary)', 
+                      background: compFilter === f ? 'var(--accent-green)' : 'var(--bg-tertiary)', 
+                      color: compFilter === f ? '#ffffff' : 'var(--text-secondary)',
+                      fontSize: '10px',
+                      fontWeight: 700,
+                      cursor: 'pointer'
+                    }}
+                  >
+                    {f}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div style={{ overflowX: 'auto' }}>
+              <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '11px', textAlign: 'left' }}>
+                <thead>
+                  <tr style={{ borderBottom: '2px solid var(--border-primary)', color: 'var(--text-secondary)', fontWeight: 700 }}>
+                    <th style={{ padding: '10px' }}>Date</th>
+                    <th style={{ padding: '10px' }}>Competition Name</th>
+                    <th style={{ padding: '10px' }}>Organizer</th>
+                    <th style={{ padding: '10px' }}>Level</th>
+                    <th style={{ padding: '10px' }}>Result / Position</th>
+                    <th style={{ padding: '10px' }}>Score</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {competitionsList
+                    .filter(item => compFilter === 'All' || item.result === compFilter)
+                    .map((item) => (
+                      <tr key={item.id} style={{ borderBottom: '1px solid var(--border-secondary)', color: 'var(--text-primary)' }}>
+                        <td style={{ padding: '10px', fontWeight: 500, color: 'var(--text-tertiary)', fontFamily: 'var(--font-mono)' }}>{item.date}</td>
+                        <td style={{ padding: '10px', fontWeight: 700 }}>{item.name}</td>
+                        <td style={{ padding: '10px', color: 'var(--text-secondary)' }}>{item.organizer}</td>
+                        <td style={{ padding: '10px' }}>
+                          <span style={{ 
+                            fontSize: '9px', 
+                            background: item.level === 'State' || item.level === 'National' ? 'rgba(59, 130, 246, 0.08)' : 'var(--border-secondary)', 
+                            color: item.level === 'State' || item.level === 'National' ? 'var(--accent-blue)' : 'var(--text-secondary)', 
+                            padding: '2px 6px', 
+                            borderRadius: '4px',
+                            fontWeight: 700
+                          }}>
+                            {item.level}
+                          </span>
+                        </td>
+                        <td style={{ padding: '10px' }}>
+                          <span style={{ 
+                            fontWeight: 700, 
+                            color: item.result === 'Won' ? 'var(--accent-green)' : item.result === 'Runner Up' ? 'var(--accent-blue)' : 'var(--text-secondary)'
+                          }}>
+                            {item.position}
+                          </span>
+                        </td>
+                        <td style={{ padding: '10px', fontWeight: 700 }}>{item.score}</td>
+                      </tr>
+                    ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
+      )}
 
-      </div>
+      {activeKpiView === 'score' && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', animation: 'fadeIn 0.3s ease' }}>
+          {/* Header */}
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+              <button 
+                onClick={() => setActiveKpiView(null)}
+                style={{ display: 'flex', alignItems: 'center', gap: '6px', background: 'none', border: 'none', color: 'var(--accent-purple)', fontWeight: 700, fontSize: '12px', cursor: 'pointer', padding: 0 }}
+              >
+                <ArrowLeft size={14} /> Back to Achievements
+              </button>
+              <h2 style={{ fontSize: '18px', fontWeight: 800, margin: 0, display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <TrendingUp size={20} style={{ color: 'var(--accent-purple)' }} /> Achievement Score Breakdown
+              </h2>
+            </div>
+            <div style={{ display: 'flex', gap: '10px', fontSize: '11px', background: 'var(--bg-secondary)', border: '1px solid var(--border-primary)', borderRadius: '8px', padding: '8px 16px', fontWeight: 600 }}>
+              <span style={{ color: 'var(--text-secondary)' }}>Score: <strong style={{ color: 'var(--accent-purple)' }}>845 / 1000</strong></span>
+              <span style={{ color: 'var(--border-primary)', borderLeft: '1px solid' }}></span>
+              <span style={{ color: 'var(--text-secondary)' }}>Percentile: <strong style={{ color: '#10b981' }}>98.2%</strong></span>
+              <span style={{ color: 'var(--border-primary)', borderLeft: '1px solid' }}></span>
+              <span style={{ color: 'var(--text-secondary)' }}>Rating: <strong style={{ color: 'var(--text-primary)' }}>Outstanding</strong></span>
+            </div>
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: '1.6fr 1.4fr', gap: '20px' }}>
+            {/* Left Column: Accumulation Area Chart */}
+            <div style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-primary)', borderRadius: '12px', padding: '20px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              <div>
+                <h3 style={{ fontSize: '13px', fontWeight: 700, margin: 0 }}>Points Accumulation History</h3>
+                <span style={{ fontSize: '10px', color: 'var(--text-secondary)' }}>Monthly progress leading up to 845 points</span>
+              </div>
+              <div style={{ height: '220px', width: '100%' }}>
+                <ResponsiveContainer width="100%" height="100%">
+                  <AreaChart data={mockOverviewData} margin={{ top: 10, right: 5, left: -25, bottom: 0 }}>
+                    <defs>
+                      <linearGradient id="scoreColor" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor="#8b5cf6" stopOpacity={0.2}/>
+                        <stop offset="95%" stopColor="#8b5cf6" stopOpacity={0.0}/>
+                      </linearGradient>
+                    </defs>
+                    <CartesianGrid strokeDasharray="3 3" stroke="var(--border-secondary)" vertical={false} />
+                    <XAxis dataKey="month" tick={{ fontSize: 9, fill: 'var(--text-secondary)' }} axisLine={false} tickLine={false} />
+                    <YAxis tick={{ fontSize: 9, fill: 'var(--text-secondary)' }} axisLine={false} tickLine={false} ticks={[0, 200, 400, 600, 800, 1000]} />
+                    <Tooltip content={<CustomTooltip />} />
+                    <Area type="monotone" dataKey="score" stroke="#8b5cf6" strokeWidth={2.5} fillOpacity={1} fill="url(#scoreColor)" isAnimationActive={false} />
+                  </AreaChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
+
+            {/* Right Column: Score Breakdown & Leaderboard */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+              {/* Breakdown category bars */}
+              <div style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-primary)', borderRadius: '12px', padding: '20px', display: 'flex', flexDirection: 'column', gap: '14px' }}>
+                <h3 style={{ fontSize: '12px', fontWeight: 700, margin: 0 }}>Category Point Allocation</h3>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                  {[
+                    { cat: 'Academic Excellence', score: 350, max: 400, color: '#8b5cf6' },
+                    { cat: 'Co-Curricular Activities', score: 250, max: 300, color: '#3b82f6' },
+                    { cat: 'Sports & Athletics', score: 150, max: 200, color: '#10b981' },
+                    { cat: 'Leadership & Services', score: 95, max: 100, color: '#f59e0b' }
+                  ].map((c, idx) => (
+                    <div key={idx} style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '10.5px', fontWeight: 600 }}>
+                        <span style={{ color: 'var(--text-secondary)' }}>{c.cat}</span>
+                        <span style={{ color: 'var(--text-primary)' }}>{c.score} / {c.max} pts</span>
+                      </div>
+                      <div style={{ width: '100%', height: '6px', background: 'var(--border-secondary)', borderRadius: '3px', overflow: 'hidden' }}>
+                        <div style={{ width: `${(c.score / c.max) * 100}%`, height: '100%', background: c.color, borderRadius: '3px' }} />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Top 5 Leaderboard */}
+              <div style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-primary)', borderRadius: '12px', padding: '20px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                <h3 style={{ fontSize: '12px', fontWeight: 700, margin: 0 }}>Achievements Leaderboard (Grade 10)</h3>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                  {leaderboardData.map((student) => (
+                    <div key={student.rank} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '6px 8px', borderRadius: '6px', background: student.isSelf ? 'rgba(139, 92, 246, 0.06)' : 'transparent', border: student.isSelf ? '1px solid rgba(139, 92, 246, 0.15)' : 'none' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                        <span style={{ fontSize: '11px', fontWeight: 800, color: student.rank === 1 ? 'var(--accent-amber)' : 'var(--text-secondary)', width: '16px' }}>#{student.rank}</span>
+                        <div style={{ width: '22px', height: '22px', borderRadius: '50%', background: student.isSelf ? 'var(--accent-purple)' : 'var(--border-secondary)', color: student.isSelf ? '#ffffff' : 'var(--text-secondary)', fontSize: '9px', fontWeight: 700, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                          {student.avatar}
+                        </div>
+                        <span style={{ fontSize: '11px', fontWeight: student.isSelf ? 700 : 500, color: 'var(--text-primary)' }}>{student.name}</span>
+                      </div>
+                      <span style={{ fontSize: '11px', fontWeight: 700, color: student.isSelf ? 'var(--accent-purple)' : 'var(--text-secondary)' }}>{student.score} pts</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {activeKpiView === 'rank' && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', animation: 'fadeIn 0.3s ease' }}>
+          {/* Header */}
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+              <button 
+                onClick={() => setActiveKpiView(null)}
+                style={{ display: 'flex', alignItems: 'center', gap: '6px', background: 'none', border: 'none', color: '#f43f5e', fontWeight: 700, fontSize: '12px', cursor: 'pointer', padding: 0 }}
+              >
+                <ArrowLeft size={14} /> Back to Achievements
+              </button>
+              <h2 style={{ fontSize: '18px', fontWeight: 800, margin: 0, display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <Star size={20} style={{ color: '#f43f5e' }} /> Rank Standing & Details
+              </h2>
+            </div>
+            <div style={{ display: 'flex', gap: '10px', fontSize: '11px', background: 'var(--bg-secondary)', border: '1px solid var(--border-primary)', borderRadius: '8px', padding: '8px 16px', fontWeight: 600 }}>
+              <span style={{ color: 'var(--text-secondary)' }}>School Rank: <strong style={{ color: '#f43f5e' }}>3 / 842</strong></span>
+              <span style={{ color: 'var(--border-primary)', borderLeft: '1px solid' }}></span>
+              <span style={{ color: 'var(--text-secondary)' }}>Class Rank: <strong style={{ color: '#f43f5e' }}>1 / 42</strong></span>
+              <span style={{ color: 'var(--border-primary)', borderLeft: '1px solid' }}></span>
+              <span style={{ color: 'var(--text-secondary)' }}>Percentile: <strong style={{ color: '#10b981' }}>99.6%</strong></span>
+            </div>
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: '1.5fr 1.5fr', gap: '20px' }}>
+            {/* Left: Rank Trend and metrics cards */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+              {/* Split Rank Cards */}
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px' }}>
+                {[
+                  { label: 'School Rank', val: '3 / 842', trend: 'Up 2 positions', icon: <Building size={16} />, color: '#f43f5e', bg: 'rgba(244, 63, 94, 0.08)' },
+                  { label: 'Class Rank', val: '1 / 42', trend: 'Held Position 1', icon: <Users size={16} />, color: 'var(--accent-purple)', bg: 'rgba(139, 92, 246, 0.08)' },
+                  { label: 'Zonal Rank', val: '12 / 2400', trend: 'Top 0.5% in zone', icon: <MapPin size={16} />, color: 'var(--accent-blue)', bg: 'rgba(59, 130, 246, 0.08)' }
+                ].map((card, idx) => (
+                  <div key={idx} style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-primary)', borderRadius: '10px', padding: '14px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: card.color }}>
+                      {card.icon}
+                      <span style={{ fontSize: '9.5px', fontWeight: 700, color: 'var(--text-secondary)' }}>{card.label}</span>
+                    </div>
+                    <div style={{ fontSize: '16px', fontWeight: 800, color: 'var(--text-primary)' }}>{card.val}</div>
+                    <div style={{ fontSize: '8.5px', color: '#10b981', fontWeight: 600 }}>{card.trend}</div>
+                  </div>
+                ))}
+              </div>
+
+              {/* LineChart Trend */}
+              <div style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-primary)', borderRadius: '12px', padding: '20px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                <div>
+                  <h3 style={{ fontSize: '13px', fontWeight: 700, margin: 0 }}>Ranking Progress</h3>
+                  <span style={{ fontSize: '10px', color: 'var(--text-secondary)' }}>School and class rankings over the last terms (Lower is better)</span>
+                </div>
+                <div style={{ height: '180px', width: '100%' }}>
+                  <ResponsiveContainer width="100%" height="100%">
+                    <LineChart data={rankHistoryData} margin={{ top: 10, right: 5, left: -25, bottom: 0 }}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="var(--border-secondary)" vertical={false} />
+                      <XAxis dataKey="term" tick={{ fontSize: 8.5, fill: 'var(--text-secondary)' }} axisLine={false} tickLine={false} />
+                      <YAxis reversed={true} tick={{ fontSize: 9, fill: 'var(--text-secondary)' }} axisLine={false} tickLine={false} domain={[1, 16]} ticks={[1, 4, 8, 12, 16]} />
+                      <Tooltip content={<CustomTooltip />} />
+                      <Legend iconSize={8} iconType="circle" wrapperStyle={{ fontSize: '10px', fontWeight: 600 }} />
+                      <Line dataKey="schoolRank" name="School Rank" stroke="#f43f5e" strokeWidth={2} dot={{ r: 3 }} isAnimationActive={false} />
+                      <Line dataKey="classRank" name="Class Rank" stroke="#8b5cf6" strokeWidth={2} dot={{ r: 3 }} isAnimationActive={false} />
+                    </LineChart>
+                  </ResponsiveContainer>
+                </div>
+              </div>
+            </div>
+
+            {/* Right Column: Leaderboard of Class */}
+            <div style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-primary)', borderRadius: '12px', padding: '20px', display: 'flex', flexDirection: 'column', gap: '14px' }}>
+              <div>
+                <h3 style={{ fontSize: '13px', fontWeight: 700, margin: 0 }}>Class Toppers List (Class 10-A)</h3>
+                <span style={{ fontSize: '10px', color: 'var(--text-secondary)' }}>Academic ranking in current division based on CGPA / exams</span>
+              </div>
+              
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', flex: 1 }}>
+                {[
+                  { rank: 1, name: 'Priya Sharma (You)', score: '9.8 CGPA', details: '95.6% Marks', avatar: 'PS', isSelf: true },
+                  { rank: 2, name: 'Rohan Mehta', score: '9.6 CGPA', details: '94.2% Marks', avatar: 'RM' },
+                  { rank: 3, name: 'Aravind Swamy', score: '9.4 CGPA', details: '92.0% Marks', avatar: 'AS' },
+                  { rank: 4, name: 'Tanya Goel', score: '9.2 CGPA', details: '90.5% Marks', avatar: 'TG' },
+                  { rank: 5, name: 'Kunal Sen', score: '9.0 CGPA', details: '89.4% Marks', avatar: 'KS' }
+                ].map((student) => (
+                  <div key={student.rank} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 12px', borderRadius: '8px', background: student.isSelf ? 'rgba(244, 63, 94, 0.05)' : 'var(--bg-tertiary)', border: student.isSelf ? '1px solid rgba(244, 63, 94, 0.15)' : '1px solid var(--border-primary)' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                      <span style={{ fontSize: '12px', fontWeight: 800, color: student.rank === 1 ? '#f43f5e' : 'var(--text-secondary)', width: '16px' }}>#{student.rank}</span>
+                      <div style={{ width: '26px', height: '26px', borderRadius: '50%', background: student.isSelf ? '#f43f5e' : 'var(--border-secondary)', color: student.isSelf ? '#ffffff' : 'var(--text-secondary)', fontSize: '10px', fontWeight: 700, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        {student.avatar}
+                      </div>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '1px' }}>
+                        <span style={{ fontSize: '11px', fontWeight: student.isSelf ? 700 : 600, color: 'var(--text-primary)' }}>{student.name}</span>
+                        <span style={{ fontSize: '9px', color: 'var(--text-tertiary)' }}>{student.details}</span>
+                      </div>
+                    </div>
+                    <span style={{ fontSize: '11.5px', fontWeight: 700, color: student.isSelf ? '#f43f5e' : 'var(--text-secondary)' }}>{student.score}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
     </div>
   );
