@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { useAppStore } from '@/lib/store';
-import { Search, Bell, MessageSquare, Calendar, ChevronDown, Shield, Key, LogOut, Clock } from 'lucide-react';
+import { Search, Bell, MessageSquare, Calendar, ChevronDown, Shield, Key, LogOut, Clock, User, BookOpen, Star, Code, Building, Globe, Heart, Settings, Bot, Beaker, Paintbrush, Accessibility, ArrowUpCircle } from 'lucide-react';
 
 export default function TopBar() {
   const { currentUser, toggleCommandBar, logout } = useAppStore();
@@ -297,109 +297,88 @@ export default function TopBar() {
                 position: 'absolute',
                 top: '40px',
                 right: 0,
-                width: '260px',
-                background: 'var(--bg-secondary)',
-                border: '1px solid var(--border-primary)',
-                borderRadius: '10px',
-                boxShadow: '0 10px 30px rgba(0, 0, 0, 0.12)',
-                padding: '16px',
+                width: '280px',
+                background: '#ffffff',
+                border: '1px solid #e5e7eb',
+                borderRadius: '8px',
+                boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
                 display: 'flex',
                 flexDirection: 'column',
-                gap: '12px',
-                animation: 'overlayFadeIn 120ms ease'
+                animation: 'overlayFadeIn 120ms ease',
+                fontFamily: 'var(--font-sans)',
+                overflow: 'hidden',
+                zIndex: 100,
+                color: '#111827'
               }}>
-                {/* User details */}
-                <div 
-                  onClick={() => handleViewNav('profile', 'Admin Profile')}
-                  style={{ 
-                    display: 'flex', 
-                    gap: '10px', 
-                    alignItems: 'center', 
-                    cursor: 'pointer',
-                    padding: '6px',
-                    borderRadius: '6px',
-                    transition: 'background var(--transition-fast)'
-                  }}
-                  onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-tertiary)'}
-                  onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
-                >
+                {/* Header */}
+                <div style={{ padding: '12px 16px', borderBottom: '1px solid #e5e7eb', display: 'flex', alignItems: 'center', gap: '12px' }}>
                   <div style={{
-                    width: '36px', height: '36px', borderRadius: '50%',
-                    background: 'linear-gradient(135deg, var(--accent-blue), var(--accent-purple))',
-                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    fontSize: 'var(--font-btn-secondary-size)', fontWeight: 700, color: 'white'
+                    width: '32px', height: '32px', borderRadius: '50%',
+                    background: '#f3f4f6', border: '1px solid #d1d5db',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center'
                   }}>
-                    DS
+                    <User size={18} color="#4b5563" />
                   </div>
-                  <div>
-                    <div style={{ fontSize: 'var(--font-tbl-cell-size)', fontWeight: 700, color: 'var(--text-primary)' }}>{currentUser.name}</div>
-                    <div style={{ fontSize: 'var(--font-tbl-hdr-size)', color: 'var(--accent-blue)', fontWeight: 600 }}>View Profile Page</div>
-                  </div>
-                </div>
-
-                <div style={{ height: '1px', background: 'var(--border-primary)' }} />
-
-                {/* Permissions and security card */}
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', fontSize: '11px' }}>
-                  <div 
-                    onClick={() => handleViewNav('profile', 'Admin Profile')}
-                    style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer', padding: '2px 4px', borderRadius: '4px' }}
-                    onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-tertiary)'}
-                    onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
-                  >
-                    <span style={{ color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                      <Shield size={12} className="text-blue-500" /> Operator Code
-                    </span>
-                    <span style={{ fontWeight: 600, color: 'var(--text-primary)', fontFamily: 'var(--font-mono)' }}>OP-7823-DPS</span>
-                  </div>
-                  <div 
-                    onClick={() => handleViewNav('profile', 'Admin Profile')}
-                    style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer', padding: '2px 4px', borderRadius: '4px' }}
-                    onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-tertiary)'}
-                    onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
-                  >
-                    <span style={{ color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                      <Shield size={12} className="text-emerald-500" /> Security Level
-                    </span>
-                    <span style={{ fontWeight: 700, color: 'var(--accent-green)', fontSize: '10px' }}>LEVEL 5 (CORE)</span>
-                  </div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '2px 4px' }}>
-                    <span style={{ color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                      <Clock size={12} className="text-slate-500" /> Active Session
-                    </span>
-                    <span style={{ fontWeight: 600, color: 'var(--text-primary)', fontFamily: 'var(--font-mono)' }}>#2972-PROD</span>
+                  <div style={{ lineHeight: 1.2 }}>
+                    <div style={{ fontSize: '14px', fontWeight: 600 }}>somraj-dev</div>
+                    <div style={{ fontSize: '14px', color: '#6b7280' }}>Somraj Lodhi</div>
                   </div>
                 </div>
 
-                <div style={{ height: '1px', background: 'var(--border-primary)' }} />
+                {/* Section 1 */}
+                <div style={{ padding: '8px 0', borderBottom: '1px solid #e5e7eb' }}>
+                  {[
+                    { label: 'Profile', icon: User },
+                    { label: 'Repositories', icon: BookOpen },
+                    { label: 'Stars', icon: Star },
+                    { label: 'Gists', icon: Code },
+                    { label: 'Organizations', icon: Building },
+                    { label: 'Enterprises', icon: Globe },
+                    { label: 'Sponsors', icon: Heart }
+                  ].map((item, idx) => (
+                    <div 
+                      key={idx}
+                      style={{ padding: '6px 16px', display: 'flex', alignItems: 'center', gap: '10px', fontSize: '14px', cursor: 'pointer' }} 
+                      onMouseEnter={e => e.currentTarget.style.background = '#f3f4f6'} 
+                      onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+                    >
+                      <item.icon size={16} color="#6b7280" /> {item.label}
+                    </div>
+                  ))}
+                </div>
 
-                {/* Attestation Signature key */}
-                <div style={{ fontSize: '10px' }}>
-                  <div style={{ color: 'var(--text-tertiary)', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '4px', marginBottom: '2px' }}>
-                    <Key size={10} /> ATTESTATION CERTIFICATE
-                  </div>
-                  <div style={{ fontFamily: 'var(--font-mono)', color: 'var(--text-secondary)', background: 'var(--bg-primary)', padding: '4px 6px', borderRadius: '4px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                    SHA256: 4f9c8d2a1b9e3f7c0a8...
-                  </div>
+                {/* Section 2 */}
+                <div style={{ padding: '8px 0', borderBottom: '1px solid #e5e7eb' }}>
+                  {[
+                    { label: 'Settings', icon: Settings },
+                    { label: 'Copilot settings', icon: Bot },
+                    { label: 'Feature preview', icon: Beaker },
+                    { label: 'Appearance', icon: Paintbrush },
+                    { label: 'Accessibility', icon: Accessibility },
+                    { label: 'Upgrade', icon: ArrowUpCircle }
+                  ].map((item, idx) => (
+                    <div 
+                      key={idx}
+                      style={{ padding: '6px 16px', display: 'flex', alignItems: 'center', gap: '10px', fontSize: '14px', cursor: 'pointer' }} 
+                      onMouseEnter={e => e.currentTarget.style.background = '#f3f4f6'} 
+                      onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+                    >
+                      <item.icon size={16} color="#6b7280" /> {item.label}
+                    </div>
+                  ))}
                 </div>
 
                 {/* Sign out */}
-                <button 
-                  onClick={logout}
-                  className="btn btn-ghost btn-sm"
-                  style={{
-                    width: '100%',
-                    justifyContent: 'center',
-                    gap: '6px',
-                    border: '1px solid var(--border-primary)',
-                    color: 'var(--accent-red)',
-                    fontSize: '11px',
-                    fontWeight: 600,
-                    marginTop: '4px'
-                  }}
-                >
-                  <LogOut size={12} /> Sign Out Operator
-                </button>
+                <div style={{ padding: '8px 0' }}>
+                  <div 
+                    onClick={logout} 
+                    style={{ padding: '6px 16px', display: 'flex', alignItems: 'center', gap: '10px', fontSize: '14px', cursor: 'pointer' }} 
+                    onMouseEnter={e => e.currentTarget.style.background = '#f3f4f6'} 
+                    onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+                  >
+                    <LogOut size={16} color="#6b7280" /> Sign out
+                  </div>
+                </div>
               </div>
             )}
           </div>

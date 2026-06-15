@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { useAppStore } from '@/lib/store';
 import { X } from 'lucide-react';
 import ActivationScreen from '@/components/ActivationScreen';
@@ -19,6 +19,8 @@ import TransfersView from '@/components/TransfersView';
 import CasesView from '@/components/CasesView';
 import SettingsView from '@/components/SettingsView';
 import EditStudentDataWizard from '@/components/EditStudentDataWizard';
+import ParentalAccess from '@/components/ParentalAccess';
+import TransferCenter from '@/components/TransferCenter';
 import { 
   TeachersView, DocumentsView, AttendanceView, 
   InstitutionView, AuditView, SearchView,
@@ -32,8 +34,10 @@ import {
 export default function Page() {
   const { 
     isActivated, isAuthenticated, currentView, 
-    tabs, activeTabId, setActiveTab, closeTab 
+    tabs, activeTabId, setActiveTab, closeTab, reorderTabs, openTab 
   } = useAppStore();
+
+  const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
 
   // 1. Activation Flow
   if (!isActivated) {
@@ -122,6 +126,10 @@ export default function Page() {
         return <StudentTranscriptView />;
       case 'edit-student-data':
         return <EditStudentDataWizard studentId={activeTabId.replace('edit-student-', '')} />;
+      case 'parental-access':
+        return <ParentalAccess studentId={activeTabId.replace('parent-access-', '')} />;
+      case 'transfer-center':
+        return <TransferCenter preselectedStudentId={activeTabId.startsWith('transfer-app-') ? activeTabId.replace('transfer-app-', '') : undefined} />;
       default:
         return <Dashboard />;
     }
@@ -152,24 +160,53 @@ export default function Page() {
         <TopBar />
 
         {/* Workspace Tab Bar */}
-        <div style={{
-          height: 'var(--tab-height)',
-          background: 'var(--bg-secondary)',
-          borderBottom: '1px solid var(--border-primary)',
-          display: 'flex',
-          alignItems: 'center',
-          padding: '0 24px',
-          gap: '6px',
-          overflowX: 'auto',
-          flexShrink: 0,
-          userSelect: 'none',
-        }}>
-          {tabs.map(tab => {
+        <div 
+          onDoubleClick={(e) => {
+            if (e.target === e.currentTarget) {
+              openTab({ id: `search-${Date.now()}`, label: 'Search', view: 'search', closable: true });
+            }
+          }}
+          style={{
+            height: 'var(--tab-height)',
+            background: 'var(--bg-secondary)',
+            borderBottom: '1px solid var(--border-primary)',
+            display: 'flex',
+            alignItems: 'center',
+            padding: '0 24px',
+            gap: '6px',
+            overflowX: 'auto',
+            flexShrink: 0,
+            userSelect: 'none',
+          }}
+        >
+          {tabs.map((tab, idx) => {
             const isActive = tab.id === activeTabId;
             return (
               <div
                 key={tab.id}
+                draggable
+                onDragStart={(e) => {
+                  setDraggedIndex(idx);
+                  e.dataTransfer.effectAllowed = 'move';
+                  e.dataTransfer.setData('text/html', e.currentTarget.outerHTML);
+                }}
+                onDragOver={(e) => {
+                  e.preventDefault();
+                  e.dataTransfer.dropEffect = 'move';
+                }}
+                onDrop={(e) => {
+                  e.preventDefault();
+                  if (draggedIndex !== null && draggedIndex !== idx) {
+                    reorderTabs(draggedIndex, idx);
+                  }
+                  setDraggedIndex(null);
+                }}
+                onDragEnd={() => setDraggedIndex(null)}
                 onClick={() => setActiveTab(tab.id)}
+                onDoubleClick={(e) => {
+                  e.stopPropagation();
+                  if (tab.closable !== false) closeTab(tab.id);
+                }}
                 style={{
                   display: 'flex',
                   alignItems: 'center',
@@ -183,18 +220,15 @@ export default function Page() {
                   cursor: 'pointer',
                   fontSize: '11px',
                   fontWeight: isActive ? 700 : 500,
-                  transition: 'all 120ms ease',
+                  transition: 'background 120ms ease, color 120ms ease, border 120ms ease',
                   whiteSpace: 'nowrap',
+                  opacity: draggedIndex === idx ? 0.5 : 1,
                 }}
                 onMouseEnter={e => {
-                  if (!isActive) {
-                    e.currentTarget.style.background = 'var(--bg-tertiary)';
-                  }
+                  if (!isActive) e.currentTarget.style.background = 'var(--bg-tertiary)';
                 }}
                 onMouseLeave={e => {
-                  if (!isActive) {
-                    e.currentTarget.style.background = 'transparent';
-                  }
+                  if (!isActive) e.currentTarget.style.background = 'transparent';
                 }}
               >
                 <span>{tab.label}</span>

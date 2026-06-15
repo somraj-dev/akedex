@@ -167,12 +167,22 @@ export default function Dashboard() {
                     {kpi.change}
                   </span>
                   {/* Micro sparkline SVG */}
-                  <svg width="40" height="18" style={{ overflow: 'visible' }}>
+                  <svg width="64" height="24" viewBox="0 -5 120 35" style={{ overflow: 'visible' }}>
+                    <defs>
+                      <linearGradient id={`gradient-${kpi.id}`} x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stopColor={kpi.color} stopOpacity="0.3" />
+                        <stop offset="100%" stopColor={kpi.color} stopOpacity="0" />
+                      </linearGradient>
+                    </defs>
+                    <path 
+                      d={`${kpi.sparkline} L120,30 L0,30 Z`} 
+                      fill={`url(#gradient-${kpi.id})`} 
+                    />
                     <path 
                       d={kpi.sparkline} 
                       fill="none" 
                       stroke={kpi.color} 
-                      strokeWidth="1.5" 
+                      strokeWidth="3" 
                       strokeLinecap="round" 
                       strokeLinejoin="round"
                     />

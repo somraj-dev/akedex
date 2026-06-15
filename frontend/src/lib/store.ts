@@ -65,7 +65,9 @@ export type AppView =
   | 'fresh-admission'
   | 'applicant-profile'
   | 'transfer-admission-wizard'
-  | 'edit-student-data';
+  | 'edit-student-data'
+  | 'transfer-center'
+  | 'parental-access';
 
 export type WorkspaceTab = {
   id: string;
@@ -127,6 +129,7 @@ interface AppState {
   openTab: (tab: WorkspaceTab) => void;
   closeTab: (tabId: string) => void;
   setActiveTab: (tabId: string) => void;
+  reorderTabs: (startIndex: number, endIndex: number) => void;
   selectEntity: (id: string | null) => void;
   toggleDetailPanel: () => void;
 }
@@ -236,6 +239,14 @@ export const useAppStore = create<AppState>((set, get) => ({
       }
       set(updates);
     }
+  },
+
+  reorderTabs: (startIndex, endIndex) => {
+    const state = get();
+    const result = Array.from(state.tabs);
+    const [removed] = result.splice(startIndex, 1);
+    result.splice(endIndex, 0, removed);
+    set({ tabs: result });
   },
 
   selectEntity: (id) => set({ selectedEntityId: id, detailPanelOpen: id !== null }),

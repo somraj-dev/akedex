@@ -59,7 +59,7 @@ export default function StudentExplorer() {
             }} />
             <input
               type="text"
-              placeholder="Search identities (UAI, Name, Class)..."
+              placeholder="Search identities (AIN, Name, Class)..."
               value={searchTerm}
               onChange={e => setSearchTerm(e.target.value)}
               className="input-field"
@@ -80,7 +80,7 @@ export default function StudentExplorer() {
           <table className="data-table">
             <thead>
               <tr>
-                <th>Universal Academic ID (UAI)</th>
+                <th>Universal Academic ID (AIN)</th>
                 <th>Full Name</th>
                 <th>Class / Div</th>
                 <th>Attendance</th>

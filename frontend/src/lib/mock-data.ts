@@ -4,18 +4,18 @@
 // =====================================================
 
 export const mockStudents = [
-  { id: '1', uai: 'UAI-2026-0000000001', firstName: 'Arjun', lastName: 'Mehta', class: '10-A', status: 'ACTIVE', attendance: 94, institution: 'Delhi Public School', admissionNo: 'DPS-2024-1001', email: 'arjun.m@dps.edu', phone: '+91 98100 10001', dob: '2010-03-15', gender: 'MALE', guardian: 'Rajesh Mehta', guardianPhone: '+91 98100 20001' },
-  { id: '2', uai: 'UAI-2026-0000000002', firstName: 'Priya', lastName: 'Sharma', class: '10-B', status: 'ACTIVE', attendance: 98, institution: 'Delhi Public School', admissionNo: 'DPS-2024-1002', email: 'priya.s@dps.edu', phone: '+91 98100 10002', dob: '2010-07-22', gender: 'FEMALE', guardian: 'Anil Sharma', guardianPhone: '+91 98100 20002' },
-  { id: '3', uai: 'UAI-2026-0000000003', firstName: 'Rohan', lastName: 'Gupta', class: '9-A', status: 'ACTIVE', attendance: 87, institution: 'Delhi Public School', admissionNo: 'DPS-2024-1003', email: 'rohan.g@dps.edu', phone: '+91 98100 10003', dob: '2011-01-10', gender: 'MALE', guardian: 'Suresh Gupta', guardianPhone: '+91 98100 20003' },
-  { id: '4', uai: 'UAI-2026-0000000004', firstName: 'Ananya', lastName: 'Patel', class: '11-Science', status: 'ACTIVE', attendance: 92, institution: 'Delhi Public School', admissionNo: 'DPS-2024-1004', email: 'ananya.p@dps.edu', phone: '+91 98100 10004', dob: '2009-11-05', gender: 'FEMALE', guardian: 'Vikram Patel', guardianPhone: '+91 98100 20004' },
-  { id: '5', uai: 'UAI-2026-0000000005', firstName: 'Karan', lastName: 'Singh', class: '12-Commerce', status: 'TRANSFERRED', attendance: 78, institution: 'Delhi Public School', admissionNo: 'DPS-2024-1005', email: 'karan.s@dps.edu', phone: '+91 98100 10005', dob: '2008-06-18', gender: 'MALE', guardian: 'Harpreet Singh', guardianPhone: '+91 98100 20005' },
-  { id: '6', uai: 'UAI-2026-0000000006', firstName: 'Meera', lastName: 'Joshi', class: '8-C', status: 'ACTIVE', attendance: 96, institution: 'Delhi Public School', admissionNo: 'DPS-2024-1006', email: 'meera.j@dps.edu', phone: '+91 98100 10006', dob: '2012-02-28', gender: 'FEMALE', guardian: 'Deepak Joshi', guardianPhone: '+91 98100 20006' },
-  { id: '7', uai: 'UAI-2026-0000000007', firstName: 'Aditya', lastName: 'Kumar', class: '10-A', status: 'ACTIVE', attendance: 91, institution: 'Delhi Public School', admissionNo: 'DPS-2024-1007', email: 'aditya.k@dps.edu', phone: '+91 98100 10007', dob: '2010-09-12', gender: 'MALE', guardian: 'Manish Kumar', guardianPhone: '+91 98100 20007' },
-  { id: '8', uai: 'UAI-2026-0000000008', firstName: 'Sneha', lastName: 'Reddy', class: '9-B', status: 'SUSPENDED', attendance: 65, institution: 'Delhi Public School', admissionNo: 'DPS-2024-1008', email: 'sneha.r@dps.edu', phone: '+91 98100 10008', dob: '2011-04-03', gender: 'FEMALE', guardian: 'Krishna Reddy', guardianPhone: '+91 98100 20008' },
-  { id: '9', uai: 'UAI-2026-0000000009', firstName: 'Vikash', lastName: 'Tiwari', class: '11-Science', status: 'ACTIVE', attendance: 88, institution: 'Delhi Public School', admissionNo: 'DPS-2024-1009', email: 'vikash.t@dps.edu', phone: '+91 98100 10009', dob: '2009-12-25', gender: 'MALE', guardian: 'Ram Tiwari', guardianPhone: '+91 98100 20009' },
-  { id: '10', uai: 'UAI-2026-0000000010', firstName: 'Nisha', lastName: 'Verma', class: '12-Arts', status: 'GRADUATED', attendance: 95, institution: 'Delhi Public School', admissionNo: 'DPS-2024-1010', email: 'nisha.v@dps.edu', phone: '+91 98100 10010', dob: '2008-08-14', gender: 'FEMALE', guardian: 'Ashok Verma', guardianPhone: '+91 98100 20010' },
-  { id: '11', uai: 'UAI-2026-0000000011', firstName: 'Rahul', lastName: 'Chauhan', class: '7-A', status: 'ACTIVE', attendance: 93, institution: 'Delhi Public School', admissionNo: 'DPS-2024-1011', email: 'rahul.c@dps.edu', phone: '+91 98100 10011', dob: '2013-05-20', gender: 'MALE', guardian: 'Pankaj Chauhan', guardianPhone: '+91 98100 20011' },
-  { id: '12', uai: 'UAI-2026-0000000012', firstName: 'Kavya', lastName: 'Nair', class: '10-C', status: 'ACTIVE', attendance: 97, institution: 'Delhi Public School', admissionNo: 'DPS-2024-1012', email: 'kavya.n@dps.edu', phone: '+91 98100 10012', dob: '2010-10-30', gender: 'FEMALE', guardian: 'Sunil Nair', guardianPhone: '+91 98100 20012' },
+  { id: '1', uai: 'AKD-STU-2026-8H4K92', firstName: 'Arjun', lastName: 'Mehta', class: '10-A', status: 'ACTIVE', attendance: 94, institution: 'Delhi Public School', admissionNo: 'DPS-2024-1001', email: 'arjun.m@dps.edu', phone: '+91 98100 10001', dob: '2010-03-15', gender: 'MALE', guardian: 'Rajesh Mehta', guardianPhone: '+91 98100 20001' },
+  { id: '2', uai: 'AKD-STU-2026-X9M2P1', firstName: 'Priya', lastName: 'Sharma', class: '10-B', status: 'ACTIVE', attendance: 98, institution: 'Delhi Public School', admissionNo: 'DPS-2024-1002', email: 'priya.s@dps.edu', phone: '+91 98100 10002', dob: '2010-07-22', gender: 'FEMALE', guardian: 'Anil Sharma', guardianPhone: '+91 98100 20002' },
+  { id: '3', uai: 'AKD-STU-2026-J7F3N5', firstName: 'Rohan', lastName: 'Gupta', class: '9-A', status: 'ACTIVE', attendance: 87, institution: 'Delhi Public School', admissionNo: 'DPS-2024-1003', email: 'rohan.g@dps.edu', phone: '+91 98100 10003', dob: '2011-01-10', gender: 'MALE', guardian: 'Suresh Gupta', guardianPhone: '+91 98100 20003' },
+  { id: '4', uai: 'AKD-STU-2026-T2Q8W4', firstName: 'Ananya', lastName: 'Patel', class: '11-Science', status: 'ACTIVE', attendance: 92, institution: 'Delhi Public School', admissionNo: 'DPS-2024-1004', email: 'ananya.p@dps.edu', phone: '+91 98100 10004', dob: '2009-11-05', gender: 'FEMALE', guardian: 'Vikram Patel', guardianPhone: '+91 98100 20004' },
+  { id: '5', uai: 'AKD-STU-2026-L5V9B7', firstName: 'Karan', lastName: 'Singh', class: '12-Commerce', status: 'TRANSFERRED', attendance: 78, institution: 'Delhi Public School', admissionNo: 'DPS-2024-1005', email: 'karan.s@dps.edu', phone: '+91 98100 10005', dob: '2008-06-18', gender: 'MALE', guardian: 'Harpreet Singh', guardianPhone: '+91 98100 20005' },
+  { id: '6', uai: 'AKD-STU-2026-C4D6M3', firstName: 'Meera', lastName: 'Joshi', class: '8-C', status: 'ACTIVE', attendance: 96, institution: 'Delhi Public School', admissionNo: 'DPS-2024-1006', email: 'meera.j@dps.edu', phone: '+91 98100 10006', dob: '2012-02-28', gender: 'FEMALE', guardian: 'Deepak Joshi', guardianPhone: '+91 98100 20006' },
+  { id: '7', uai: 'AKD-STU-2026-Y1R5K8', firstName: 'Aditya', lastName: 'Kumar', class: '10-A', status: 'ACTIVE', attendance: 91, institution: 'Delhi Public School', admissionNo: 'DPS-2024-1007', email: 'aditya.k@dps.edu', phone: '+91 98100 10007', dob: '2010-09-12', gender: 'MALE', guardian: 'Manish Kumar', guardianPhone: '+91 98100 20007' },
+  { id: '8', uai: 'AKD-STU-2026-P3N7Z2', firstName: 'Sneha', lastName: 'Reddy', class: '9-B', status: 'SUSPENDED', attendance: 65, institution: 'Delhi Public School', admissionNo: 'DPS-2024-1008', email: 'sneha.r@dps.edu', phone: '+91 98100 10008', dob: '2011-04-03', gender: 'FEMALE', guardian: 'Krishna Reddy', guardianPhone: '+91 98100 20008' },
+  { id: '9', uai: 'AKD-STU-2026-G8B4F6', firstName: 'Vikash', lastName: 'Tiwari', class: '11-Science', status: 'ACTIVE', attendance: 88, institution: 'Delhi Public School', admissionNo: 'DPS-2024-1009', email: 'vikash.t@dps.edu', phone: '+91 98100 10009', dob: '2009-12-25', gender: 'MALE', guardian: 'Ram Tiwari', guardianPhone: '+91 98100 20009' },
+  { id: '10', uai: 'AKD-STU-2026-H2M5X9', firstName: 'Nisha', lastName: 'Verma', class: '12-Arts', status: 'GRADUATED', attendance: 95, institution: 'Delhi Public School', admissionNo: 'DPS-2024-1010', email: 'nisha.v@dps.edu', phone: '+91 98100 10010', dob: '2008-08-14', gender: 'FEMALE', guardian: 'Ashok Verma', guardianPhone: '+91 98100 20010' },
+  { id: '11', uai: 'AKD-STU-2026-K9T1Q3', firstName: 'Rahul', lastName: 'Chauhan', class: '7-A', status: 'ACTIVE', attendance: 93, institution: 'Delhi Public School', admissionNo: 'DPS-2024-1011', email: 'rahul.c@dps.edu', phone: '+91 98100 10011', dob: '2013-05-20', gender: 'MALE', guardian: 'Pankaj Chauhan', guardianPhone: '+91 98100 20011' },
+  { id: '12', uai: 'AKD-STU-2026-W6J8V4', firstName: 'Kavya', lastName: 'Nair', class: '10-C', status: 'ACTIVE', attendance: 97, institution: 'Delhi Public School', admissionNo: 'DPS-2024-1012', email: 'kavya.n@dps.edu', phone: '+91 98100 10012', dob: '2010-10-30', gender: 'FEMALE', guardian: 'Sunil Nair', guardianPhone: '+91 98100 20012' },
 ];
 
 export const mockCases = [
@@ -84,4 +84,117 @@ export const recentActivity = [
   { time: '45 min ago', action: 'Interview scheduled', subject: 'Deepak Yadav — Admission', user: 'Dr. Meena Shah', type: 'admission' },
   { time: '1 hr ago', action: 'Document verified', subject: 'Birth Certificate — Arjun Mehta', user: 'Mr. Sunil Rao', type: 'document' },
   { time: '1.5 hrs ago', action: 'New case created', subject: 'INT-2026-000001 — Academic Intervention', user: 'Mr. Rajiv Saxena', type: 'case' },
+];
+
+export const mockTransferApplications = [
+  {
+    id: 'trf1',
+    applicationNo: 'TRF-2026-001245',
+    studentId: '5',
+    studentName: 'Karan Singh',
+    class: '12-Commerce',
+    section: 'Commerce',
+    ain: 'AKD-STU-2026-L5V9B7',
+    status: 'Clearance Pending',
+    reason: 'Parent job relocation to another state',
+    preferredDate: '2026-07-15',
+    additionalNotes: 'Need TC and character certificate at the earliest.',
+    parentDeclaration: true,
+    consentConfirmation: true,
+    submittedDate: '2026-06-12T10:30:00Z',
+    lastUpdated: '2026-06-13T14:20:00Z',
+    assignedReviewer: 'Mrs. Anita Desai',
+    clearances: [
+      { department: 'Class Teacher', status: 'Approved', reviewer: 'Mr. Sharma', date: '2026-06-13', comments: 'All academics clear.' },
+      { department: 'Accounts', status: 'Pending', reviewer: '', date: '', comments: '' },
+      { department: 'Library', status: 'Requires Action', reviewer: 'Mrs. Gupta', date: '2026-06-13', comments: '1 book pending return.' },
+      { department: 'Transport', status: 'Approved', reviewer: 'Mr. Singh', date: '2026-06-12', comments: 'No dues.' },
+      { department: 'Administration', status: 'Pending', reviewer: '', date: '', comments: '' }
+    ],
+    internalNotes: [
+      { author: 'Mrs. Anita Desai', text: 'Parent called to expedite.', timestamp: '2026-06-12T11:00:00Z' }
+    ],
+    communications: [
+      { sender: 'Parent', role: 'parent', message: 'I have submitted the transfer application. Please process it quickly.', timestamp: '2026-06-12T10:35:00Z', attachments: [] },
+      { sender: 'School Admin', role: 'school', message: 'We have received your application. It is under process. Please return the pending library book.', timestamp: '2026-06-13T14:20:00Z', attachments: [] }
+    ],
+    auditTrail: [
+      { user: 'Parent', action: 'Application Submitted', timestamp: '2026-06-12T10:30:00Z', prevStatus: 'Draft', newStatus: 'Submitted' },
+      { user: 'System', action: 'Department Review Started', timestamp: '2026-06-12T10:35:00Z', prevStatus: 'Submitted', newStatus: 'Clearance Pending' }
+    ],
+    documents: [
+      { name: 'Relocation_Letter.pdf', uploadDate: '2026-06-12', size: '1.2 MB' }
+    ]
+  },
+  {
+    id: 'trf2',
+    applicationNo: 'TRF-2026-001246',
+    studentId: '8',
+    studentName: 'Sneha Reddy',
+    class: '9-B',
+    section: 'B',
+    ain: 'AKD-STU-2026-P3N7Z2',
+    status: 'Principal Review',
+    reason: 'Better academic opportunities',
+    preferredDate: '2026-08-01',
+    additionalNotes: 'Transferring to an international curriculum school.',
+    parentDeclaration: true,
+    consentConfirmation: true,
+    submittedDate: '2026-06-10T09:15:00Z',
+    lastUpdated: '2026-06-14T16:45:00Z',
+    assignedReviewer: 'Dr. Meena Shah',
+    clearances: [
+      { department: 'Class Teacher', status: 'Approved', reviewer: 'Mrs. Kavita Menon', date: '2026-06-11', comments: 'Good student.' },
+      { department: 'Accounts', status: 'Approved', reviewer: 'Ms. Pooja Iyer', date: '2026-06-12', comments: 'Fee cleared.' },
+      { department: 'Library', status: 'Approved', reviewer: 'Mrs. Gupta', date: '2026-06-11', comments: 'All clear.' },
+      { department: 'Transport', status: 'Approved', reviewer: 'Mr. Singh', date: '2026-06-12', comments: 'No dues.' },
+      { department: 'Administration', status: 'Approved', reviewer: 'Mr. Sunil Rao', date: '2026-06-14', comments: 'All docs verified.' }
+    ],
+    internalNotes: [
+      { author: 'Mr. Sunil Rao', text: 'Clearances done. Ready for principal sign-off.', timestamp: '2026-06-14T16:40:00Z' }
+    ],
+    communications: [
+      { sender: 'School Admin', role: 'school', message: 'All clearances are approved. Moving to principal review.', timestamp: '2026-06-14T16:45:00Z', attachments: [] }
+    ],
+    auditTrail: [
+      { user: 'Parent', action: 'Application Submitted', timestamp: '2026-06-10T09:15:00Z', prevStatus: 'Draft', newStatus: 'Submitted' },
+      { user: 'System', action: 'Moved to Principal Review', timestamp: '2026-06-14T16:45:00Z', prevStatus: 'Clearance Pending', newStatus: 'Principal Review' }
+    ],
+    documents: [
+      { name: 'Admission_Offer_Letter.pdf', uploadDate: '2026-06-10', size: '2.5 MB' }
+    ]
+  },
+  {
+    id: 'trf3',
+    applicationNo: 'TRF-2026-001247',
+    studentId: '10',
+    studentName: 'Nisha Verma',
+    class: '12-Arts',
+    section: 'Arts',
+    ain: 'AKD-STU-2026-H2M5X9',
+    status: 'Approved',
+    reason: 'Graduation',
+    preferredDate: '2026-05-30',
+    additionalNotes: 'Completed 12th grade.',
+    parentDeclaration: true,
+    consentConfirmation: true,
+    submittedDate: '2026-05-15T11:20:00Z',
+    lastUpdated: '2026-05-25T14:10:00Z',
+    assignedReviewer: 'Dr. Meena Shah',
+    clearances: [
+      { department: 'Class Teacher', status: 'Approved', reviewer: 'Mr. Rajiv Saxena', date: '2026-05-16', comments: 'Passed with distinction.' },
+      { department: 'Accounts', status: 'Approved', reviewer: 'Ms. Pooja Iyer', date: '2026-05-18', comments: 'No dues.' },
+      { department: 'Library', status: 'Approved', reviewer: 'Mrs. Gupta', date: '2026-05-17', comments: 'All clear.' },
+      { department: 'Transport', status: 'Approved', reviewer: 'Mr. Singh', date: '2026-05-16', comments: 'No dues.' },
+      { department: 'Administration', status: 'Approved', reviewer: 'Mr. Sunil Rao', date: '2026-05-20', comments: 'Records archived.' }
+    ],
+    internalNotes: [],
+    communications: [
+      { sender: 'School Admin', role: 'school', message: 'Transfer application approved. Best wishes.', timestamp: '2026-05-25T14:10:00Z', attachments: [] }
+    ],
+    auditTrail: [
+      { user: 'Dr. Meena Shah', action: 'Application Approved', timestamp: '2026-05-25T14:10:00Z', prevStatus: 'Principal Review', newStatus: 'Approved' }
+    ],
+    documents: []
+  }
 ];

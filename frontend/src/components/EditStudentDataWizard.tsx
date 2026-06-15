@@ -5,7 +5,7 @@ import { useAppStore } from '@/lib/store';
 import { mockStudents } from '@/lib/mock-data';
 import { User, BookOpen, MapPin, FileText, Check, ArrowRight, Camera, Users, ArrowLeft } from 'lucide-react';
 
-const Field = ({ label, name, value, type = 'text', required = false, options = [], onChange }: any) => {
+const Field = ({ label, name, value, type = 'text', required = false, options = [], disabled = false, onChange }: any) => {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', flex: 1 }}>
       <label style={{ fontSize: '11px', fontWeight: 700, color: '#334155' }}>
@@ -16,15 +16,16 @@ const Field = ({ label, name, value, type = 'text', required = false, options = 
           name={name} 
           value={value} 
           onChange={onChange}
-          style={{ padding: '8px 12px', borderRadius: '6px', border: '1px solid #e2e8f0', fontSize: '12px', color: '#0f172a', background: '#fff', outline: 'none', height: '36px' }}
+          disabled={disabled}
+          style={{ padding: '8px 12px', borderRadius: '6px', border: '1px solid #e2e8f0', fontSize: '12px', color: disabled ? '#94a3b8' : '#0f172a', background: disabled ? '#f8fafc' : '#fff', outline: 'none', height: '36px', cursor: disabled ? 'not-allowed' : 'auto' }}
         >
           {options.map((opt: string) => <option key={opt} value={opt}>{opt}</option>)}
         </select>
       ) : type === 'radio' ? (
         <div style={{ display: 'flex', gap: '16px', height: '36px', alignItems: 'center' }}>
           {options.map((opt: string) => (
-            <label key={opt} style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13px', color: '#0f172a', cursor: 'pointer' }}>
-              <input type="radio" name={name} value={opt} checked={value === opt} onChange={onChange} style={{ cursor: 'pointer', accentColor: '#2563eb' }} />
+            <label key={opt} style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13px', color: disabled ? '#94a3b8' : '#0f172a', cursor: disabled ? 'not-allowed' : 'pointer' }}>
+              <input type="radio" name={name} value={opt} checked={value === opt} onChange={onChange} disabled={disabled} style={{ cursor: disabled ? 'not-allowed' : 'pointer', accentColor: '#2563eb' }} />
               {opt}
             </label>
           ))}
@@ -36,7 +37,8 @@ const Field = ({ label, name, value, type = 'text', required = false, options = 
           value={value} 
           onChange={onChange}
           placeholder={label}
-          style={{ padding: '8px 12px', borderRadius: '6px', border: '1px solid #e2e8f0', fontSize: '12px', color: '#0f172a', background: '#fff', outline: 'none', height: '36px' }}
+          disabled={disabled}
+          style={{ padding: '8px 12px', borderRadius: '6px', border: '1px solid #e2e8f0', fontSize: '12px', color: disabled ? '#94a3b8' : '#0f172a', background: disabled ? '#f8fafc' : '#fff', outline: 'none', height: '36px', cursor: disabled ? 'not-allowed' : 'auto' }}
         />
       )}
     </div>
@@ -271,7 +273,7 @@ export default function EditStudentDataWizard({ studentId }: { studentId: string
                 </h3>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px' }}>
                   <Field label="Full Name" name="fullName" value={formData.fullName} required onChange={handleChange} />
-                  <Field label="Student ID" name="studentId" value={formData.studentId} required onChange={handleChange} />
+                  <Field label="Student ID" name="studentId" value={formData.studentId} required disabled onChange={handleChange} />
                   <Field label="Admission No." name="admissionNo" value={formData.admissionNo} onChange={handleChange} />
                   
                   <Field label="Date of Birth" name="dob" value={formData.dob} type="date" required onChange={handleChange} />
@@ -319,7 +321,7 @@ export default function EditStudentDataWizard({ studentId }: { studentId: string
                   <Field label="Medium of Instruction" name="medium" value={formData.medium} type="select" options={['English', 'Hindi']} onChange={handleChange} />
                   
                   <div style={{ gridColumn: 'span 2' }}>
-                    <Field label="Previous School" name="prevSchool" value={formData.prevSchool} onChange={handleChange} />
+                    <Field label="Previous School" name="prevSchool" value={formData.prevSchool} disabled onChange={handleChange} />
                   </div>
                 </div>
               </div>

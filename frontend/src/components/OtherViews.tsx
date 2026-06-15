@@ -2871,8 +2871,8 @@ function getEnrichedStudentData(student: any) {
   const idNum = parseInt(student.id) || 1;
   const isAarav = idNum === 1;
   
-  const uai = isAarav ? 'STU-2026-000458' : (student.uai || `UAI-2026-${idNum.toString().padStart(10, '0')}`);
-  const ain = isAarav ? 'ACDX-IND-00000458' : `ACDX-IND-${idNum.toString().padStart(8, '0')}`;
+  const ain = student.uai || `AKD-STU-2026-${idNum.toString().padStart(6, 'X')}`;
+  const uai = ain;
   const firstName = isAarav ? 'Aarav' : (student.firstName || 'Aarav');
   const lastName = isAarav ? 'Sharma' : (student.lastName || 'Sharma');
   const fullName = `${firstName} ${lastName}`;
@@ -3111,6 +3111,24 @@ export function StudentProfileView() {
       });
       return;
     }
+    if (actionName === 'Transfer Student') {
+      openTab({
+        id: `transfer-app-${sData.id}`,
+        label: `Transfer — ${sData.fullName}`,
+        view: 'transfer-center',
+        closable: true
+      });
+      return;
+    }
+    if (actionName === 'Parent Access') {
+      openTab({
+        id: `parent-access-${sData.id}`,
+        label: `Parent Portal — ${sData.fullName}`,
+        view: 'parental-access',
+        closable: true
+      });
+      return;
+    }
     alert(`${actionName} triggered for ${sData.fullName}`);
   };
 
@@ -3167,7 +3185,7 @@ export function StudentProfileView() {
 
             {/* IDs line */}
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px', fontSize: '11px', color: 'var(--text-secondary)', flexWrap: 'wrap' }}>
-              <span style={{ fontFamily: 'var(--font-mono)' }}>STU-2026-{sData.id.toString().padStart(6, '0')}</span>
+              <span style={{ fontFamily: 'var(--font-mono)' }}>STU-2026-{sData.id.toString().padStart(4, '0')}</span>
               <span style={{ color: 'var(--border-primary)' }}>•</span>
               <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
                 <span style={{ color: 'var(--text-tertiary)' }}>AIN:</span>

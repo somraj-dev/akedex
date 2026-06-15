@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 import { useAppStore, AppView, FinanceSubView, ExamsSubView } from '@/lib/store';
 import {
   Home, Users, BookOpen, Layers, FileSpreadsheet, Award,
@@ -103,7 +103,27 @@ export default function Sidebar() {
   const isFinanceMode = currentView === 'finance';
   const isExamsMode = currentView === 'exams' && examsSidebarActive;
 
+  const sidebarRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (sidebarRef.current && !sidebarRef.current.contains(event.target as Node)) {
+        if (!useAppStore.getState().sidebarCollapsed) {
+          useAppStore.setState({ sidebarCollapsed: true });
+        }
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
   const handleNavClick = (item: NavItem) => {
+    if (useAppStore.getState().sidebarCollapsed) {
+      useAppStore.setState({ sidebarCollapsed: false });
+    }
     openTab({
       id: item.id,
       label: item.label,
@@ -113,6 +133,9 @@ export default function Sidebar() {
   };
 
   const handleFinanceNavClick = (item: FinanceNavItem) => {
+    if (useAppStore.getState().sidebarCollapsed) {
+      useAppStore.setState({ sidebarCollapsed: false });
+    }
     setFinanceSubView(item.id);
     // Ensure we're on the finance tab
     openTab({
@@ -135,7 +158,7 @@ export default function Sidebar() {
   const width = sidebarCollapsed ? 'var(--sidebar-collapsed)' : 'var(--sidebar-width)';
 
   return (
-    <aside style={{
+    <aside ref={sidebarRef} style={{
       width,
       minWidth: width,
       height: '100vh',
@@ -268,6 +291,9 @@ export default function Sidebar() {
                   )}
                   <button
                     onClick={() => {
+                      if (useAppStore.getState().sidebarCollapsed) {
+                        useAppStore.setState({ sidebarCollapsed: false });
+                      }
                       setExamsSubView(item.id);
                       openTab({
                         id: 'exams',
