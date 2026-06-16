@@ -441,7 +441,7 @@ export default function Dashboard() {
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', flex: 1, alignContent: 'center' }}>
               {[
                 { label: 'New Admission', icon: <Users size={16} />, color: 'var(--accent-blue)', bg: 'rgba(59, 130, 246, 0.1)', view: 'new-admission-flow' as AppView, navLabel: 'New Admission' },
-                { label: 'Collect Fees', icon: <DollarSign size={16} />, color: 'var(--accent-green)', bg: 'rgba(16, 185, 129, 0.1)', view: 'finance' as AppView, navLabel: 'Finance' },
+                { label: 'Collect Fees', icon: <DollarSign size={16} />, color: 'var(--accent-green)', bg: 'rgba(16, 185, 129, 0.1)', view: 'collect-fees-flow' as AppView, navLabel: 'Collect Fees' },
                 { label: 'Complaints', icon: <AlertCircle size={16} />, color: 'var(--accent-amber)', bg: 'rgba(245, 158, 11, 0.1)', view: 'cases' as AppView, navLabel: 'Disciplinary Cases' },
                 { label: 'Library', icon: <BookMarked size={16} />, color: 'var(--accent-purple)', bg: 'rgba(168, 85, 247, 0.1)', view: 'library' as AppView, navLabel: 'Library' }
               ].map((action, idx) => (

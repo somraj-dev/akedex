@@ -21,6 +21,7 @@ import SettingsView from '@/components/SettingsView';
 import EditStudentDataWizard from '@/components/EditStudentDataWizard';
 import ParentalAccess from '@/components/ParentalAccess';
 import TransferCenter from '@/components/TransferCenter';
+import { CollectFeesFlow } from '@/components/CollectFeesFlow';
 import { 
   TeachersView, DocumentsView, AttendanceView, 
   InstitutionView, AuditView, SearchView,
@@ -130,6 +131,8 @@ export default function Page() {
         return <ParentalAccess studentId={activeTabId.replace('parent-access-', '')} />;
       case 'transfer-center':
         return <TransferCenter preselectedStudentId={activeTabId.startsWith('transfer-app-') ? activeTabId.replace('transfer-app-', '') : undefined} />;
+      case 'collect-fees-flow':
+        return <CollectFeesFlow />;
       default:
         return <Dashboard />;
     }
