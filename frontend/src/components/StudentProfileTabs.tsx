@@ -2423,6 +2423,7 @@ export function StudentFeesTab({ studentId, sData }: { studentId: string; sData:
 export function StudentDocumentsTab({ studentId, sData }: { studentId: string; sData: any }) {
   const [selectedDocId, setSelectedDocId] = useState('d1');
   const [searchQuery, setSearchQuery] = useState('');
+  const [statusFilter, setStatusFilter] = useState('ALL');
 
   const documents = [
     { id: 'd1', name: 'Aadhaar Card', category: 'Identity Proof', status: 'VERIFIED', date: '12 Feb 2019', expiry: '-', verifiedOn: '15 Feb 2025', verifiedBy: 'Admin (Ritika Sharma)', number: '1234 5678 9012', docRef: 'DOC-2026-00024' },
@@ -2435,6 +2436,15 @@ export function StudentDocumentsTab({ studentId, sData }: { studentId: string; s
     { id: 'd8', name: 'Previous School TC', category: 'Academic', status: 'PENDING', date: '28 Mar 2025', expiry: '-', verifiedOn: '-', verifiedBy: '-' }
   ];
 
+  const filteredDocuments = documents.filter(d => {
+    if (searchQuery && !d.name.toLowerCase().includes(searchQuery.toLowerCase())) return false;
+    if (statusFilter === 'VERIFIED' && d.status !== 'VERIFIED') return false;
+    if (statusFilter === 'PENDING' && d.status !== 'PENDING') return false;
+    if (statusFilter === 'REJECTED' && d.status !== 'REJECTED') return false;
+    if (statusFilter === 'EXPIRING' && d.expiry === '-') return false;
+    return true;
+  });
+
   const selectedDoc = documents.find(d => d.id === selectedDocId) || documents[0];
 
   return (
@@ -2443,48 +2453,57 @@ export function StudentDocumentsTab({ studentId, sData }: { studentId: string; s
       {/* 5-CARD KPI METRICS STRIP */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '16px' }}>
         {[
-          { label: 'Total Documents', val: '24', trend: 'All Documents', color: 'var(--accent-purple)', bg: 'rgba(139, 92, 246, 0.08)', action: 'View all →', actionColor: 'var(--accent-purple)' },
-          { label: 'Verified Documents', val: '18', trend: '75% of total', color: 'var(--accent-green)', bg: 'var(--accent-green-dim)', action: 'Verified →', actionColor: 'var(--accent-green)' },
-          { label: 'Pending Verification', val: '4', trend: '16.7% of total', color: 'var(--accent-amber)', bg: 'rgba(245, 158, 11, 0.08)', action: 'Review →', actionColor: 'var(--accent-amber)' },
-          { label: 'Rejected Documents', val: '2', trend: '8.3% of total', color: 'var(--accent-red)', bg: 'var(--accent-red-dim)', action: 'Rejected →', actionColor: 'var(--accent-red)' },
-          { label: 'Expiring Soon', val: '1', trend: 'In 90 days', color: 'var(--accent-blue)', bg: 'rgba(59, 130, 246, 0.08)', action: 'Details →', actionColor: 'var(--accent-blue)' }
-        ].map((card, idx) => (
-          <div 
-            key={idx} 
-            style={{ 
-              background: '#ffffff', 
-              border: '1px solid var(--border-primary)', 
-              borderRadius: '12px', 
-              padding: '16px', 
-              display: 'flex', 
-              flexDirection: 'row', 
-              alignItems: 'center', 
-              gap: '14px', 
-              boxShadow: '0 1px 3px rgba(0,0,0,0.05)',
-              transition: 'transform 0.2s ease, box-shadow 0.2s ease'
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.transform = 'translateY(-2px)';
-              e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.05)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = 'none';
-              e.currentTarget.style.boxShadow = '0 1px 3px rgba(0,0,0,0.05)';
-            }}
-          >
-            <div style={{ width: '44px', height: '44px', borderRadius: '50%', background: card.bg, color: card.color, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-              <Folder size={18} />
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', minWidth: 0, flex: 1 }}>
-              <span style={{ fontSize: '10px', fontWeight: 600, color: 'var(--text-tertiary)', textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap' }}>{card.label}</span>
-              <div style={{ fontSize: '18px', fontWeight: 800, color: 'var(--text-primary)', lineHeight: 1.2 }}>{card.val}</div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '9px', marginTop: '2px', gap: '4px' }}>
-                <span style={{ color: 'var(--text-muted)', textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap' }}>{card.trend}</span>
-                <span style={{ color: card.actionColor, fontWeight: 700, cursor: 'pointer', whiteSpace: 'nowrap' }}>{card.action}</span>
+          { label: 'Total Documents', val: '24', trend: 'All Documents', color: 'var(--accent-purple)', bg: 'rgba(139, 92, 246, 0.08)', action: 'View all →', actionColor: 'var(--accent-purple)', filter: 'ALL' },
+          { label: 'Verified Documents', val: '18', trend: '75% of total', color: 'var(--accent-green)', bg: 'var(--accent-green-dim)', action: 'Verified →', actionColor: 'var(--accent-green)', filter: 'VERIFIED' },
+          { label: 'Pending Verification', val: '4', trend: '16.7% of total', color: 'var(--accent-amber)', bg: 'rgba(245, 158, 11, 0.08)', action: 'Review →', actionColor: 'var(--accent-amber)', filter: 'PENDING' },
+          { label: 'Rejected Documents', val: '2', trend: '8.3% of total', color: 'var(--accent-red)', bg: 'var(--accent-red-dim)', action: 'Rejected →', actionColor: 'var(--accent-red)', filter: 'REJECTED' },
+          { label: 'Expiring Soon', val: '1', trend: 'In 90 days', color: 'var(--accent-blue)', bg: 'rgba(59, 130, 246, 0.08)', action: 'Details →', actionColor: 'var(--accent-blue)', filter: 'EXPIRING' }
+        ].map((card, idx) => {
+          const isActive = statusFilter === card.filter;
+          return (
+            <div 
+              key={idx} 
+              onClick={() => setStatusFilter(card.filter)}
+              style={{ 
+                background: isActive ? 'var(--bg-tertiary)' : '#ffffff', 
+                border: isActive ? `1px solid ${card.color}` : '1px solid var(--border-primary)', 
+                borderRadius: '12px', 
+                padding: '16px', 
+                display: 'flex', 
+                flexDirection: 'row', 
+                alignItems: 'center', 
+                gap: '14px', 
+                boxShadow: isActive ? '0 4px 12px rgba(0,0,0,0.05)' : '0 1px 3px rgba(0,0,0,0.05)',
+                transition: 'transform 0.2s ease, box-shadow 0.2s ease, border 0.2s ease, background 0.2s ease',
+                cursor: 'pointer'
+              }}
+              onMouseEnter={(e) => {
+                if (!isActive) {
+                  e.currentTarget.style.transform = 'translateY(-2px)';
+                  e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.05)';
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (!isActive) {
+                  e.currentTarget.style.transform = 'none';
+                  e.currentTarget.style.boxShadow = '0 1px 3px rgba(0,0,0,0.05)';
+                }
+              }}
+            >
+              <div style={{ width: '44px', height: '44px', borderRadius: '50%', background: card.bg, color: card.color, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                <Folder size={18} />
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', minWidth: 0, flex: 1 }}>
+                <span style={{ fontSize: '10px', fontWeight: 600, color: 'var(--text-tertiary)', textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap' }}>{card.label}</span>
+                <div style={{ fontSize: '18px', fontWeight: 800, color: 'var(--text-primary)', lineHeight: 1.2 }}>{card.val}</div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '9px', marginTop: '2px', gap: '4px' }}>
+                  <span style={{ color: 'var(--text-muted)', textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap' }}>{card.trend}</span>
+                  <span style={{ color: card.actionColor, fontWeight: 700, whiteSpace: 'nowrap' }}>{card.action}</span>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
       {/* Row 2: Document list & Preview Panel */}
@@ -2504,11 +2523,16 @@ export function StudentDocumentsTab({ studentId, sData }: { studentId: string; s
                   style={{ width: '100%', border: '1px solid var(--border-primary)', borderRadius: '8px', padding: '6px 12px 6px 32px', fontSize: '11.5px', outline: 'none', background: 'transparent', color: 'var(--text-primary)' }} 
                 />
               </div>
-              <select style={{ border: '1px solid var(--border-primary)', borderRadius: '8px', fontSize: '11.5px', padding: '6px 12px', outline: 'none', background: 'transparent', color: 'var(--text-secondary)' }}>
-                <option>All Categories</option>
-              </select>
-              <select style={{ border: '1px solid var(--border-primary)', borderRadius: '8px', fontSize: '11.5px', padding: '6px 12px', outline: 'none', background: 'transparent', color: 'var(--text-secondary)' }}>
-                <option>All Status</option>
+              <select 
+                value={statusFilter}
+                onChange={(e) => setStatusFilter(e.target.value)}
+                style={{ border: '1px solid var(--border-primary)', borderRadius: '8px', fontSize: '11.5px', padding: '6px 12px', outline: 'none', background: 'transparent', color: 'var(--text-secondary)' }}
+              >
+                <option value="ALL">All Status</option>
+                <option value="VERIFIED">Verified</option>
+                <option value="PENDING">Pending</option>
+                <option value="REJECTED">Rejected</option>
+                <option value="EXPIRING">Expiring</option>
               </select>
               <button style={{ border: '1px solid var(--border-primary)', borderRadius: '8px', fontSize: '11.5px', padding: '6px 12px', background: 'transparent', color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer' }}>
                 <Filter size={12} /> More Filters
@@ -2533,7 +2557,7 @@ export function StudentDocumentsTab({ studentId, sData }: { studentId: string; s
                 </tr>
               </thead>
               <tbody>
-                {documents.filter(d => d.name.toLowerCase().includes(searchQuery.toLowerCase())).map((doc) => {
+                {filteredDocuments.length > 0 ? filteredDocuments.map((doc) => {
                   const isSelected = doc.id === selectedDocId;
                   const statusBg = doc.status === 'VERIFIED' ? 'var(--accent-green-dim)' : doc.status === 'PENDING' ? 'rgba(245,158,11,0.08)' : 'var(--accent-red-dim)';
                   const statusColor = doc.status === 'VERIFIED' ? 'var(--accent-green)' : doc.status === 'PENDING' ? 'var(--accent-amber)' : 'var(--accent-red)';
@@ -2564,7 +2588,13 @@ export function StudentDocumentsTab({ studentId, sData }: { studentId: string; s
                       </td>
                     </tr>
                   );
-                })}
+                }) : (
+                  <tr>
+                    <td colSpan={7} style={{ padding: '24px', textAlign: 'center', color: 'var(--text-tertiary)' }}>
+                      No documents found for this filter.
+                    </td>
+                  </tr>
+                )}
               </tbody>
             </table>
           </div>
