@@ -328,16 +328,21 @@ export default function TopBar() {
                 {/* Section 1 */}
                 <div style={{ padding: '8px 0', borderBottom: '1px solid #e5e7eb' }}>
                   {[
-                    { label: 'Profile', icon: User },
+                    { label: 'Profile', icon: User, view: 'profile' },
                     { label: 'Repositories', icon: BookOpen },
                     { label: 'Stars', icon: Star },
                     { label: 'Gists', icon: Code },
-                    { label: 'Organizations', icon: Building },
+                    { label: 'Organizations', icon: Building, view: 'organizations' },
                     { label: 'Enterprises', icon: Globe },
                     { label: 'Sponsors', icon: Heart }
                   ].map((item, idx) => (
                     <div 
                       key={idx}
+                      onClick={() => {
+                        if (item.view) {
+                          handleViewNav(item.view, item.label);
+                        }
+                      }}
                       style={{ padding: '6px 16px', display: 'flex', alignItems: 'center', gap: '10px', fontSize: '14px', cursor: 'pointer' }} 
                       onMouseEnter={e => e.currentTarget.style.background = '#f3f4f6'} 
                       onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
@@ -350,15 +355,18 @@ export default function TopBar() {
                 {/* Section 2 */}
                 <div style={{ padding: '8px 0', borderBottom: '1px solid #e5e7eb' }}>
                   {[
-                    { label: 'Settings', icon: Settings },
-                    { label: 'Copilot settings', icon: Bot },
-                    { label: 'Feature preview', icon: Beaker },
+                    { label: 'Settings', icon: Settings, view: 'settings' },
+                    { label: 'Feature request', icon: Beaker },
                     { label: 'Appearance', icon: Paintbrush },
-                    { label: 'Accessibility', icon: Accessibility },
-                    { label: 'Upgrade', icon: ArrowUpCircle }
+                    { label: 'Accessibility', icon: Accessibility }
                   ].map((item, idx) => (
                     <div 
                       key={idx}
+                      onClick={() => {
+                        if (item.view) {
+                          handleViewNav(item.view, item.label);
+                        }
+                      }}
                       style={{ padding: '6px 16px', display: 'flex', alignItems: 'center', gap: '10px', fontSize: '14px', cursor: 'pointer' }} 
                       onMouseEnter={e => e.currentTarget.style.background = '#f3f4f6'} 
                       onMouseLeave={e => e.currentTarget.style.background = 'transparent'}

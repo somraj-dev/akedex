@@ -18,6 +18,7 @@ import TransferAdmissionWizard from '@/components/TransferAdmissionWizard';
 import TransfersView from '@/components/TransfersView';
 import CasesView from '@/components/CasesView';
 import SettingsView from '@/components/SettingsView';
+import OrganizationsView from '@/components/OrganizationsView';
 import EditStudentDataWizard from '@/components/EditStudentDataWizard';
 import ParentalAccess from '@/components/ParentalAccess';
 import TransferCenter from '@/components/TransferCenter';
@@ -83,6 +84,8 @@ export default function Page() {
         return <AuditView />;
       case 'settings':
         return <SettingsView />;
+      case 'organizations':
+        return <OrganizationsView />;
       case 'search':
         return <SearchView />;
       case 'courses':

@@ -68,7 +68,8 @@ export type AppView =
   | 'edit-student-data'
   | 'transfer-center'
   | 'parental-access'
-  | 'collect-fees-flow';
+  | 'collect-fees-flow'
+  | 'organizations';
 
 export type WorkspaceTab = {
   id: string;
