@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useAppStore } from '@/lib/store';
 import { ArrowLeft, Search, User, CreditCard, FileText, CheckCircle2, Receipt, PlusCircle, IndianRupee } from 'lucide-react';
+import { ReceiptPrintView } from './ReceiptPrintView';
 
 export function CollectFeesFlow() {
   const closeTab = useAppStore(s => s.closeTab);
@@ -8,6 +9,7 @@ export function CollectFeesFlow() {
   const [step, setStep] = useState(1);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedStudent, setSelectedStudent] = useState<any>(null);
+  const [showReceipt, setShowReceipt] = useState(false);
 
   // Form State
   const [feeType, setFeeType] = useState('Tuition Fee');
@@ -224,7 +226,7 @@ export function CollectFeesFlow() {
           
           <div style={{ display: 'flex', justifyContent: 'center', gap: '16px' }}>
             <button 
-              onClick={() => alert("Printing Receipt...")}
+              onClick={() => setShowReceipt(true)}
               style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '12px 24px', borderRadius: '8px', border: '1px solid var(--border-primary)', background: '#ffffff', fontWeight: 600, color: 'var(--text-primary)', cursor: 'pointer', boxShadow: '0 1px 2px rgba(0,0,0,0.05)' }}
             >
               <Receipt size={18} />
@@ -239,6 +241,18 @@ export function CollectFeesFlow() {
             </button>
           </div>
         </div>
+      )}
+
+      {showReceipt && (
+        <ReceiptPrintView
+          student={selectedStudent}
+          feeType={feeType}
+          amount={amount}
+          paymentMethod={paymentMethod}
+          transactionId={transactionId}
+          remarks={remarks}
+          onClose={() => setShowReceipt(false)}
+        />
       )}
     </div>
   );

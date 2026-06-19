@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useRef, useEffect } from 'react';
-import { useAppStore, AppView, FinanceSubView, ExamsSubView } from '@/lib/store';
+import { useAppStore, AppView, FinanceSubView, ExamsSubView, SettingsSubView } from '@/lib/store';
 import {
   Home, Users, BookOpen, Layers, FileSpreadsheet, Award,
   GraduationCap, Calendar, Clock, Clipboard, BookMarked,
@@ -9,7 +9,8 @@ import {
   LogOut, ShieldAlert, ArrowRight, CheckCircle2, ChevronLeft, ChevronRight,
   LayoutDashboard, CreditCard, AlertTriangle, TrendingUp, Receipt,
   PiggyBank, Banknote, Wallet, GraduationCap as ScholarshipIcon,
-  ShoppingCart, ShieldCheck, Brain, FileText, ArrowLeft
+  ShoppingCart, ShieldCheck, Brain, FileText, ArrowLeft,
+  Fingerprint, Files, Palette, Zap, Database
 } from 'lucide-react';
 
 type NavItem = {
@@ -92,16 +93,47 @@ const examsNavItems: ExamsNavItem[] = [
   { id: 'exams-reports', label: 'Examination Reports', icon: <FileText size={18} /> },
 ];
 
+type SettingsNavItem = {
+  id: SettingsSubView;
+  label: string;
+  icon: React.ReactNode;
+  section?: string;
+};
+
+const settingsNavItems: SettingsNavItem[] = [
+  { id: 'Institution', label: 'Institution', icon: <Building size={18} />, section: 'CORE CONFIG' },
+  { id: 'Academics', label: 'Academics', icon: <BookOpen size={18} /> },
+  { id: 'Admissions', label: 'Admissions', icon: <GraduationCap size={18} /> },
+  { id: 'Student Identity', label: 'Student Identity', icon: <Fingerprint size={18} /> },
+  { id: 'Attendance', label: 'Attendance', icon: <Calendar size={18} /> },
+  { id: 'Examinations', label: 'Examinations', icon: <FileText size={18} /> },
+  { id: 'Fees & Finance', label: 'Fees & Finance', icon: <CreditCard size={18} /> },
+  { id: 'Communication', label: 'Communication', icon: <MessageSquare size={18} /> },
+  { id: 'Documents', label: 'Documents', icon: <Files size={18} /> },
+  
+  { id: 'Users & Roles', label: 'Users & Roles', icon: <Users size={18} />, section: 'SECURITY & ACCESS' },
+  { id: 'Security', label: 'Security', icon: <ShieldCheck size={18} /> },
+  { id: 'Audit Logs', label: 'Audit Logs', icon: <Clipboard size={18} /> },
+  
+  { id: 'AI Configuration', label: 'AI Configuration', icon: <Brain size={18} />, section: 'ADVANCED' },
+  { id: 'Integrations', label: 'Integrations', icon: <Layers size={18} /> },
+  { id: 'Branding', label: 'Branding', icon: <Palette size={18} /> },
+  { id: 'Automation', label: 'Automation', icon: <Zap size={18} /> },
+  { id: 'Data Management', label: 'Data Management', icon: <Database size={18} /> },
+];
+
 export default function Sidebar() {
   const { 
     currentView, sidebarCollapsed, toggleSidebar, currentUser, logout, 
-    financeSubView, examsSubView, examsSidebarActive, setExamsSubView 
+    financeSubView, examsSubView, examsSidebarActive, setExamsSubView,
+    settingsSubView, setSettingsSubView
   } = useAppStore();
   const openTab = useAppStore(s => s.openTab);
   const setFinanceSubView = useAppStore(s => s.setFinanceSubView);
 
   const isFinanceMode = currentView === 'finance';
   const isExamsMode = currentView === 'exams' && examsSidebarActive;
+  const isSettingsMode = currentView === 'settings';
 
   const sidebarRef = useRef<HTMLElement>(null);
 
@@ -188,19 +220,21 @@ export default function Sidebar() {
                 ? 'linear-gradient(135deg, #10b981, #059669)'
                 : isExamsMode
                 ? 'linear-gradient(135deg, #f59e0b, #d97706)'
+                : isSettingsMode
+                ? 'linear-gradient(135deg, #64748b, #475569)'
                 : 'linear-gradient(135deg, var(--accent-blue), #1d4ed8)',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               color: 'white', fontWeight: 800, fontSize: '16px',
               transition: 'background 0.3s ease'
             }}>
-              {isFinanceMode ? <DollarSign size={14} /> : isExamsMode ? <Award size={14} /> : 'A'}
+              {isFinanceMode ? <DollarSign size={14} /> : isExamsMode ? <Award size={14} /> : isSettingsMode ? <Settings size={14} /> : 'A'}
             </div>
             <div>
               <div style={{ fontSize: '15px', fontWeight: 800, color: 'var(--text-primary)', display: 'flex', alignItems: 'center', lineHeight: 1.1 }}>
-                <span>{isFinanceMode ? 'Finance' : isExamsMode ? 'Examinations' : 'Akedex'}</span>
+                <span>{isFinanceMode ? 'Finance' : isExamsMode ? 'Examinations' : isSettingsMode ? 'Settings' : 'Akedex'}</span>
               </div>
               <div style={{ fontSize: '9px', color: 'var(--text-tertiary)', fontWeight: 500 }}>
-                {isFinanceMode ? 'CFO Control Center' : isExamsMode ? 'Assessment Office' : 'Educational Operating Environment'}
+                {isFinanceMode ? 'CFO Control Center' : isExamsMode ? 'Assessment Office' : isSettingsMode ? 'System Configuration' : 'Educational Operating Environment'}
               </div>
             </div>
           </div>
@@ -221,7 +255,133 @@ export default function Sidebar() {
         overflowX: 'hidden',
         padding: '8px 12px',
       }}>
-        {isExamsMode ? (
+        {isSettingsMode ? (
+          <>
+            {/* Back to Main Menu button */}
+            <button
+              onClick={handleBackToMainMenu}
+              title={sidebarCollapsed ? 'Main Menu' : undefined}
+              style={{
+                width: '100%',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '10px',
+                padding: sidebarCollapsed ? '10px 0' : '8px 12px',
+                borderRadius: '6px',
+                border: 'none',
+                background: 'transparent',
+                color: 'var(--text-secondary)',
+                cursor: 'pointer',
+                fontSize: 'var(--font-nav-size)',
+                fontWeight: 600,
+                lineHeight: 'var(--font-nav-lh)',
+                fontFamily: 'var(--font-sans)',
+                transition: 'all var(--transition-fast)',
+                justifyContent: sidebarCollapsed ? 'center' : 'flex-start',
+                marginBottom: '4px',
+              }}
+              onMouseEnter={e => {
+                (e.currentTarget as HTMLElement).style.background = 'var(--bg-tertiary)';
+                (e.currentTarget as HTMLElement).style.color = 'var(--text-primary)';
+              }}
+              onMouseLeave={e => {
+                (e.currentTarget as HTMLElement).style.background = 'transparent';
+                (e.currentTarget as HTMLElement).style.color = 'var(--text-secondary)';
+              }}
+            >
+              <span style={{ flexShrink: 0, color: 'var(--text-tertiary)' }}><ArrowLeft size={18} /></span>
+              {!sidebarCollapsed && (
+                <span style={{ flex: 1, textAlign: 'left' }}>Main Menu</span>
+              )}
+            </button>
+
+            {/* Divider */}
+            {!sidebarCollapsed && (
+              <div style={{
+                height: '1px',
+                background: 'var(--border-primary)',
+                margin: '4px 8px 8px',
+              }} />
+            )}
+
+            {/* Settings navigation items */}
+            {settingsNavItems.map((item) => {
+              const isActive = settingsSubView === item.id;
+              const showSection = item.section && !sidebarCollapsed;
+
+              return (
+                <React.Fragment key={item.id}>
+                  {showSection && (
+                    <div style={{
+                      fontSize: '9px',
+                      fontWeight: 700,
+                      color: 'var(--text-muted)',
+                      letterSpacing: '0.08em',
+                      padding: '16px 8px 6px',
+                      textTransform: 'uppercase',
+                    }}>
+                      {item.section}
+                    </div>
+                  )}
+                  <button
+                    onClick={() => {
+                      if (useAppStore.getState().sidebarCollapsed) {
+                        useAppStore.setState({ sidebarCollapsed: false });
+                      }
+                      setSettingsSubView(item.id);
+                      openTab({
+                        id: 'settings',
+                        label: 'Settings',
+                        view: 'settings',
+                        closable: true,
+                      });
+                    }}
+                    title={sidebarCollapsed ? item.label : undefined}
+                    style={{
+                      width: '100%',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '10px',
+                      padding: sidebarCollapsed ? '10px 0' : '8px 12px',
+                      borderRadius: '6px',
+                      border: 'none',
+                      background: isActive ? 'var(--bg-active)' : 'transparent',
+                      color: isActive ? 'var(--accent-blue)' : 'var(--text-secondary)',
+                      cursor: 'pointer',
+                      fontSize: 'var(--font-nav-size)',
+                      fontWeight: isActive ? 600 : 'var(--font-nav-weight)',
+                      lineHeight: 'var(--font-nav-lh)',
+                      fontFamily: 'var(--font-sans)',
+                      transition: 'all var(--transition-fast)',
+                      justifyContent: sidebarCollapsed ? 'center' : 'flex-start',
+                      marginBottom: '2px',
+                    }}
+                    onMouseEnter={e => {
+                      if (!isActive) {
+                        (e.currentTarget as HTMLElement).style.background = 'var(--bg-tertiary)';
+                        (e.currentTarget as HTMLElement).style.color = 'var(--text-primary)';
+                      }
+                    }}
+                    onMouseLeave={e => {
+                      if (!isActive) {
+                        (e.currentTarget as HTMLElement).style.background = 'transparent';
+                        (e.currentTarget as HTMLElement).style.color = 'var(--text-secondary)';
+                      }
+                    }}
+                  >
+                    <span style={{ 
+                      flexShrink: 0, 
+                      color: isActive ? 'var(--accent-blue)' : 'var(--text-tertiary)' 
+                    }}>{item.icon}</span>
+                    {!sidebarCollapsed && (
+                      <span style={{ flex: 1, textAlign: 'left', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{item.label}</span>
+                    )}
+                  </button>
+                </React.Fragment>
+              );
+            })}
+          </>
+        ) : isExamsMode ? (
           <>
             {/* Back to Main Menu button */}
             <button

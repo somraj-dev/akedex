@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useAppStore } from '@/lib/store';
 import { 
   Building, BookOpen, UserPlus, Fingerprint, CalendarCheck, FileText, 
   Wallet, MessageSquare, Files, Users, Brain, Blocks, Shield, Palette, 
@@ -8,33 +9,13 @@ import {
 } from 'lucide-react';
 
 export default function SettingsView() {
-  const [activeTab, setActiveTab] = useState('Institution');
+  const activeTab = useAppStore(s => s.settingsSubView);
   const [savedStatus, setSavedStatus] = useState<string | null>(null);
 
   const handleSave = () => {
     setSavedStatus('Settings saved successfully!');
     setTimeout(() => setSavedStatus(null), 3000);
   };
-
-  const tabs = [
-    { id: 'Institution', icon: Building, label: 'Institution' },
-    { id: 'Academics', icon: BookOpen, label: 'Academics' },
-    { id: 'Admissions', icon: UserPlus, label: 'Admissions' },
-    { id: 'Student Identity', icon: Fingerprint, label: 'Student Identity' },
-    { id: 'Attendance', icon: CalendarCheck, label: 'Attendance' },
-    { id: 'Examinations', icon: FileText, label: 'Examinations' },
-    { id: 'Fees & Finance', icon: Wallet, label: 'Fees & Finance' },
-    { id: 'Communication', icon: MessageSquare, label: 'Communication' },
-    { id: 'Documents', icon: Files, label: 'Documents' },
-    { id: 'Users & Roles', icon: Users, label: 'Users & Roles' },
-    { id: 'AI Configuration', icon: Brain, label: 'AI Configuration' },
-    { id: 'Integrations', icon: Blocks, label: 'Integrations' },
-    { id: 'Security', icon: Shield, label: 'Security' },
-    { id: 'Branding', icon: Palette, label: 'Branding' },
-    { id: 'Automation', icon: Zap, label: 'Automation' },
-    { id: 'Data Management', icon: Database, label: 'Data Management' },
-    { id: 'Audit Logs', icon: Activity, label: 'Audit Logs' },
-  ];
 
   // Styles matching Applicant Profile Overview
   const inputStyle = {
@@ -92,38 +73,6 @@ export default function SettingsView() {
   return (
     <div style={{ display: 'flex', height: '100%', backgroundColor: 'var(--bg-secondary)', fontFamily: 'var(--font-sans)', overflow: 'hidden' }}>
       
-      {/* Sidebar Navigation */}
-      <div style={{ width: '280px', borderRight: '1px solid var(--border-primary)', backgroundColor: 'var(--bg-primary)', display: 'flex', flexDirection: 'column' }}>
-        <div style={{ padding: '32px 24px 20px' }}>
-          <h2 style={{ fontSize: '24px', fontWeight: 800, color: 'var(--text-primary)', margin: 0, letterSpacing: '-0.5px' }}>Settings</h2>
-        </div>
-        
-        <div style={{ flex: 1, overflowY: 'auto', padding: '0 16px 24px' }}>
-          <nav style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-            {tabs.map(tab => {
-              const Icon = tab.icon;
-              const isActive = activeTab === tab.id;
-              return (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id)}
-                  style={{
-                    display: 'flex', alignItems: 'center', gap: '12px', padding: '10px 16px', borderRadius: '8px',
-                    backgroundColor: isActive ? 'var(--bg-secondary)' : 'transparent',
-                    color: isActive ? 'var(--text-primary)' : 'var(--text-secondary)',
-                    border: 'none', textAlign: 'left', cursor: 'pointer', fontSize: '13px', fontWeight: isActive ? 600 : 500,
-                    transition: 'all 0.2s'
-                  }}
-                >
-                  <Icon size={16} color={isActive ? 'var(--accent-blue)' : 'currentColor'} />
-                  {tab.label}
-                </button>
-              );
-            })}
-          </nav>
-        </div>
-      </div>
-
       {/* Main Content Area */}
       <div style={{ flex: 1, overflowY: 'auto', padding: '40px 80px', position: 'relative' }}>
         <div style={{ maxWidth: '800px', margin: '0 auto' }}>

@@ -26,6 +26,25 @@ export type ExamsSubView =
   | 'exams-certificates'
   | 'exams-reports';
 
+export type SettingsSubView =
+  | 'Institution'
+  | 'Academics'
+  | 'Admissions'
+  | 'Student Identity'
+  | 'Attendance'
+  | 'Examinations'
+  | 'Fees & Finance'
+  | 'Communication'
+  | 'Documents'
+  | 'Users & Roles'
+  | 'AI Configuration'
+  | 'Integrations'
+  | 'Security'
+  | 'Branding'
+  | 'Automation'
+  | 'Data Management'
+  | 'Audit Logs';
+
 export type AppView = 
   | 'activation' 
   | 'login' 
@@ -116,6 +135,10 @@ interface AppState {
   examsSidebarActive: boolean;
   setExamsSidebarActive: (active: boolean) => void;
 
+  // Settings sub-navigation
+  settingsSubView: SettingsSubView;
+  setSettingsSubView: (subView: SettingsSubView) => void;
+
   // Installed widgets
   installedWidgetIds: string[];
   installWidget: (id: string) => void;
@@ -161,6 +184,9 @@ export const useAppStore = create<AppState>((set, get) => ({
   setExamsSubView: (subView) => set({ examsSubView: subView }),
   examsSidebarActive: false,
   setExamsSidebarActive: (active) => set({ examsSidebarActive: active }),
+
+  settingsSubView: 'Institution',
+  setSettingsSubView: (subView) => set({ settingsSubView: subView }),
 
   installedWidgetIds: [
     'total-students', 
