@@ -3731,7 +3731,8 @@ export function getEnrichedTeacherData(teacher: any) {
   const idNum = parseInt(teacher.id.replace('t', '')) || 1;
   const isMeena = idNum === 1;
 
-  const uti = teacher.uti || `UTI-2026-${idNum.toString().padStart(10, '0')}`;
+  const fallbackSuffixes = ['F9X2P5', 'K8L4N7', 'B3J6R9', 'W5Q7T2', 'H4K8V1', 'Z7D3M6'];
+  const uti = teacher.uti || `AKD-TCH-2026-${fallbackSuffixes[(idNum - 1) % 6]}`;
   const name = teacher.name;
   const department = teacher.department;
   const designation = teacher.designation;

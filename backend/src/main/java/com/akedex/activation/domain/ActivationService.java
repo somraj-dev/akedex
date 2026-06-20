@@ -167,10 +167,10 @@ public class ActivationService {
         studentRepository.saveAll(Arrays.asList(s1, s2, s3, s4, s5, s6));
 
         // Seed Teachers
-        createTeacher(tenantId, "UTI-2026-0000001201", "Dr. Meena", "Shah", "Administration", "Principal", "meena.shah@dps.edu", 22);
-        createTeacher(tenantId, "UTI-2026-0000001202", "Mr. Rajiv", "Saxena", "Mathematics", "HOD", "rajiv.s@dps.edu", 15);
-        createTeacher(tenantId, "UTI-2026-0000001203", "Mrs. Anita", "Desai", "Science", "Senior Teacher", "anita.d@dps.edu", 12);
-        createTeacher(tenantId, "UTI-2026-0000001204", "Ms. Pooja", "Iyer", "Accounts", "Accounts Head", "pooja.i@dps.edu", 8);
+        createTeacher(tenantId, "AKD-TCH-2026-F9X2P5", "Dr. Meena", "Shah", "Administration", "Principal", "meena.shah@dps.edu", 22);
+        createTeacher(tenantId, "AKD-TCH-2026-K8L4N7", "Mr. Rajiv", "Saxena", "Mathematics", "HOD", "rajiv.s@dps.edu", 15);
+        createTeacher(tenantId, "AKD-TCH-2026-B3J6R9", "Mrs. Anita", "Desai", "Science", "Senior Teacher", "anita.d@dps.edu", 12);
+        createTeacher(tenantId, "AKD-TCH-2026-W5Q7T2", "Ms. Pooja", "Iyer", "Accounts", "Accounts Head", "pooja.i@dps.edu", 8);
 
         // Seed Workflow Cases
         WorkflowCase c1 = createCase(tenantId, "ADM-2026-000001", WorkflowCase.CaseType.ADMISSION, "New admission application — Ravi Kumar", WorkflowCase.CaseStatus.OPEN, WorkflowCase.CasePriority.HIGH, "Dr. Meena Shah", "Ravi Kumar", "Review documents and schedule interview");

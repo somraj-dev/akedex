@@ -1,4 +1,4 @@
-package com.akedex.admissions.domain;
++ package com.akedex.admissions.domain;
 
 import com.akedex.shared.domain.BaseEntity;
 import jakarta.persistence.*;

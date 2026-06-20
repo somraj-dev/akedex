@@ -21,7 +21,7 @@ import java.util.UUID;
 public class Teacher extends BaseEntity {
 
     @Column(name = "universal_teacher_id", nullable = false, unique = true, length = 30)
-    private String universalTeacherId; // e.g. UTI-2026-0000001203
+    private String universalTeacherId; // e.g. AKD-TCH-2026-0000001203
 
     @Column(name = "first_name", nullable = false)
     private String firstName;

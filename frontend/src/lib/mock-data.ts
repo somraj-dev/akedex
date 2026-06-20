@@ -42,12 +42,12 @@ export const mockAdmissions = [
 ];
 
 export const mockTeachers = [
-  { id: 't1', uti: 'UTI-2026-0000001201', name: 'Dr. Meena Shah', department: 'Administration', designation: 'Principal', email: 'meena.shah@dps.edu', phone: '+91 98100 50001', status: 'ACTIVE', subjects: 'Admin', experience: 22, avatar: '/teacher_1.png' },
-  { id: 't2', uti: 'UTI-2026-0000001202', name: 'Mr. Rajiv Saxena', department: 'Mathematics', designation: 'HOD', email: 'rajiv.s@dps.edu', phone: '+91 98100 50002', status: 'ACTIVE', subjects: 'Mathematics', experience: 15, avatar: '/teacher_2.png' },
-  { id: 't3', uti: 'UTI-2026-0000001203', name: 'Mrs. Anita Desai', department: 'Science', designation: 'Senior Teacher', email: 'anita.d@dps.edu', phone: '+91 98100 50003', status: 'ACTIVE', subjects: 'Physics, Chemistry', experience: 12, avatar: '/teacher_3.png' },
-  { id: 't4', uti: 'UTI-2026-0000001204', name: 'Ms. Pooja Iyer', department: 'Accounts', designation: 'Accounts Head', email: 'pooja.i@dps.edu', phone: '+91 98100 50004', status: 'ACTIVE', subjects: 'N/A', experience: 8, avatar: '/teacher_4.png' },
-  { id: 't5', uti: 'UTI-2026-0000001205', name: 'Mr. Sunil Rao', department: 'Administration', designation: 'Registrar', email: 'sunil.r@dps.edu', phone: '+91 98100 50005', status: 'ACTIVE', subjects: 'N/A', experience: 18, avatar: '/teacher_5.png' },
-  { id: 't6', uti: 'UTI-2026-0000001206', name: 'Mrs. Kavita Menon', department: 'English', designation: 'HOD', email: 'kavita.m@dps.edu', phone: '+91 98100 50006', status: 'ON_LEAVE', subjects: 'English, Literature', experience: 14, avatar: '/teacher_6.png' },
+  { id: 't1', uti: 'AKD-TCH-2026-F9X2P5', name: 'Dr. Meena Shah', department: 'Administration', designation: 'Principal', email: 'meena.shah@dps.edu', phone: '+91 98100 50001', status: 'ACTIVE', subjects: 'Admin', experience: 22, avatar: '/teacher_1.png' },
+  { id: 't2', uti: 'AKD-TCH-2026-K8L4N7', name: 'Mr. Rajiv Saxena', department: 'Mathematics', designation: 'HOD', email: 'rajiv.s@dps.edu', phone: '+91 98100 50002', status: 'ACTIVE', subjects: 'Mathematics', experience: 15, avatar: '/teacher_2.png' },
+  { id: 't3', uti: 'AKD-TCH-2026-B3J6R9', name: 'Mrs. Anita Desai', department: 'Science', designation: 'Senior Teacher', email: 'anita.d@dps.edu', phone: '+91 98100 50003', status: 'ACTIVE', subjects: 'Physics, Chemistry', experience: 12, avatar: '/teacher_3.png' },
+  { id: 't4', uti: 'AKD-TCH-2026-W5Q7T2', name: 'Ms. Pooja Iyer', department: 'Accounts', designation: 'Accounts Head', email: 'pooja.i@dps.edu', phone: '+91 98100 50004', status: 'ACTIVE', subjects: 'N/A', experience: 8, avatar: '/teacher_4.png' },
+  { id: 't5', uti: 'AKD-TCH-2026-H4K8V1', name: 'Mr. Sunil Rao', department: 'Administration', designation: 'Registrar', email: 'sunil.r@dps.edu', phone: '+91 98100 50005', status: 'ACTIVE', subjects: 'N/A', experience: 18, avatar: '/teacher_5.png' },
+  { id: 't6', uti: 'AKD-TCH-2026-Z7D3M6', name: 'Mrs. Kavita Menon', department: 'English', designation: 'HOD', email: 'kavita.m@dps.edu', phone: '+91 98100 50006', status: 'ON_LEAVE', subjects: 'English, Literature', experience: 14, avatar: '/teacher_6.png' },
 ];
 
 export const dashboardMetrics = {
