@@ -28,7 +28,6 @@ const navItems: NavItem[] = [
   { id: 'students', label: 'Students', icon: <Users size={18} />, section: 'ACADEMICS' },
   { id: 'courses', label: 'Courses', icon: <BookOpen size={18} /> },
   { id: 'classes', label: 'Classes', icon: <Layers size={18} /> },
-  { id: 'assignments', label: 'Assignments', icon: <FileSpreadsheet size={18} /> },
   { id: 'exams', label: 'Exams & Assessments', icon: <Award size={18} /> },
   
   // OPERATIONS
@@ -126,7 +125,7 @@ export default function Sidebar() {
   const { 
     currentView, sidebarCollapsed, toggleSidebar, currentUser, logout, 
     financeSubView, examsSubView, examsSidebarActive, setExamsSubView,
-    settingsSubView, setSettingsSubView
+    settingsSubView, setSettingsSubView, institutionInfo
   } = useAppStore();
   const openTab = useAppStore(s => s.openTab);
   const setFinanceSubView = useAppStore(s => s.setFinanceSubView);
@@ -712,7 +711,7 @@ export default function Sidebar() {
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '8px' }}>
               <span style={{ fontSize: 'var(--font-nav-size)', fontWeight: 700, color: 'var(--text-primary)' }}>
-                Axio Education Group
+                {institutionInfo?.name || 'Axio Education Group'}
               </span>
               <CheckCircle2 size={12} className="text-emerald-500 fill-emerald-100" />
             </div>

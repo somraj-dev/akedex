@@ -27,7 +27,6 @@ export default function Dashboard() {
     { id: 'active-courses', label: 'Active Courses', value: '568', change: '+8.4% vs Yesterday', trend: 'up', color: '#a855f7', sparkline: 'M0,20 Q10,18 20,22 T40,15 T60,10 T80,14 T100,5 T120,4', view: 'courses' as AppView, labelNav: 'Courses' },
     { id: 'classes-today', label: 'Classes Today', value: '642', change: '+6.1% vs Yesterday', trend: 'up', color: '#06b6d4', sparkline: 'M0,18 Q10,22 20,15 T40,12 T60,20 T80,10 T100,8 T120,6', view: 'classes' as AppView, labelNav: 'Classes' },
     { id: 'attendance-rate', label: 'Attendance Rate', value: '92.7%', change: '+3.8% vs Yesterday', trend: 'up', color: '#10b981', sparkline: 'M0,22 Q10,20 20,18 T40,14 T60,16 T80,12 T100,10 T120,5', view: 'attendance' as AppView, labelNav: 'Attendance' },
-    { id: 'assignments-submitted', label: 'Assignments Submitted', value: '1,932', change: '+15.3% vs Yesterday', trend: 'up', color: '#f97316', sparkline: 'M0,25 Q10,20 20,22 T40,18 T60,12 T80,15 T100,8 T120,6', view: 'assignments' as AppView, labelNav: 'Assignments' },
     { id: 'exam-pass-rate', label: 'Exam Pass Rate', value: '87.6%', change: '+4.2% vs Yesterday', trend: 'up', color: '#ef4444', sparkline: 'M0,22 Q10,20 20,21 T40,18 T60,14 T80,15 T100,10 T120,8', view: 'exams' as AppView, labelNav: 'Exams & Assessments' }
   ];
 
@@ -47,7 +46,6 @@ export default function Dashboard() {
   const snapshotItems = [
     { label: 'Lectures Conducted', value: '428', icon: <Layers size={14} className="text-blue-500" />, view: 'timetable' as AppView, labelNav: 'Timetable' },
     { label: 'Assessments', value: '156', icon: <Award size={14} className="text-purple-500" />, view: 'exams' as AppView, labelNav: 'Exams & Assessments' },
-    { label: 'Assignments Due', value: '312', icon: <FileSpreadsheet size={14} className="text-orange-500" />, view: 'assignments' as AppView, labelNav: 'Assignments' },
     { label: 'Library Issues', value: '189', icon: <BookMarked size={14} className="text-teal-500" />, view: 'library' as AppView, labelNav: 'Library' },
     { label: 'Counseling Sessions', value: '54', icon: <Users size={14} className="text-indigo-500" />, view: 'communication' as AppView, labelNav: 'Communication' },
     { label: 'Club Activities', value: '23', icon: <Activity size={14} className="text-emerald-500" />, view: 'facilities' as AppView, labelNav: 'Facilities' }
@@ -606,8 +604,7 @@ export default function Dashboard() {
               {[
                 { title: 'At Risk Students', desc: '23 students need immediate academic attention', type: 'Alert', color: '#ef4444', bg: '#fef2f2', view: 'students' as AppView, navLabel: 'Students' },
                 { title: 'High Performing Courses', desc: 'AI & Machine Learning is trending up by 20%', type: 'Insight', color: '#10b981', bg: '#ecfdf5', view: 'courses' as AppView, navLabel: 'Courses' },
-                { title: 'Resource Utilization', desc: 'Lab 3 is at 95% capacity for midterm projects', type: 'Info', color: '#2563eb', bg: '#eff6ff', view: 'facilities' as AppView, navLabel: 'Facilities' },
-                { title: 'Upcoming Deadlines', desc: '12 assignments due this week for Class 10', type: 'Reminder', color: '#f59e0b', bg: '#fffbeb', view: 'assignments' as AppView, navLabel: 'Assignments' }
+                { title: 'Resource Utilization', desc: 'Lab 3 is at 95% capacity for midterm projects', type: 'Info', color: '#2563eb', bg: '#eff6ff', view: 'facilities' as AppView, navLabel: 'Facilities' }
               ].map((intel, idx) => (
                 <div 
                   key={idx} 

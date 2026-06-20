@@ -2673,8 +2673,8 @@ export function StudentDocumentsTab({ studentId, sData }: { studentId: string; s
                   flexShrink: 0
                 }}>
                   <img 
-                    src="/student_avatar.png" 
-                    alt="Aditya Kumar" 
+                    src={sData.avatar} 
+                    alt={sData.fullName} 
                     style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                     onError={(e) => {
                       e.currentTarget.style.display = 'none';

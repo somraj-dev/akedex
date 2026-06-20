@@ -22,11 +22,12 @@ import OrganizationsView from '@/components/OrganizationsView';
 import EditStudentDataWizard from '@/components/EditStudentDataWizard';
 import ParentalAccess from '@/components/ParentalAccess';
 import TransferCenter from '@/components/TransferCenter';
+import EditInstituteWizard from '@/components/EditInstituteWizard';
 import { CollectFeesFlow } from '@/components/CollectFeesFlow';
 import { 
   TeachersView, DocumentsView, AttendanceView, 
   InstitutionView, AuditView, SearchView,
-  CoursesView, ClassesView, AssignmentsView, ExamsView,
+  CoursesView, ClassesView, ExamsView,
   TimetableView, GradebookView, LibraryView, CommunicationView,
   FinanceView, FacilitiesView, ReportsView, SystemLogsView,
   ProfileView, NotificationsView, StudentProfileView, TeacherProfileView,
@@ -92,8 +93,6 @@ export default function Page() {
         return <CoursesView />;
       case 'classes':
         return <ClassesView />;
-      case 'assignments':
-        return <AssignmentsView />;
       case 'exams':
         return <ExamsView />;
       case 'timetable':
@@ -136,6 +135,8 @@ export default function Page() {
         return <TransferCenter preselectedStudentId={activeTabId.startsWith('transfer-app-') ? activeTabId.replace('transfer-app-', '') : undefined} />;
       case 'collect-fees-flow':
         return <CollectFeesFlow />;
+      case 'edit-institute':
+        return <EditInstituteWizard />;
       default:
         return <Dashboard />;
     }

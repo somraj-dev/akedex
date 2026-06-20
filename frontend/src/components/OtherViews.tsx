@@ -26,6 +26,7 @@ import {
 } from './FinanceSubViews';
 import AdmitCardCenter from './AdmitCardCenter';
 import ResultProcessingCenter from './ResultProcessingCenter';
+import SchoolProfileView from './SchoolProfileView';
 
 // =====================================================
 // TEACHERS VIEW (Already defined, but kept clean)
@@ -104,7 +105,47 @@ export function TeachersView() {
                   style={{ cursor: 'pointer' }}
                 >
                   <td className="font-mono text-xs" style={{ color: t.id === selectedTeacherId ? 'var(--accent-purple)' : 'var(--text-primary)' }}>{t.uti}</td>
-                  <td style={{ fontWeight: 600 }}>{t.name}</td>
+                  <td style={{ fontWeight: 600 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <div style={{ 
+                        width: '24px', 
+                        height: '24px', 
+                        borderRadius: '50%', 
+                        overflow: 'hidden', 
+                        background: 'var(--bg-tertiary)', 
+                        display: 'flex', 
+                        alignItems: 'center', 
+                        justifyContent: 'center', 
+                        border: '1px solid var(--border-primary)',
+                        flexShrink: 0 
+                      }}>
+                        <img 
+                          src={t.avatar} 
+                          alt={t.name}
+                          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                          onError={(e) => {
+                            e.currentTarget.style.display = 'none';
+                            const parent = e.currentTarget.parentElement;
+                            if (parent) {
+                              const placeholder = document.createElement('div');
+                              placeholder.style.width = '100%';
+                              placeholder.style.height = '100%';
+                              placeholder.style.display = 'flex';
+                              placeholder.style.alignItems = 'center';
+                              placeholder.style.justifyContent = 'center';
+                              placeholder.style.background = 'linear-gradient(135deg, var(--accent-purple), var(--accent-cyan))';
+                              placeholder.style.color = '#ffffff';
+                              placeholder.style.fontSize = '9px';
+                              placeholder.style.fontWeight = '700';
+                              placeholder.innerText = t.name.split(' ').map((n: string) => n[0]).join('');
+                              parent.appendChild(placeholder);
+                            }
+                          }}
+                        />
+                      </div>
+                      <span>{t.name}</span>
+                    </div>
+                  </td>
                   <td>{t.department}</td>
                   <td>{t.designation}</td>
                   <td>
@@ -224,14 +265,30 @@ export function TeachersView() {
 
             {/* Profile strip */}
             <div style={{ display: 'flex', gap: '16px', alignItems: 'center', marginBottom: '20px' }}>
-              <div style={{ width: '56px', height: '56px', borderRadius: '50%', border: '1px solid var(--border-primary)', overflow: 'hidden', background: 'var(--bg-tertiary)', flexShrink: 0 }}>
-                {tData.id === 't1' ? (
-                  <img src="/teacher_avatar.png" alt={tData.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                ) : (
-                  <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'linear-gradient(135deg, var(--accent-purple), var(--accent-cyan))', color: '#ffffff', fontWeight: 800, fontSize: '16px' }}>
-                    {tData.name.split(' ').map((n: string) => n[0]).join('')}
-                  </div>
-                )}
+              <div style={{ width: '56px', height: '56px', borderRadius: '50%', border: '1px solid var(--border-primary)', overflow: 'hidden', background: 'var(--bg-tertiary)', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <img 
+                  src={tData.avatar} 
+                  alt={tData.name} 
+                  style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+                  onError={(e) => {
+                    e.currentTarget.style.display = 'none';
+                    const parent = e.currentTarget.parentElement;
+                    if (parent) {
+                      const placeholder = document.createElement('div');
+                      placeholder.style.width = '100%';
+                      placeholder.style.height = '100%';
+                      placeholder.style.display = 'flex';
+                      placeholder.style.alignItems = 'center';
+                      placeholder.style.justifyContent = 'center';
+                      placeholder.style.background = 'linear-gradient(135deg, var(--accent-purple), var(--accent-cyan))';
+                      placeholder.style.color = '#ffffff';
+                      placeholder.style.fontWeight = '800';
+                      placeholder.style.fontSize = '16px';
+                      placeholder.innerText = tData.name.split(' ').map((n: string) => n[0]).join('');
+                      parent.appendChild(placeholder);
+                    }
+                  }}
+                />
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -824,55 +881,6 @@ export function ClassesView() {
                 <td className="font-mono">{c.count}</td>
                 <td className="font-mono">{c.todayLectures} Lectures</td>
                 <td style={{ color: c.capacity.includes('Full') ? 'var(--accent-red)' : 'var(--text-primary)', fontWeight: 600 }}>{c.capacity}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </div>
-  );
-}
-
-// =====================================================
-// ASSIGNMENTS VIEW (NEW)
-// =====================================================
-export function AssignmentsView() {
-  const assignments = [
-    { title: 'Tree traversals implementation', course: 'CS-201', due: '2026-06-10', submissions: '38/40', status: 'GRADING_IN_PROGRESS' },
-    { title: 'Graph theory problem ledger', course: 'MA-102', due: '2026-06-15', submissions: '20/40', status: 'OPEN' },
-    { title: 'Photoelectric effect reports', course: 'PHY-301', due: '2026-06-08', submissions: '35/35', status: 'COMPLETED' },
-    { title: 'Proposal document writeup', course: 'ENG-101', due: '2026-06-12', submissions: '320/320', status: 'COMPLETED' }
-  ];
-
-  return (
-    <div style={{ padding: '16px', background: 'var(--bg-primary)', height: '100%', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '16px' }}>
-      <div>
-        <h2 style={{ fontSize: '16px', fontWeight: 700, color: 'var(--text-primary)', margin: 0 }}>Assignments Management</h2>
-        <p style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>Track task submissions, attestation checklists, and grading queues.</p>
-      </div>
-      <div style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-primary)', borderRadius: '12px', overflow: 'hidden' }}>
-        <table className="data-table">
-          <thead>
-            <tr>
-              <th>Assignment Title</th>
-              <th>Course</th>
-              <th>Due Date</th>
-              <th>Submissions Ratio</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {assignments.map((a, idx) => (
-              <tr key={idx}>
-                <td style={{ fontWeight: 600 }}>{a.title}</td>
-                <td className="font-mono text-xs">{a.course}</td>
-                <td className="font-mono text-xs">{a.due}</td>
-                <td className="font-mono">{a.submissions}</td>
-                <td>
-                  <span className={`badge ${a.status === 'COMPLETED' ? 'badge-active' : a.status === 'OPEN' ? 'badge-info' : 'badge-warning'}`}>
-                    {a.status.replace('_', ' ')}
-                  </span>
-                </td>
               </tr>
             ))}
           </tbody>
@@ -2599,182 +2607,7 @@ export function SystemLogsView() {
 // PROFILE VIEW (NEW)
 // =====================================================
 export function ProfileView() {
-  const { currentUser, logout } = useAppStore();
-  const [activeTab, setActiveTab] = useState('credentials');
-  
-  if (!currentUser) return <div style={{ padding: '24px', color: 'var(--text-secondary)' }}>No active operator session.</div>;
-
-  return (
-    <div style={{ display: 'flex', height: '100%', background: 'var(--bg-primary)', overflow: 'hidden' }}>
-      {/* Left Profile Summary Card */}
-      <div style={{ flex: 0.8, borderRight: '1px solid var(--border-primary)', display: 'flex', flexDirection: 'column', background: 'var(--bg-secondary)', padding: '24px', gap: '16px' }}>
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px', textAlign: 'center' }}>
-          <div style={{
-            width: '80px', height: '80px', borderRadius: '50%',
-            background: 'linear-gradient(135deg, var(--accent-blue), var(--accent-purple))',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            fontSize: '28px', fontWeight: 800, color: 'white',
-            boxShadow: '0 4px 12px rgba(59,130,246,0.2)'
-          }}>
-            {currentUser.name.split(' ').map(n => n[0]).join('')}
-          </div>
-          <div>
-            <h2 style={{ fontSize: '18px', fontWeight: 800, color: 'var(--text-primary)', margin: 0 }}>{currentUser.name}</h2>
-            <div style={{ fontSize: '12px', color: 'var(--text-secondary)', fontWeight: 600, marginTop: '2px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px' }}>
-              <Shield size={12} className="text-blue-500" /> {currentUser.role}
-            </div>
-            <div style={{ fontSize: '11px', color: 'var(--text-tertiary)', marginTop: '4px' }}>{currentUser.institution}</div>
-          </div>
-        </div>
-
-        <div style={{ height: '1px', background: 'var(--border-primary)' }} />
-
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-          <div>
-            <div style={{ fontSize: '9px', color: 'var(--text-tertiary)', fontWeight: 700, textTransform: 'uppercase' }}>Operator UUID</div>
-            <div style={{ fontSize: '11px', color: 'var(--text-secondary)', fontFamily: 'var(--font-mono)', marginTop: '2px' }}>usr-8942-dps-sharma</div>
-          </div>
-          <div>
-            <div style={{ fontSize: '9px', color: 'var(--text-tertiary)', fontWeight: 700, textTransform: 'uppercase' }}>Security Domain</div>
-            <div style={{ fontSize: '11px', color: 'var(--text-secondary)', marginTop: '2px' }}>Axio Group Network Nodes</div>
-          </div>
-          <div>
-            <div style={{ fontSize: '9px', color: 'var(--text-tertiary)', fontWeight: 700, textTransform: 'uppercase' }}>Attestation Power</div>
-            <div style={{ fontSize: '11px', color: 'var(--accent-green)', fontWeight: 700, marginTop: '2px' }}>Level 5 (Unrestricted Ledger Sign)</div>
-          </div>
-        </div>
-
-        <button 
-          onClick={logout}
-          className="btn btn-secondary" 
-          style={{ marginTop: 'auto', color: 'var(--accent-red)', border: '1px solid var(--accent-red)', background: 'var(--accent-red-dim)', gap: '6px', justifyContent: 'center' }}
-        >
-          <LogOut size={14} /> Terminate Session
-        </button>
-      </div>
-
-      {/* Right Details Panel */}
-      <div style={{ flex: 1.2, display: 'flex', flexDirection: 'column', height: '100%', overflow: 'hidden' }}>
-        {/* Sub Navigation */}
-        <div style={{ display: 'flex', background: 'var(--bg-secondary)', borderBottom: '1px solid var(--border-primary)', padding: '0 16px', height: '40px', alignItems: 'center', gap: '16px' }}>
-          {[
-            { id: 'credentials', label: 'Operator Credentials' },
-            { id: 'security', label: 'Security & Certs' },
-            { id: 'audit', label: 'Personal Audit Log' }
-          ].map(tab => (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              style={{
-                height: '100%',
-                background: 'transparent',
-                border: 'none',
-                borderBottom: activeTab === tab.id ? '2px solid var(--accent-blue)' : '2px solid transparent',
-                color: activeTab === tab.id ? 'var(--accent-blue)' : 'var(--text-secondary)',
-                fontWeight: activeTab === tab.id ? 700 : 500,
-                fontSize: '12px',
-                cursor: 'pointer',
-                padding: '0 4px',
-                transition: 'all var(--transition-fast)'
-              }}
-            >
-              {tab.label}
-            </button>
-          ))}
-        </div>
-
-        {/* Content Area */}
-        <div style={{ flex: 1, overflowY: 'auto', padding: '24px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
-          {activeTab === 'credentials' && (
-            <>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-                <div style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-primary)', borderRadius: '8px', padding: '16px' }}>
-                  <div style={{ fontSize: '10px', color: 'var(--text-tertiary)', fontWeight: 600 }}>FIRST NAME</div>
-                  <div style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)', marginTop: '4px' }}>Priya</div>
-                </div>
-                <div style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-primary)', borderRadius: '8px', padding: '16px' }}>
-                  <div style={{ fontSize: '10px', color: 'var(--text-tertiary)', fontWeight: 600 }}>LAST NAME</div>
-                  <div style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)', marginTop: '4px' }}>Sharma</div>
-                </div>
-                <div style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-primary)', borderRadius: '8px', padding: '16px' }}>
-                  <div style={{ fontSize: '10px', color: 'var(--text-tertiary)', fontWeight: 600 }}>EMAIL ADDRESS</div>
-                  <div style={{ fontSize: '13px', color: 'var(--text-primary)', marginTop: '4px' }}>{currentUser.email}</div>
-                </div>
-                <div style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-primary)', borderRadius: '8px', padding: '16px' }}>
-                  <div style={{ fontSize: '10px', color: 'var(--text-tertiary)', fontWeight: 600 }}>PHONE NUMBER</div>
-                  <div style={{ fontSize: '13px', color: 'var(--text-primary)', fontFamily: 'var(--font-mono)', marginTop: '4px' }}>+91 98765 43210</div>
-                </div>
-              </div>
-              <div style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-primary)', borderRadius: '8px', padding: '16px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                <h4 style={{ fontSize: '12px', fontWeight: 700, color: 'var(--text-primary)', margin: 0 }}>BIOGRAPHIC ATTESTATION</h4>
-                <p style={{ fontSize: '12px', color: 'var(--text-secondary)', lineHeight: 1.5, margin: 0 }}>
-                  Dr. Priya Sharma is the Director of Academic Operations for Axio Education Group and acts as the Super Admin for the Akedex environment. She holds a Ph.D. in Educational Administration and coordinates campus networks.
-                </p>
-              </div>
-            </>
-          )}
-
-          {activeTab === 'security' && (
-            <>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                <div style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-primary)', borderRadius: '8px', padding: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <div>
-                    <div style={{ fontSize: '12px', fontWeight: 700, color: 'var(--text-primary)' }}>Cryptographic Ledger Sign Key</div>
-                    <div style={{ fontSize: '11px', color: 'var(--text-secondary)', fontFamily: 'var(--font-mono)', marginTop: '2px' }}>SHA256: 4f9c8d2a1b9e3f7c0a8...</div>
-                  </div>
-                  <button className="btn btn-secondary btn-xs" style={{ display: 'flex', gap: '4px' }}><Key size={12} /> Rotate Key</button>
-                </div>
-
-                <div style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-primary)', borderRadius: '8px', padding: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <div>
-                    <div style={{ fontSize: '12px', fontWeight: 700, color: 'var(--text-primary)' }}>Multi-Factor Authentication (MFA)</div>
-                    <div style={{ fontSize: '11px', color: 'var(--text-secondary)', marginTop: '2px' }}>YubiKey FIDO2 Security Token enabled</div>
-                  </div>
-                  <span className="badge badge-active">ENABLED</span>
-                </div>
-
-                <div style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-primary)', borderRadius: '8px', padding: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <div>
-                    <div style={{ fontSize: '12px', fontWeight: 700, color: 'var(--text-primary)' }}>IP Restriction Shield</div>
-                    <div style={{ fontSize: '11px', color: 'var(--text-secondary)', marginTop: '2px' }}>Only allow operations from verified institutional subnets</div>
-                  </div>
-                  <span className="badge badge-active">ACTIVE</span>
-                </div>
-              </div>
-            </>
-          )}
-
-          {activeTab === 'audit' && (
-            <div style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-primary)', borderRadius: '8px', overflow: 'hidden' }}>
-              <table className="data-table">
-                <thead>
-                  <tr>
-                    <th>Timestamp</th>
-                    <th>Action</th>
-                    <th>Node Address</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {[
-                    { time: '2026-06-05 10:28:21', action: 'Operator session started successfully', ip: '192.168.1.100' },
-                    { time: '2026-06-05 09:42:15', action: 'Attested CBSE Marks Transcript Ledger', ip: '192.168.1.100' },
-                    { time: '2026-06-04 18:12:04', action: 'Resolved admissions query case #CAS-912', ip: '192.168.1.102' },
-                    { time: '2026-06-04 14:02:50', action: 'Modified timetable parameters for Lab 3', ip: '192.168.1.100' }
-                  ].map((row, idx) => (
-                    <tr key={idx}>
-                      <td className="font-mono text-xs" style={{ color: 'var(--text-secondary)' }}>{row.time}</td>
-                      <td style={{ fontWeight: 600 }}>{row.action}</td>
-                      <td className="font-mono text-xs">{row.ip}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
-        </div>
-      </div>
-    </div>
-  );
+  return <SchoolProfileView />;
 }
 
 // =====================================================
@@ -3059,7 +2892,8 @@ function getEnrichedStudentData(student: any) {
     absentDays,
     leaveDays,
     halfDays,
-    documents
+    documents,
+    avatar: student.avatar || `/student_${student.id}.png`
   };
 }
 
@@ -3144,7 +2978,7 @@ export function StudentProfileView() {
           {/* Portrait Photo Wrapper */}
           <div style={{ position: 'relative', width: '110px', height: '110px', borderRadius: '12px', border: '1px solid var(--border-primary)', overflow: 'hidden', background: 'var(--bg-tertiary)', flexShrink: 0 }}>
             <img 
-              src="/student_avatar.png" 
+              src={sData.avatar} 
               alt={sData.fullName}
               style={{ width: '100%', height: '100%', objectFit: 'cover' }}
               onError={(e) => {
@@ -3985,6 +3819,7 @@ export function getEnrichedTeacherData(teacher: any) {
 
   return {
     id: teacher.id,
+    avatar: teacher.avatar || `/teacher_${teacher.id.replace('t', '')}.png`,
     uti,
     name,
     department,
@@ -4038,18 +3873,30 @@ export function TeacherProfileView() {
         <div style={{ display: 'flex', gap: '24px', flex: 1, minWidth: '320px' }}>
           
           {/* Portrait Photo Wrapper */}
-          <div style={{ position: 'relative', width: '110px', height: '110px', borderRadius: '12px', border: '1px solid var(--border-primary)', overflow: 'hidden', background: 'var(--bg-tertiary)', flexShrink: 0 }}>
-            {tData.id === 't1' ? (
-              <img 
-                src="/teacher_avatar.png" 
-                alt={tData.name}
-                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-              />
-            ) : (
-              <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'linear-gradient(135deg, var(--accent-purple), var(--accent-cyan))', color: '#ffffff', fontSize: '32px', fontWeight: '800' }}>
-                {tData.name.split(' ').map((n: string) => n[0]).join('')}
-              </div>
-            )}
+          <div style={{ position: 'relative', width: '110px', height: '110px', borderRadius: '50%', border: '1px solid var(--border-primary)', overflow: 'hidden', background: 'var(--bg-tertiary)', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <img 
+              src={tData.avatar} 
+              alt={tData.name}
+              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+              onError={(e) => {
+                e.currentTarget.style.display = 'none';
+                const parent = e.currentTarget.parentElement;
+                if (parent) {
+                  const placeholder = document.createElement('div');
+                  placeholder.style.width = '100%';
+                  placeholder.style.height = '100%';
+                  placeholder.style.display = 'flex';
+                  placeholder.style.alignItems = 'center';
+                  placeholder.style.justifyContent = 'center';
+                  placeholder.style.background = 'linear-gradient(135deg, var(--accent-purple), var(--accent-cyan))';
+                  placeholder.style.color = '#ffffff';
+                  placeholder.style.fontSize = '32px';
+                  placeholder.style.fontWeight = '800';
+                  placeholder.innerText = tData.name.split(' ').map((n: string) => n[0]).join('');
+                  parent.appendChild(placeholder);
+                }
+              }}
+            />
           </div>
 
           {/* Demographic Metadata */}
@@ -4555,21 +4402,7 @@ const widgetsList: WidgetItem[] = [
     howItWorks: 'The Attendance Rate widget computes a weighted average of student presence across all scheduled sessions for the day. It factors in late arrivals, early departures, and excused absences to provide a nuanced view of institutional attendance health.',
     features: ['Weighted attendance calculation', 'Absentee pattern detection', 'Cohort-level breakdowns', 'Automatic alert thresholds']
   },
-  {
-    id: 'assignments-submitted',
-    label: 'Assignments Submitted',
-    value: '1,932',
-    change: '+15.3% vs Yesterday',
-    trend: 'up',
-    color: '#f97316',
-    sparkline: 'M0,25 Q10,20 20,22 T40,18 T60,12 T80,15 T100,8 T120,6',
-    view: 'assignments',
-    labelNav: 'Assignments',
-    description: 'Keeps track of homework compliance, student task submissions, and grading workloads.',
-    category: 'Administrative & Operational',
-    howItWorks: 'The Assignments Submitted widget tracks all homework, projects, and lab reports submitted across the institution. It monitors submission timelines against due dates to calculate on-time compliance rates and flags overdue items for teacher review.',
-    features: ['Submission timeline tracking', 'On-time compliance rates', 'Overdue item alerts', 'Grading workload estimation']
-  },
+
   {
     id: 'exam-pass-rate',
     label: 'Exam Pass Rate',
@@ -4593,7 +4426,6 @@ const widgetIconMap: Record<string, React.ReactNode> = {
   'active-courses': <BookOpen size={20} />,
   'classes-today': <Layers size={20} />,
   'attendance-rate': <UserCheck size={20} />,
-  'assignments-submitted': <Clipboard size={20} />,
   'exam-pass-rate': <Award size={20} />,
 };
 
@@ -7028,7 +6860,7 @@ export function StudentReportCardView() {
               }}>
                 {!imageFailed ? (
                   <img 
-                    src="/student_avatar.png" 
+                    src={sData.avatar} 
                     alt={sData.fullName}
                     style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                     onError={() => setImageFailed(true)}
@@ -7576,7 +7408,7 @@ export function StudentTranscriptView() {
                 <div style={{ width: '65px', height: '78px', borderRadius: '4px', overflow: 'hidden', border: '1px solid #cbd5e1', background: '#f8fafc', flexShrink: 0 }}>
                   {!imageFailed ? (
                     <img 
-                      src="/student_avatar.png" 
+                      src={sData.avatar} 
                       alt={sData.fullName} 
                       style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                       onError={() => setImageFailed(true)}

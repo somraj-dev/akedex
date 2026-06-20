@@ -329,7 +329,7 @@ export default function ReportCardCenter() {
                       width: '32px', height: '32px', borderRadius: '50%', overflow: 'hidden', background: 'var(--bg-tertiary)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0
                     }}>
                       <img 
-                        src="/student_avatar.png" 
+                        src={student.avatar || `/student_${student.id}.png`} 
                         alt={student.firstName}
                         style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                       />
@@ -559,7 +559,7 @@ export default function ReportCardCenter() {
             
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px', paddingBottom: '12px', borderBottom: '1px solid var(--border-secondary)' }}>
               <img 
-                src="/student_avatar.png" 
+                src={selectedStudent.avatar} 
                 alt={selectedStudent.fullName}
                 style={{ width: '44px', height: '44px', borderRadius: '50%', objectFit: 'cover' }}
               />

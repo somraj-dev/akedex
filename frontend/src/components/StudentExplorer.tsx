@@ -111,7 +111,45 @@ export default function StudentExplorer() {
                       {student.universalAcademicId || student.uai}
                     </td>
                     <td style={{ fontWeight: 600 }}>
-                      {student.firstName} {student.lastName}
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <div style={{ 
+                          width: '24px', 
+                          height: '24px', 
+                          borderRadius: '50%', 
+                          overflow: 'hidden', 
+                          background: 'var(--bg-tertiary)', 
+                          display: 'flex', 
+                          alignItems: 'center', 
+                          justifyContent: 'center', 
+                          border: '1px solid var(--border-primary)',
+                          flexShrink: 0 
+                        }}>
+                          <img 
+                            src={student.avatar} 
+                            alt={`${student.firstName} ${student.lastName}`}
+                            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                            onError={(e) => {
+                              e.currentTarget.style.display = 'none';
+                              const parent = e.currentTarget.parentElement;
+                              if (parent) {
+                                const placeholder = document.createElement('div');
+                                placeholder.style.width = '100%';
+                                placeholder.style.height = '100%';
+                                placeholder.style.display = 'flex';
+                                placeholder.style.alignItems = 'center';
+                                placeholder.style.justifyContent = 'center';
+                                placeholder.style.background = 'linear-gradient(135deg, var(--accent-blue), var(--accent-purple))';
+                                placeholder.style.color = '#ffffff';
+                                placeholder.style.fontSize = '10px';
+                                placeholder.style.fontWeight = '700';
+                                placeholder.innerText = `${student.firstName[0]}${student.lastName[0]}`;
+                                parent.appendChild(placeholder);
+                              }
+                            }}
+                          />
+                        </div>
+                        <span>{student.firstName} {student.lastName}</span>
+                      </div>
                     </td>
                     <td>{student.currentClass || student.class}</td>
                     <td className="font-mono">

@@ -62,7 +62,6 @@ export type AppView =
   | 'audit'
   | 'courses'
   | 'classes'
-  | 'assignments'
   | 'exams'
   | 'timetable'
   | 'gradebook'
@@ -88,6 +87,7 @@ export type AppView =
   | 'transfer-center'
   | 'parental-access'
   | 'collect-fees-flow'
+  | 'edit-institute'
   | 'organizations';
 
 export type WorkspaceTab = {
@@ -156,7 +156,25 @@ interface AppState {
   setActiveTab: (tabId: string) => void;
   reorderTabs: (startIndex: number, endIndex: number) => void;
   selectEntity: (id: string | null) => void;
-  toggleDetailPanel: () => void;
+  // Institution Info
+  institutionInfo: {
+    name: string;
+    affiliationBoard: string;
+    affiliationNo: string;
+    schoolCode: string;
+    address: string;
+    phone: string;
+    email: string;
+    website: string;
+    slogan: string;
+    verified: boolean;
+    logoText1: string;
+    logoText2: string;
+    logoText3: string;
+    logoTextSub: string;
+    bannerUrl: string;
+  };
+  updateInstitutionInfo: (info: Partial<AppState['institutionInfo']>) => void;
 }
 
 export const useAppStore = create<AppState>((set, get) => ({
@@ -193,7 +211,6 @@ export const useAppStore = create<AppState>((set, get) => ({
     'active-courses', 
     'classes-today', 
     'attendance-rate', 
-    'assignments-submitted', 
     'exam-pass-rate'
   ],
   installWidget: (id) => set(s => ({
@@ -280,4 +297,25 @@ export const useAppStore = create<AppState>((set, get) => ({
   selectEntity: (id) => set({ selectedEntityId: id, detailPanelOpen: id !== null }),
 
   toggleDetailPanel: () => set(s => ({ detailPanelOpen: !s.detailPanelOpen })),
+
+  institutionInfo: {
+    name: 'Fun & Learn School',
+    affiliationBoard: 'CBSE',
+    affiliationNo: '830123',
+    schoolCode: 'FLS2015',
+    address: 'Koramangala, Bangalore, Karnataka - 560034',
+    phone: '+91 98765 43210',
+    email: 'info@funandlearnschool.edu.in',
+    website: 'www.funandlearnschool.edu.in',
+    slogan: 'Inspiring Young Minds. Building Bright Futures.',
+    verified: true,
+    logoText1: 'FUN',
+    logoText2: '&',
+    logoText3: 'LEARN',
+    logoTextSub: 'SCHOOL',
+    bannerUrl: '/school_banner.png',
+  },
+  updateInstitutionInfo: (info) => set((state) => ({
+    institutionInfo: { ...state.institutionInfo, ...info }
+  })),
 }));
