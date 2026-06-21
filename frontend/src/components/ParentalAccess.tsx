@@ -43,8 +43,10 @@ export default function ParentalAccess({ studentId }: { studentId?: string }) {
     });
   };
 
+  const showToast = useAppStore(s => s.showToast);
+
   const handleGrantAccess = () => {
-    alert(`Access granted for ${formData.parentName} to student ${student.firstName} ${student.lastName}`);
+    showToast(`Access granted for ${formData.parentName} to student ${student.firstName} ${student.lastName}`, "success");
     closeTab(activeTabId);
   };
 

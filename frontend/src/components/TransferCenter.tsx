@@ -71,10 +71,12 @@ export default function TransferCenter({ preselectedStudentId }: { preselectedSt
     return true;
   });
 
+  const showToast = useAppStore(s => s.showToast);
+
   // Actions
   const handleNewSubmit = () => {
     if (!parentDec || !consentConf || !activeStudent) {
-      alert("Please check declarations and ensure a student is selected.");
+      showToast("Please check declarations and ensure a student is selected.", "error");
       return;
     }
     const newApp = {

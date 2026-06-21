@@ -1860,57 +1860,6 @@ export default function ResultProcessingCenter() {
             <option value="Annual Examination 2024-25">Annual Examination 2024-25</option>
           </select>
 
-          {/* Search query inside header */}
-          <div style={{ position: 'relative', width: '200px' }}>
-            <Search size={14} style={{
-              position: 'absolute',
-              left: '10px',
-              top: '50%',
-              transform: 'translateY(-50%)',
-              color: 'var(--text-muted)'
-            }} />
-            <input
-              type="text"
-              placeholder="Search students, exams, classes..."
-              value={searchQuery}
-              onChange={e => setSearchQuery(e.target.value)}
-              className="input-field"
-              style={{ paddingLeft: '30px', height: '32px', borderRadius: '6px', fontSize: '11px' }}
-            />
-          </div>
-
-          {/* Notifications count */}
-          <button style={{
-            position: 'relative',
-            background: 'var(--bg-secondary)',
-            border: '1px solid var(--border-primary)',
-            borderRadius: '6px',
-            width: '32px',
-            height: '32px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            color: 'var(--text-secondary)',
-            cursor: 'pointer'
-          }}>
-            <Bell size={16} />
-            <span style={{
-              position: 'absolute',
-              top: '-2px',
-              right: '-2px',
-              background: 'var(--accent-red)',
-              color: '#ffffff',
-              fontSize: '8px',
-              fontWeight: 700,
-              borderRadius: '50%',
-              width: '14px',
-              height: '14px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center'
-            }}>6</span>
-          </button>
-
           {/* "+ Create New Result" button */}
           <button 
             onClick={() => setIsCreateWizardOpen(true)}

@@ -291,6 +291,99 @@ export default function Page() {
 
       {/* Global Command Bar Shortcut (Ctrl+K) */}
       <CommandBar />
+
+      {/* Global Toast Notification */}
+      <Toast />
+    </div>
+  );
+}
+
+function Toast() {
+  const { toastMessage, toastType, hideToast } = useAppStore();
+
+  React.useEffect(() => {
+    if (toastMessage) {
+      const timer = setTimeout(() => {
+        hideToast();
+      }, 3500);
+      return () => clearTimeout(timer);
+    }
+  }, [toastMessage, hideToast]);
+
+  if (!toastMessage) return null;
+
+  let accentColor = 'var(--accent-blue)';
+
+  if (toastType === 'success') {
+    accentColor = 'var(--accent-green)';
+  } else if (toastType === 'error') {
+    accentColor = 'var(--accent-red)';
+  } else if (toastType === 'info') {
+    accentColor = 'var(--accent-blue)';
+  }
+
+  return (
+    <div style={{
+      position: 'fixed',
+      bottom: '24px',
+      right: '24px',
+      zIndex: 9999,
+      display: 'flex',
+      alignItems: 'center',
+      gap: '12px',
+      padding: '12px 18px',
+      borderRadius: '12px',
+      background: 'rgba(15, 23, 42, 0.95)',
+      border: '1px solid rgba(255, 255, 255, 0.1)',
+      boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.25), 0 10px 10px -5px rgba(0, 0, 0, 0.2)',
+      backdropFilter: 'blur(8px)',
+      color: '#ffffff',
+      fontFamily: 'var(--font-sans)',
+      fontSize: '13px',
+      fontWeight: 500,
+      minWidth: '280px',
+      maxWidth: '450px',
+      animation: 'toastSlideIn 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
+    }}>
+      <style>{`
+        @keyframes toastSlideIn {
+          from {
+            transform: translateY(100%) scale(0.9);
+            opacity: 0;
+          }
+          to {
+            transform: translateY(0) scale(1);
+            opacity: 1;
+          }
+        }
+      `}</style>
+      <div style={{
+        width: '6px',
+        height: '6px',
+        borderRadius: '50%',
+        background: accentColor,
+        boxShadow: `0 0 8px ${accentColor}`,
+        flexShrink: 0,
+      }} />
+      <span style={{ flex: 1, color: 'rgba(255,255,255,0.95)' }}>{toastMessage}</span>
+      <button 
+        onClick={hideToast}
+        style={{
+          background: 'transparent',
+          border: 'none',
+          color: 'rgba(255,255,255,0.5)',
+          cursor: 'pointer',
+          padding: '2px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          transition: 'color 100ms ease',
+        }}
+        onMouseEnter={e => e.currentTarget.style.color = '#ffffff'}
+        onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,255,255,0.5)'}
+      >
+        <X size={14} />
+      </button>
     </div>
   );
 }

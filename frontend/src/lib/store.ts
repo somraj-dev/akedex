@@ -175,6 +175,10 @@ interface AppState {
     bannerUrl: string;
   };
   updateInstitutionInfo: (info: Partial<AppState['institutionInfo']>) => void;
+  toastMessage: string | null;
+  toastType: 'success' | 'info' | 'error' | null;
+  showToast: (message: string, type?: 'success' | 'info' | 'error') => void;
+  hideToast: () => void;
 }
 
 export const useAppStore = create<AppState>((set, get) => ({
@@ -318,4 +322,11 @@ export const useAppStore = create<AppState>((set, get) => ({
   updateInstitutionInfo: (info) => set((state) => ({
     institutionInfo: { ...state.institutionInfo, ...info }
   })),
+
+  toastMessage: null,
+  toastType: null,
+  showToast: (message, type = 'success') => {
+    set({ toastMessage: message, toastType: type });
+  },
+  hideToast: () => set({ toastMessage: null, toastType: null }),
 }));

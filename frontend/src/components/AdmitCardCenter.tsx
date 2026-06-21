@@ -173,57 +173,6 @@ export default function AdmitCardCenter() {
         </div>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
-          {/* Top Search */}
-          <div style={{ position: 'relative', width: '220px' }}>
-            <Search size={14} style={{
-              position: 'absolute',
-              left: '10px',
-              top: '50%',
-              transform: 'translateY(-50%)',
-              color: 'var(--text-muted)'
-            }} />
-            <input
-              type="text"
-              placeholder="Search students, exams..."
-              value={topSearchTerm}
-              onChange={e => setTopSearchTerm(e.target.value)}
-              className="input-field"
-              style={{ paddingLeft: '30px', height: '32px', borderRadius: '6px', fontSize: '11px' }}
-            />
-          </div>
-
-          {/* Notifications */}
-          <button style={{
-            position: 'relative',
-            background: 'var(--bg-secondary)',
-            border: '1px solid var(--border-primary)',
-            borderRadius: '6px',
-            width: '32px',
-            height: '32px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            color: 'var(--text-secondary)',
-            cursor: 'pointer'
-          }}>
-            <Bell size={16} />
-            <span style={{
-              position: 'absolute',
-              top: '-2px',
-              right: '-2px',
-              background: 'var(--accent-red)',
-              color: '#ffffff',
-              fontSize: '8px',
-              fontWeight: 700,
-              borderRadius: '50%',
-              width: '14px',
-              height: '14px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center'
-            }}>6</span>
-          </button>
-
           {/* Action buttons */}
           <button 
             onClick={() => runBulkAction('export', 'Report exported successfully in Excel format.')}

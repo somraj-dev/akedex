@@ -74,7 +74,7 @@ const Field = ({ label, name, value, type = 'text', required = false, options = 
 };
 
 export default function EditInstituteWizard() {
-  const { institutionInfo, updateInstitutionInfo, closeTab, activeTabId } = useAppStore();
+  const { institutionInfo, updateInstitutionInfo, closeTab, activeTabId, showToast } = useAppStore();
   const [step, setStep] = useState(1);
   const [errors, setErrors] = useState<string[]>([]);
   const [formData, setFormData] = useState({ ...institutionInfo });
@@ -114,7 +114,7 @@ export default function EditInstituteWizard() {
 
   const handleSave = () => {
     updateInstitutionInfo(formData);
-    alert("Institution Profile Updated Successfully!");
+    showToast("Institution Profile Updated Successfully!", "success");
     closeTab(activeTabId);
   };
 

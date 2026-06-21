@@ -2963,7 +2963,7 @@ export function StudentProfileView() {
       });
       return;
     }
-    alert(`${actionName} triggered for ${sData.fullName}`);
+    useAppStore.getState().showToast(`${actionName} triggered for ${sData.fullName}`, "info");
   };
 
   return (
@@ -3861,7 +3861,7 @@ export function TeacherProfileView() {
   const [activeTab, setActiveTab] = useState('Overview');
 
   const handleActionClick = (actionName: string) => {
-    alert(`${actionName} triggered for ${tData.name}`);
+    useAppStore.getState().showToast(`${actionName} triggered for ${tData.name}`, "info");
   };
 
   return (
@@ -4853,8 +4853,7 @@ export function ManageWidgetsView() {
                     style={{
                       background: 'transparent', border: 'none', cursor: 'pointer',
                       color: '#9ca3af', display: 'flex', padding: '4px'
-                    }}
-                  >
+                    }}>
                     <X size={16} />
                   </button>
                 </div>
@@ -6679,7 +6678,7 @@ export function StudentReportCardView() {
       
     } catch (error) {
       console.error('Error generating PDF:', error);
-      alert('An error occurred while generating the PDF.');
+      useAppStore.getState().showToast('An error occurred while generating the PDF.', 'error');
     }
   };
 

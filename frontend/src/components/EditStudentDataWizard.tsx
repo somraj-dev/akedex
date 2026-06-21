@@ -48,6 +48,7 @@ const Field = ({ label, name, value, type = 'text', required = false, options = 
 export default function EditStudentDataWizard({ studentId }: { studentId: string }) {
   const closeTab = useAppStore(s => s.closeTab);
   const activeTabId = useAppStore(s => s.activeTabId);
+  const showToast = useAppStore(s => s.showToast);
   
   // Find student in mock data
   const sIndex = mockStudents.findIndex(s => s.id === studentId);
@@ -190,7 +191,7 @@ export default function EditStudentDataWizard({ studentId }: { studentId: string
       mockStudents[sIndex].phone = formData.phone;
       mockStudents[sIndex].class = formData.classGrade;
     }
-    alert("Student Profile Updated Successfully!");
+    showToast("Student Profile Updated Successfully!", "success");
     closeTab(activeTabId);
   };
 

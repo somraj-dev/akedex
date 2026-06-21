@@ -34,9 +34,6 @@ const navItems: NavItem[] = [
   { id: 'teachers', label: 'Faculty', icon: <GraduationCap size={18} />, section: 'OPERATIONS' },
   { id: 'timetable', label: 'Timetable', icon: <Clock size={18} /> },
   { id: 'attendance', label: 'Attendance', icon: <Calendar size={18} /> },
-  { id: 'gradebook', label: 'Gradebook', icon: <Clipboard size={18} /> },
-  { id: 'library', label: 'Library', icon: <BookMarked size={18} /> },
-  { id: 'communication', label: 'Communication', icon: <MessageSquare size={18} /> },
   
   // ADMINISTRATION
   { id: 'finance', label: 'Finance', icon: <DollarSign size={18} />, section: 'ADMINISTRATION' },
