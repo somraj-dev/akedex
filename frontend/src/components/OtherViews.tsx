@@ -7,7 +7,7 @@ import {
   Calendar, Check, UserCheck, Shield, Key, HelpCircle, Building,
   BookOpen, Layers, FileSpreadsheet, Clock, Clipboard, BookMarked,
   MessageSquare, DollarSign, BarChart3, Send, Download, RefreshCw,
-  LogOut, Trash2, Plus, Minus, Phone, Link, Mail, MoreHorizontal, Edit,
+  LogOut, Trash2, Plus, Minus, Phone, Link, Mail, MoreHorizontal, MoreVertical, Edit,
   Copy, MapPin, Printer, ArrowUpRight, Briefcase, GraduationCap, User, ChevronDown, ChevronUp, X, TrendingUp, ArrowLeft,
   Bell, TrendingDown, Users, Brain, CreditCard
 } from 'lucide-react';
@@ -846,45 +846,147 @@ export function CoursesView() {
 // =====================================================
 // CLASSES VIEW (NEW)
 // =====================================================
+function ClassCard({ c }: { c: any }) {
+  const [hovered, setHovered] = useState(false);
+  
+  return (
+    <div 
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      style={{
+        background: 'var(--bg-secondary)',
+        border: '1px solid var(--border-primary)',
+        borderRadius: '16px',
+        padding: '20px',
+        boxShadow: hovered ? '0 10px 15px -3px rgba(0,0,0,0.04), 0 4px 6px -2px rgba(0,0,0,0.02)' : '0 1px 3px rgba(0,0,0,0.01)',
+        transform: hovered ? 'translateY(-2px)' : 'translateY(0)',
+        transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '14px',
+        position: 'relative',
+        boxSizing: 'border-box'
+      }}
+    >
+      {/* Top row with initial badge and options */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div style={{
+          width: '36px',
+          height: '36px',
+          borderRadius: '8px',
+          background: c.bgColor,
+          color: c.color,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          fontWeight: 800,
+          fontSize: '13px'
+        }}>
+          {c.code}
+        </div>
+        <button style={{
+          background: 'none',
+          border: 'none',
+          padding: '4px',
+          color: 'var(--text-muted)',
+          cursor: 'pointer',
+          display: 'flex',
+          alignItems: 'center'
+        }}>
+          <MoreVertical size={16} />
+        </button>
+      </div>
+
+      {/* Title & subtitle info */}
+      <div>
+        <h3 style={{ fontSize: '14px', fontWeight: 700, color: 'var(--text-primary)', margin: 0 }}>
+          {c.name}
+        </h3>
+        <p style={{ fontSize: '11px', color: 'var(--text-secondary)', margin: '2px 0 0 0' }}>
+          {c.label}
+        </p>
+      </div>
+
+      {/* Sections Row */}
+      <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+        {c.sections.map((sec: string, sIdx: number) => (
+          <div 
+            key={sIdx}
+            style={{
+              padding: '4px 10px',
+              borderRadius: '6px',
+              background: c.bgColor,
+              color: c.color,
+              fontSize: '11px',
+              fontWeight: 700,
+              display: 'inline-flex',
+              alignItems: 'center'
+            }}
+          >
+            {sec}
+          </div>
+        ))}
+      </div>
+
+      {/* Divider */}
+      <div style={{ borderTop: '1px solid var(--border-primary)', margin: '4px 0' }} />
+
+      {/* Stats at bottom */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <Users size={14} style={{ color: 'var(--text-muted)' }} />
+          <div>
+            <div style={{ fontSize: '12px', fontWeight: 700, color: 'var(--text-primary)', lineHeight: '1.2' }}>{c.students}</div>
+            <div style={{ fontSize: '9px', color: 'var(--text-secondary)' }}>Students</div>
+          </div>
+        </div>
+        
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <GraduationCap size={15} style={{ color: 'var(--text-muted)' }} />
+          <div>
+            <div style={{ fontSize: '12px', fontWeight: 700, color: 'var(--text-primary)', lineHeight: '1.2' }}>{c.teachers}</div>
+            <div style={{ fontSize: '9px', color: 'var(--text-secondary)' }}>Teachers</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export function ClassesView() {
   const classes = [
-    { name: '10-A', room: 'Room 302', advisor: 'Mr. Rajiv Saxena', count: 40, todayLectures: 6, capacity: '95%' },
-    { name: '10-B', room: 'Room 304', advisor: 'Mrs. Anita Desai', count: 38, todayLectures: 5, capacity: '90%' },
-    { name: '9-A', room: 'Room 201', advisor: 'Mrs. Kavita Menon', count: 42, todayLectures: 6, capacity: '100% (Full)' },
-    { name: '11-Science', room: 'Lab 3', advisor: 'Dr. Meena Shah', count: 35, todayLectures: 4, capacity: '87%' }
+    { code: 'PP', name: 'Pre-Primary', label: 'Pre-Primary', sections: ['Section A', 'Section B'], students: 48, teachers: 2, color: '#6d28d9', bgColor: '#f3e8ff' },
+    { code: 'I', name: 'Grade I', label: 'Grade 1', sections: ['Section A', 'Section B'], students: 72, teachers: 4, color: '#2563eb', bgColor: '#eff6ff' },
+    { code: 'II', name: 'Grade II', label: 'Grade 2', sections: ['Section A', 'Section B'], students: 74, teachers: 4, color: '#059669', bgColor: '#ecfdf5' },
+    { code: 'III', name: 'Grade III', label: 'Grade 3', sections: ['Section A', 'Section B'], students: 76, teachers: 4, color: '#d97706', bgColor: '#fffbeb' },
+    { code: 'IV', name: 'Grade IV', label: 'Grade 4', sections: ['Section A', 'Section B'], students: 88, teachers: 4, color: '#ea580c', bgColor: '#fff5eb' },
+    { code: 'V', name: 'Grade V', label: 'Grade 5', sections: ['Section A', 'Section B'], students: 92, teachers: 4, color: '#e11d48', bgColor: '#fff1f2' },
+    { code: 'VI', name: 'Grade VI', label: 'Grade 6', sections: ['Section A', 'Section B'], students: 90, teachers: 4, color: '#7c3aed', bgColor: '#f5f3ff' },
+    { code: 'VII', name: 'Grade VII', label: 'Grade 7', sections: ['Section A', 'Section B'], students: 86, teachers: 4, color: '#0891b2', bgColor: '#ecfeff' },
+    { code: 'VIII', name: 'Grade VIII', label: 'Grade 8', sections: ['Section A', 'Section B'], students: 80, teachers: 4, color: '#4f46e5', bgColor: '#eef2ff' },
+    { code: 'IX', name: 'Grade IX', label: 'Grade 9', sections: ['Section A', 'Section B'], students: 74, teachers: 4, color: '#16a34a', bgColor: '#f0fdf4' }
   ];
 
   return (
-    <div style={{ padding: '16px', background: 'var(--bg-primary)', height: '100%', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+    <div style={{ padding: '24px', background: 'var(--bg-primary)', height: '100%', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '24px', fontFamily: 'var(--font-sans)', boxSizing: 'border-box' }}>
       <div>
-        <h2 style={{ fontSize: '16px', fontWeight: 700, color: 'var(--text-primary)', margin: 0 }}>Classrooms & Divisions</h2>
-        <p style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>Track class advisors, active division roster counts, and spatial room coordinates.</p>
+        <h2 style={{ fontSize: '20px', fontWeight: 800, color: 'var(--text-primary)', margin: 0, letterSpacing: '-0.02em' }}>Classrooms & Divisions</h2>
+        <p style={{ fontSize: '12px', color: 'var(--text-secondary)', marginTop: '4px' }}>Track class advisors, active division roster counts, and spatial room coordinates.</p>
       </div>
-      <div style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-primary)', borderRadius: '12px', overflow: 'hidden' }}>
-        <table className="data-table">
-          <thead>
-            <tr>
-              <th>Roster Name</th>
-              <th>Room Alloc</th>
-              <th>Class Advisor</th>
-              <th>Student Roster Count</th>
-              <th>Today's Lecture Count</th>
-              <th>Capacity Utilization</th>
-            </tr>
-          </thead>
-          <tbody>
-            {classes.map((c, idx) => (
-              <tr key={idx}>
-                <td style={{ fontWeight: 700 }}>{c.name}</td>
-                <td className="font-mono text-xs">{c.room}</td>
-                <td>{c.advisor}</td>
-                <td className="font-mono">{c.count}</td>
-                <td className="font-mono">{c.todayLectures} Lectures</td>
-                <td style={{ color: c.capacity.includes('Full') ? 'var(--accent-red)' : 'var(--text-primary)', fontWeight: 600 }}>{c.capacity}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fill, minmax(225px, 1fr))',
+        gap: '20px',
+        width: '100%'
+      }}>
+        {classes.map((c, idx) => (
+          <ClassCard key={idx} c={c} />
+        ))}
+      </div>
+
+      <div style={{ fontSize: '12px', color: 'var(--text-secondary)', fontWeight: 600, marginTop: '8px' }}>
+        Showing 1 to 10 of 10 classes
       </div>
     </div>
   );
