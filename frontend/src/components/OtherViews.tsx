@@ -846,13 +846,468 @@ export function CoursesView() {
 // =====================================================
 // CLASSES VIEW (NEW)
 // =====================================================
-function ClassCard({ c }: { c: any }) {
+const getClassRoomAndAdvisor = (name: string, section: string) => {
+  if (name === 'Pre-Primary') {
+    return section === 'Section A' 
+      ? { room: 'Room 101', advisor: 'Mrs. Anita Desai' }
+      : { room: 'Room 102', advisor: 'Mrs. Kavita Menon' };
+  }
+  if (name === 'Grade I') {
+    return section === 'Section A' 
+      ? { room: 'Room 201', advisor: 'Mr. Rajiv Saxena' }
+      : { room: 'Room 202', advisor: 'Dr. Meena Shah' };
+  }
+  if (name === 'Grade II') {
+    return section === 'Section A' 
+      ? { room: 'Room 203', advisor: 'Mr. Sunil Rao' }
+      : { room: 'Room 204', advisor: 'Ms. Pooja Iyer' };
+  }
+  if (name === 'Grade III') {
+    return section === 'Section A' 
+      ? { room: 'Room 301', advisor: 'Mr. Rajiv Saxena' }
+      : { room: 'Room 302', advisor: 'Mrs. Anita Desai' };
+  }
+  if (name === 'Grade IV') {
+    return section === 'Section A' 
+      ? { room: 'Room 303', advisor: 'Mrs. Kavita Menon' }
+      : { room: 'Room 304', advisor: 'Dr. Meena Shah' };
+  }
+  if (name === 'Grade V') {
+    return section === 'Section A' 
+      ? { room: 'Room 401', advisor: 'Mr. Sunil Rao' }
+      : { room: 'Room 402', advisor: 'Ms. Pooja Iyer' };
+  }
+  if (name === 'Grade VI') {
+    return section === 'Section A' 
+      ? { room: 'Room 403', advisor: 'Mr. Rajiv Saxena' }
+      : { room: 'Room 404', advisor: 'Mrs. Anita Desai' };
+  }
+  if (name === 'Grade VII') {
+    return section === 'Section A' 
+      ? { room: 'Room 501', advisor: 'Mrs. Kavita Menon' }
+      : { room: 'Room 502', advisor: 'Dr. Meena Shah' };
+  }
+  if (name === 'Grade VIII') {
+    return section === 'Section A' 
+      ? { room: 'Room 503', advisor: 'Mr. Sunil Rao' }
+      : { room: 'Room 504', advisor: 'Ms. Pooja Iyer' };
+  }
+  return section === 'Section A' 
+    ? { room: 'Room 505', advisor: 'Mr. Rajiv Saxena' }
+    : { room: 'Room 506', advisor: 'Mrs. Anita Desai' };
+};
+
+const getMockStudentsForClass = (className: string, section: string) => {
+  const names = [
+    { first: 'Aarav', last: 'Sharma', gender: 'MALE', avatar: '/student_1.png' },
+    { first: 'Diya', last: 'Patel', gender: 'FEMALE', avatar: '/student_2.png' },
+    { first: 'Vivaan', last: 'Mehta', gender: 'MALE', avatar: '/student_3.png' },
+    { first: 'Ananya', last: 'Singh', gender: 'FEMALE', avatar: '/student_4.png' },
+    { first: 'Kabir', last: 'Verma', gender: 'MALE', avatar: '/student_5.png' },
+    { first: 'Myra', last: 'Jain', gender: 'FEMALE', avatar: '/student_6.png' },
+    { first: 'Arjun', last: 'Nair', gender: 'MALE', avatar: '/student_7.png' },
+    { first: 'Ishita', last: 'Roy', gender: 'FEMALE', avatar: '/student_8.png' },
+  ];
+  
+  return names.map((n, idx) => {
+    const id = `${className}-${section}-${idx + 1}`;
+    const formattedIdx = (idx + 1).toString().padStart(2, '0');
+    return {
+      id,
+      rollNo: `${className.replace('Grade ', '')}-${section.replace('Section ', '')}-${formattedIdx}`,
+      uai: `AKD-STU-2026-CL${idx}${idx+2}P`,
+      name: `${n.first} ${n.last}`,
+      avatar: n.avatar,
+      gender: n.gender,
+      attendance: 90 + (idx % 3) * 4 - (idx % 2) * 2,
+      status: idx === 4 ? 'ON_LEAVE' : idx === 6 ? 'SUSPENDED' : 'ACTIVE',
+      email: `${n.first.toLowerCase()}.${n.last.toLowerCase()}@school.edu`,
+      phone: `+91 98100 700${formattedIdx}`
+    };
+  });
+};
+
+const getClassTimetable = (classCode: string) => {
+  return [
+    { period: 'Period 1', time: '08:30 AM - 09:15 AM', subject: 'Mathematics', teacher: 'Mr. Rajiv Saxena', status: 'COMPLETED' },
+    { period: 'Period 2', time: '09:15 AM - 10:00 AM', subject: 'English Literature', teacher: 'Mrs. Kavita Menon', status: 'COMPLETED' },
+    { period: 'Period 3', time: '10:15 AM - 11:00 AM', subject: 'Physics Lab', teacher: 'Mrs. Anita Desai', status: 'ONGOING' },
+    { period: 'Period 4', time: '11:00 AM - 11:45 AM', subject: 'History & Civics', teacher: 'Mr. Sunil Rao', status: 'SCHEDULED' },
+    { period: 'Period 5', time: '12:30 PM - 01:15 PM', subject: 'Chemistry', teacher: 'Mrs. Anita Desai', status: 'SCHEDULED' },
+    { period: 'Period 6', time: '01:15 PM - 02:00 PM', subject: 'Physical Education', teacher: 'Mr. Sunil Rao', status: 'SCHEDULED' },
+  ];
+};
+
+function ClassroomDetail({ selectedClass, onBack }: { selectedClass: any; onBack: () => void }) {
+  const [activeTab, setActiveTab] = useState<'roster' | 'timetable' | 'performance'>('roster');
+  const openTab = useAppStore(s => s.openTab);
+
+  const studentsList = React.useMemo(() => {
+    return getMockStudentsForClass(selectedClass.name, selectedClass.section);
+  }, [selectedClass]);
+
+  const timetableList = React.useMemo(() => {
+    return getClassTimetable(selectedClass.code);
+  }, [selectedClass]);
+
+  const avgAttendance = React.useMemo(() => {
+    const total = studentsList.reduce((acc, s) => acc + s.attendance, 0);
+    return (total / studentsList.length).toFixed(1);
+  }, [studentsList]);
+
+  const gradeData = [
+    { grade: 'Grade A', count: 12, fill: '#10b981' },
+    { grade: 'Grade B', count: 15, fill: '#3b82f6' },
+    { grade: 'Grade C', count: 7, fill: '#f59e0b' },
+    { grade: 'Grade D', count: 2, fill: '#ef4444' },
+  ];
+
+  return (
+    <div style={{ padding: '24px', background: 'var(--bg-primary)', height: '100%', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '24px', fontFamily: 'var(--font-sans)', boxSizing: 'border-box' }}>
+      
+      {/* Header with Back Button */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+          <button 
+            onClick={onBack}
+            style={{
+              background: 'var(--bg-secondary)',
+              border: '1px solid var(--border-primary)',
+              borderRadius: '8px',
+              padding: '8px 12px',
+              fontSize: '12px',
+              fontWeight: 700,
+              color: 'var(--text-primary)',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+              transition: 'all 0.1s'
+            }}
+            onMouseEnter={e => {
+              e.currentTarget.style.background = 'var(--bg-hover)';
+            }}
+            onMouseLeave={e => {
+              e.currentTarget.style.background = 'var(--bg-secondary)';
+            }}
+          >
+            <ArrowLeft size={14} /> Back
+          </button>
+
+          <div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <h2 style={{ fontSize: '20px', fontWeight: 800, color: 'var(--text-primary)', margin: 0, letterSpacing: '-0.02em' }}>
+                {selectedClass.name} — {selectedClass.section}
+              </h2>
+              <span style={{
+                fontSize: '10px',
+                fontWeight: 700,
+                color: selectedClass.color,
+                background: selectedClass.bgColor,
+                padding: '2px 8px',
+                borderRadius: '4px'
+              }}>
+                {selectedClass.room}
+              </span>
+            </div>
+            <p style={{ fontSize: '12px', color: 'var(--text-secondary)', margin: '4px 0 0 0' }}>
+              Class Advisor: <strong>{selectedClass.advisor}</strong>
+            </p>
+          </div>
+        </div>
+
+        <div style={{ display: 'flex', gap: '8px' }}>
+          <button 
+            onClick={() => useAppStore.getState().showToast(`Attendance Roster printed for ${selectedClass.name} ${selectedClass.section}`, 'success')}
+            style={{
+              padding: '8px 14px',
+              background: 'var(--bg-secondary)',
+              border: '1px solid var(--border-primary)',
+              borderRadius: '8px',
+              fontSize: '11px',
+              fontWeight: 600,
+              color: 'var(--text-secondary)',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px'
+            }}
+          >
+            <Printer size={12} /> Print Attendance
+          </button>
+          
+          <button 
+            onClick={() => useAppStore.getState().showToast(`Lecture scheduling launched for Room ${selectedClass.room}`, 'info')}
+            style={{
+              padding: '8px 14px',
+              background: 'var(--accent-blue)',
+              border: 'none',
+              borderRadius: '8px',
+              fontSize: '11px',
+              fontWeight: 600,
+              color: '#ffffff',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px'
+            }}
+          >
+            <Plus size={12} /> Schedule Lecture
+          </button>
+        </div>
+      </div>
+
+      {/* Metrics Row */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px' }}>
+        <div style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-primary)', borderRadius: '12px', padding: '16px', display: 'flex', alignItems: 'center', gap: '14px' }}>
+          <div style={{ background: 'rgba(59, 130, 246, 0.08)', color: '#3b82f6', borderRadius: '8px', padding: '8px', display: 'flex' }}>
+            <Users size={20} />
+          </div>
+          <div>
+            <div style={{ fontSize: '18px', fontWeight: 800, color: 'var(--text-primary)' }}>{studentsList.length}</div>
+            <div style={{ fontSize: '10px', color: 'var(--text-secondary)', fontWeight: 600 }}>Students Roster Count</div>
+          </div>
+        </div>
+
+        <div style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-primary)', borderRadius: '12px', padding: '16px', display: 'flex', alignItems: 'center', gap: '14px' }}>
+          <div style={{ background: 'rgba(16, 185, 129, 0.08)', color: '#10b981', borderRadius: '8px', padding: '8px', display: 'flex' }}>
+            <CheckCircle2 size={20} />
+          </div>
+          <div>
+            <div style={{ fontSize: '18px', fontWeight: 800, color: 'var(--text-primary)' }}>{avgAttendance}%</div>
+            <div style={{ fontSize: '10px', color: 'var(--text-secondary)', fontWeight: 600 }}>Avg Attendance Rate</div>
+          </div>
+        </div>
+
+        <div style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-primary)', borderRadius: '12px', padding: '16px', display: 'flex', alignItems: 'center', gap: '14px' }}>
+          <div style={{ background: 'rgba(245, 158, 11, 0.08)', color: '#f59e0b', borderRadius: '8px', padding: '8px', display: 'flex' }}>
+            <Clock size={20} />
+          </div>
+          <div>
+            <div style={{ fontSize: '18px', fontWeight: 800, color: 'var(--text-primary)' }}>{timetableList.length}</div>
+            <div style={{ fontSize: '10px', color: 'var(--text-secondary)', fontWeight: 600 }}>Lectures Scheduled Today</div>
+          </div>
+        </div>
+
+        <div style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-primary)', borderRadius: '12px', padding: '16px', display: 'flex', alignItems: 'center', gap: '14px' }}>
+          <div style={{ background: 'rgba(139, 92, 246, 0.08)', color: '#8b5cf6', borderRadius: '8px', padding: '8px', display: 'flex' }}>
+            <Building size={20} />
+          </div>
+          <div>
+            <div style={{ fontSize: '18px', fontWeight: 800, color: 'var(--text-primary)' }}>90%</div>
+            <div style={{ fontSize: '10px', color: 'var(--text-secondary)', fontWeight: 600 }}>Roster Capacity Utilized</div>
+          </div>
+        </div>
+      </div>
+
+      {/* Tabs Menu Row */}
+      <div style={{ display: 'flex', borderBottom: '1px solid var(--border-primary)', gap: '8px' }}>
+        {[
+          { id: 'roster', label: 'Student Roster' },
+          { id: 'timetable', label: 'Daily Timetable' },
+          { id: 'performance', label: 'Class Performance' },
+        ].map(t => (
+          <button
+            key={t.id}
+            onClick={() => setActiveTab(t.id as any)}
+            style={{
+              padding: '10px 16px',
+              background: 'transparent',
+              border: 'none',
+              borderBottom: activeTab === t.id ? '2px solid var(--accent-blue)' : '2px solid transparent',
+              color: activeTab === t.id ? 'var(--accent-blue)' : 'var(--text-secondary)',
+              fontWeight: activeTab === t.id ? 700 : 500,
+              fontSize: '13px',
+              cursor: 'pointer',
+              transition: 'all 0.15s'
+            }}
+          >
+            {t.label}
+          </button>
+        ))}
+      </div>
+
+      {/* Active Tab Contents */}
+      <div style={{ flex: 1 }}>
+        {activeTab === 'roster' && (
+          <div style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-primary)', borderRadius: '16px', padding: '20px', boxShadow: '0 1px 3px rgba(0,0,0,0.02)' }}>
+            <div style={{ overflowX: 'auto' }}>
+              <table className="data-table" style={{ width: '100%' }}>
+                <thead>
+                  <tr>
+                    <th>Roll No</th>
+                    <th>Name</th>
+                    <th>Gender</th>
+                    <th>Roster Attendance</th>
+                    <th>Status</th>
+                    <th>Email Address</th>
+                    <th>Quick Link</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {studentsList.map((stu, sIdx) => (
+                    <tr key={sIdx}>
+                      <td style={{ fontWeight: 600, fontFamily: 'var(--font-mono)' }}>{stu.rollNo}</td>
+                      <td>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                          <img 
+                            src={stu.avatar} 
+                            alt={stu.name} 
+                            style={{ width: '24px', height: '24px', borderRadius: '50%', objectFit: 'cover', border: '1px solid var(--border-primary)' }}
+                            onError={e => {
+                              e.currentTarget.src = 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=80&auto=format&fit=crop';
+                            }}
+                          />
+                          <span style={{ fontWeight: 600 }}>{stu.name}</span>
+                        </div>
+                      </td>
+                      <td style={{ fontSize: '11px', textTransform: 'uppercase', color: 'var(--text-secondary)' }}>{stu.gender}</td>
+                      <td style={{ fontFamily: 'var(--font-mono)' }}>{stu.attendance}%</td>
+                      <td>
+                        <span className={`badge ${stu.status === 'ACTIVE' ? 'badge-active' : stu.status === 'ON_LEAVE' ? 'badge-warning' : 'badge-danger'}`}>
+                          {stu.status.replace('_', ' ')}
+                        </span>
+                      </td>
+                      <td style={{ fontSize: '11px', color: 'var(--text-secondary)', fontFamily: 'var(--font-mono)' }}>{stu.email}</td>
+                      <td>
+                        <button 
+                          onClick={() => {
+                            const matchingStudent = mockStudents.find(s => `${s.firstName} ${s.lastName}`.toLowerCase() === stu.name.toLowerCase());
+                            const finalId = matchingStudent ? matchingStudent.id : '1';
+                            
+                            openTab({
+                              id: `student-profile-${finalId}`,
+                              label: `Student — ${stu.name}`,
+                              view: 'student-profile',
+                              closable: true
+                            });
+                          }}
+                          style={{
+                            background: 'transparent',
+                            border: 'none',
+                            color: 'var(--accent-blue)',
+                            fontSize: '11px',
+                            fontWeight: 600,
+                            cursor: 'pointer',
+                            padding: 0
+                          }}
+                        >
+                          View Profile
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'timetable' && (
+          <div style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-primary)', borderRadius: '16px', padding: '24px', boxShadow: '0 1px 3px rgba(0,0,0,0.02)', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            <h3 style={{ fontSize: '14px', fontWeight: 700, margin: 0 }}>Roster Rhythms — Today's Timeline</h3>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', position: 'relative', paddingLeft: '20px', borderLeft: '2px solid var(--border-primary)', margin: '10px 0 10px 10px' }}>
+              {timetableList.map((t, tIdx) => {
+                const isOngoing = t.status === 'ONGOING';
+                const isCompleted = t.status === 'COMPLETED';
+
+                return (
+                  <div key={tIdx} style={{ position: 'relative', paddingBottom: '8px' }}>
+                    <div style={{
+                      position: 'absolute',
+                      left: '-27px',
+                      top: '4px',
+                      width: '12px',
+                      height: '12px',
+                      borderRadius: '50%',
+                      background: isOngoing ? '#f59e0b' : isCompleted ? '#10b981' : 'var(--border-primary)',
+                      border: '2px solid var(--bg-secondary)',
+                      boxShadow: isOngoing ? '0 0 0 3px rgba(245, 158, 11, 0.2)' : 'none'
+                    }} />
+
+                    <div style={{ background: 'var(--bg-primary)', border: '1px solid var(--border-primary)', borderRadius: '12px', padding: '14px 18px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                          <span style={{ fontSize: '10px', color: 'var(--text-tertiary)', fontWeight: 700, textTransform: 'uppercase' }}>{t.period}</span>
+                          <span style={{ fontSize: '10px', color: 'var(--text-secondary)' }}>({t.time})</span>
+                        </div>
+                        <h4 style={{ fontSize: '13px', fontWeight: 700, color: 'var(--text-primary)', margin: '4px 0 2px' }}>{t.subject}</h4>
+                        <span style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>Instructor: <strong>{t.teacher}</strong></span>
+                      </div>
+                      
+                      <span className={`badge ${isOngoing ? 'badge-warning' : isCompleted ? 'badge-active' : 'badge-inactive'}`}>
+                        {t.status}
+                      </span>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'performance' && (
+          <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 0.8fr', gap: '20px', alignItems: 'start' }}>
+            <div style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-primary)', borderRadius: '16px', padding: '24px', boxShadow: '0 1px 3px rgba(0,0,0,0.02)' }}>
+              <h3 style={{ fontSize: '14px', fontWeight: 700, marginBottom: '20px', marginTop: 0 }}>Roster Grade Distribution</h3>
+              <div style={{ width: '100%', height: '220px' }}>
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={gradeData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--border-secondary)" />
+                    <XAxis dataKey="grade" stroke="var(--text-muted)" fontSize={11} tickLine={false} />
+                    <YAxis stroke="var(--text-muted)" fontSize={11} tickLine={false} />
+                    <Bar dataKey="count" radius={[4, 4, 0, 0]} barSize={40}>
+                      {gradeData.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={entry.fill} />
+                      ))}
+                    </Bar>
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
+
+            <div style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-primary)', borderRadius: '16px', padding: '24px', boxShadow: '0 1px 3px rgba(0,0,0,0.02)', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              <h3 style={{ fontSize: '14px', fontWeight: 700, margin: 0 }}>Class Standing Analytics</h3>
+              
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', borderBottom: '1px solid var(--border-primary)', paddingBottom: '8px' }}>
+                  <span style={{ color: 'var(--text-secondary)' }}>Outstanding (A)</span>
+                  <span style={{ fontWeight: 700, color: 'var(--text-primary)' }}>12 Students (33%)</span>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', borderBottom: '1px solid var(--border-primary)', paddingBottom: '8px' }}>
+                  <span style={{ color: 'var(--text-secondary)' }}>Proficient (B)</span>
+                  <span style={{ fontWeight: 700, color: 'var(--text-primary)' }}>15 Students (42%)</span>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', borderBottom: '1px solid var(--border-primary)', paddingBottom: '8px' }}>
+                  <span style={{ color: 'var(--text-secondary)' }}>Satisfactory (C)</span>
+                  <span style={{ fontWeight: 700, color: 'var(--text-primary)' }}>7 Students (19%)</span>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', paddingBottom: '4px' }}>
+                  <span style={{ color: 'var(--text-secondary)' }}>Needs Remedial (D)</span>
+                  <span style={{ fontWeight: 700, color: 'var(--text-primary)' }}>2 Students (6%)</span>
+                </div>
+              </div>
+
+              <div style={{ marginTop: '4px', padding: '12px 14px', background: 'rgba(37,99,235,0.04)', borderRadius: '10px', fontSize: '11px', color: 'var(--accent-blue)', fontWeight: 600, lineHeight: '1.4' }}>
+                Remedial classes are automatically suggested for 2 students who have grade standing below C.
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+
+    </div>
+  );
+}
+
+function ClassCard({ c, onSelectSection }: { c: any; onSelectSection: (section: string) => void }) {
   const [hovered, setHovered] = useState(false);
   
   return (
     <div 
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
+      onClick={() => onSelectSection(c.sections[0])}
       style={{
         background: 'var(--bg-secondary)',
         border: '1px solid var(--border-primary)',
@@ -865,7 +1320,8 @@ function ClassCard({ c }: { c: any }) {
         flexDirection: 'column',
         gap: '14px',
         position: 'relative',
-        boxSizing: 'border-box'
+        boxSizing: 'border-box',
+        cursor: 'pointer'
       }}
     >
       {/* Top row with initial badge and options */}
@@ -884,15 +1340,21 @@ function ClassCard({ c }: { c: any }) {
         }}>
           {c.code}
         </div>
-        <button style={{
-          background: 'none',
-          border: 'none',
-          padding: '4px',
-          color: 'var(--text-muted)',
-          cursor: 'pointer',
-          display: 'flex',
-          alignItems: 'center'
-        }}>
+        <button 
+          onClick={(e) => {
+            e.stopPropagation();
+            useAppStore.getState().showToast(`Options opened for ${c.name}`, 'info');
+          }}
+          style={{
+            background: 'none',
+            border: 'none',
+            padding: '4px',
+            color: 'var(--text-muted)',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center'
+          }}
+        >
           <MoreVertical size={16} />
         </button>
       </div>
@@ -912,6 +1374,10 @@ function ClassCard({ c }: { c: any }) {
         {c.sections.map((sec: string, sIdx: number) => (
           <div 
             key={sIdx}
+            onClick={(e) => {
+              e.stopPropagation();
+              onSelectSection(sec);
+            }}
             style={{
               padding: '4px 10px',
               borderRadius: '6px',
@@ -920,7 +1386,8 @@ function ClassCard({ c }: { c: any }) {
               fontSize: '11px',
               fontWeight: 700,
               display: 'inline-flex',
-              alignItems: 'center'
+              alignItems: 'center',
+              cursor: 'pointer'
             }}
           >
             {sec}
@@ -954,6 +1421,8 @@ function ClassCard({ c }: { c: any }) {
 }
 
 export function ClassesView() {
+  const [selectedClass, setSelectedClass] = useState<any>(null);
+
   const classes = [
     { code: 'PP', name: 'Pre-Primary', label: 'Pre-Primary', sections: ['Section A', 'Section B'], students: 48, teachers: 2, color: '#6d28d9', bgColor: '#f3e8ff' },
     { code: 'I', name: 'Grade I', label: 'Grade 1', sections: ['Section A', 'Section B'], students: 72, teachers: 4, color: '#2563eb', bgColor: '#eff6ff' },
@@ -966,6 +1435,15 @@ export function ClassesView() {
     { code: 'VIII', name: 'Grade VIII', label: 'Grade 8', sections: ['Section A', 'Section B'], students: 80, teachers: 4, color: '#4f46e5', bgColor: '#eef2ff' },
     { code: 'IX', name: 'Grade IX', label: 'Grade 9', sections: ['Section A', 'Section B'], students: 74, teachers: 4, color: '#16a34a', bgColor: '#f0fdf4' }
   ];
+
+  if (selectedClass) {
+    return (
+      <ClassroomDetail 
+        selectedClass={selectedClass} 
+        onBack={() => setSelectedClass(null)} 
+      />
+    );
+  }
 
   return (
     <div style={{ padding: '24px', background: 'var(--bg-primary)', height: '100%', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '24px', fontFamily: 'var(--font-sans)', boxSizing: 'border-box' }}>
@@ -981,7 +1459,19 @@ export function ClassesView() {
         width: '100%'
       }}>
         {classes.map((c, idx) => (
-          <ClassCard key={idx} c={c} />
+          <ClassCard 
+            key={idx} 
+            c={c} 
+            onSelectSection={(section) => {
+              const details = getClassRoomAndAdvisor(c.name, section);
+              setSelectedClass({
+                ...c,
+                section,
+                room: details.room,
+                advisor: details.advisor
+              });
+            }}
+          />
         ))}
       </div>
 
