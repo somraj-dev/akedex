@@ -3,12 +3,15 @@
 import React, { useState, useEffect } from 'react';
 import { X, Minus, Square } from 'lucide-react';
 
+import { useAppStore } from '@/lib/store';
+
 interface PersonSearchModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
 export default function PersonSearchModal({ isOpen, onClose }: PersonSearchModalProps) {
+  const openTab = useAppStore(s => s.openTab);
   const [lastName, setLastName] = useState('pat');
   const [firstName, setFirstName] = useState('');
   const [birthDate, setBirthDate] = useState('');
@@ -283,7 +286,20 @@ export default function PersonSearchModal({ isOpen, onClose }: PersonSearchModal
               }}>
                 <div style={{ display: 'flex', gap: '12px', fontWeight: 'bold' }}>
                   <span style={{ color: '#1e40af', cursor: 'pointer' }}>Person</span>
-                  <span style={{ color: '#475569', cursor: 'pointer' }}>➕ Add</span>
+                  <span 
+                    onClick={() => {
+                      onClose();
+                      openTab({
+                        id: 'new-admission-flow',
+                        label: 'Admission Flow',
+                        view: 'new-admission-flow',
+                        closable: true
+                      });
+                    }}
+                    style={{ color: '#475569', cursor: 'pointer' }}
+                  >
+                    ➕ Add
+                  </span>
                   <span style={{ color: '#475569', cursor: 'pointer' }}>🔍 Preview</span>
                 </div>
                 <span style={{ color: '#1e40af', cursor: 'pointer', fontWeight: 'bold' }}>Preferences</span>
