@@ -163,7 +163,7 @@ export default function PersonSearchModal({ isOpen, onClose }: PersonSearchModal
             flexShrink: 0,
           }}>
             <div>
-              <label style={{ fontSize: '11px', fontWeight: 'bold', color: '#475569', display: 'block', marginBottom: '3px' }}>Last Name</label>
+              <label style={{ fontSize: '11px', fontWeight: 'bold', color: '#475569', display: 'block', marginBottom: '3px' }}>Student Name</label>
               <input 
                 type="text" 
                 value={lastName}
@@ -181,19 +181,6 @@ export default function PersonSearchModal({ isOpen, onClose }: PersonSearchModal
               />
             </div>
             <div>
-              <label style={{ fontSize: '11px', fontWeight: 'bold', color: '#475569', display: 'block', marginBottom: '3px' }}>Birth Date</label>
-              <div style={{ display: 'flex', gap: '4px' }}>
-                <input 
-                  type="text" 
-                  placeholder="DD/MM/YYYY"
-                  value={birthDate}
-                  onChange={(e) => setBirthDate(e.target.value)}
-                  style={{ flex: 1, padding: '4px 8px', fontSize: '12px', border: '1px solid #cbd5e1', borderRadius: '4px', outline: 'none' }}
-                />
-                <button style={{ padding: '0 6px', border: '1px solid #cbd5e1', borderRadius: '4px', background: '#f1f5f9', cursor: 'pointer' }}>📅</button>
-              </div>
-            </div>
-            <div>
               <label style={{ fontSize: '11px', fontWeight: 'bold', color: '#475569', display: 'block', marginBottom: '3px' }}>Any Phone Number</label>
               <input 
                 type="text" 
@@ -203,20 +190,11 @@ export default function PersonSearchModal({ isOpen, onClose }: PersonSearchModal
               />
             </div>
             <div>
-              <label style={{ fontSize: '11px', fontWeight: 'bold', color: '#475569', display: 'block', marginBottom: '3px' }}>Person Identifiers</label>
+              <label style={{ fontSize: '11px', fontWeight: 'bold', color: '#475569', display: 'block', marginBottom: '3px' }}>Roll Number</label>
               <input 
                 type="text" 
                 value={personId}
                 onChange={(e) => setPersonId(e.target.value)}
-                style={{ width: '100%', padding: '4px 8px', fontSize: '12px', border: '1px solid #cbd5e1', borderRadius: '4px', outline: 'none' }}
-              />
-            </div>
-            <div>
-              <label style={{ fontSize: '11px', fontWeight: 'bold', color: '#475569', display: 'block', marginBottom: '3px' }}>Encounter Identifiers</label>
-              <input 
-                type="text" 
-                value={encounterId}
-                onChange={(e) => setEncounterId(e.target.value)}
                 style={{ width: '100%', padding: '4px 8px', fontSize: '12px', border: '1px solid #cbd5e1', borderRadius: '4px', outline: 'none' }}
               />
             </div>
