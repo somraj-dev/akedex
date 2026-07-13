@@ -5,6 +5,7 @@ import { useAppStore } from '@/lib/store';
 import { X } from 'lucide-react';
 import LoginScreen from '@/components/LoginScreen';
 import TopHeader from '@/components/TopHeader';
+import TabBar from '@/components/TabBar';
 import CommandBar from '@/components/CommandBar';
 import Dashboard from '@/components/Dashboard';
 import StudentExplorer from '@/components/StudentExplorer';
@@ -170,6 +171,9 @@ export default function Page() {
     }}>
       {/* Unified 3-Row Professional Header */}
       <TopHeader />
+
+      {/* Chrome-style Workspace Tab Bar */}
+      <TabBar />
 
       {/* Dynamic Workspace Workspace View Area */}
       <main style={{
