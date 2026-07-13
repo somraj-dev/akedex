@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { mockCases, mockStudents } from '@/lib/mock-data';
+import { mockCases, mockStudents, mockTeachers } from '@/lib/mock-data';
 import { Search, AlertTriangle, CheckSquare, Clock, Filter, UserCheck, MessageSquare } from 'lucide-react';
 import { useAppStore } from '@/lib/store';
 
@@ -123,7 +123,53 @@ export default function CasesView() {
                       {c.ref}
                     </td>
                     <td style={{ fontWeight: 600 }}>{c.title}</td>
-                    <td>{c.assignee.split(' ').pop()}</td>
+                    <td>
+                      {(() => {
+                        const matchedTeacher = mockTeachers.find(t => t.name === c.assignee);
+                        const avatarSrc = matchedTeacher ? matchedTeacher.avatar : `/teacher_1.png`;
+                        return (
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                            <div style={{ 
+                              width: '18px', 
+                              height: '18px', 
+                              borderRadius: '50%', 
+                              overflow: 'hidden', 
+                              background: 'var(--bg-tertiary)', 
+                              display: 'flex', 
+                              alignItems: 'center', 
+                              justifyContent: 'center', 
+                              border: '1px solid var(--border-primary)',
+                              flexShrink: 0 
+                            }}>
+                              <img 
+                                src={avatarSrc} 
+                                alt={c.assignee}
+                                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                onError={(e) => {
+                                  e.currentTarget.style.display = 'none';
+                                  const parent = e.currentTarget.parentElement;
+                                  if (parent) {
+                                    const placeholder = document.createElement('div');
+                                    placeholder.style.width = '100%';
+                                    placeholder.style.height = '100%';
+                                    placeholder.style.display = 'flex';
+                                    placeholder.style.alignItems = 'center';
+                                    placeholder.style.justifyContent = 'center';
+                                    placeholder.style.background = 'linear-gradient(135deg, var(--accent-purple), var(--accent-cyan))';
+                                    placeholder.style.color = '#ffffff';
+                                    placeholder.style.fontSize = '8px';
+                                    placeholder.style.fontWeight = '700';
+                                    placeholder.innerText = c.assignee.split(' ').map((n: string) => n[0]).join('');
+                                    parent.appendChild(placeholder);
+                                  }
+                                }}
+                              />
+                            </div>
+                            <span>{c.assignee.split(' ').pop()}</span>
+                          </div>
+                        );
+                      })()}
+                    </td>
                     <td>
                       <span className={`badge ${priorityBadge}`} style={{ fontSize: '9px', padding: '1px 4px' }}>
                         {c.priority}

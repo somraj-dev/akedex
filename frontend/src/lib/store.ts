@@ -88,6 +88,7 @@ export type AppView =
   | 'parental-access'
   | 'collect-fees-flow'
   | 'edit-institute'
+  | 'dev-tools'
   | 'organizations';
 
 export type WorkspaceTab = {

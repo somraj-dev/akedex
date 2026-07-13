@@ -30,7 +30,8 @@ import {
   TimetableView, GradebookView, LibraryView, CommunicationView,
   FinanceView, FacilitiesView, ReportsView, SystemLogsView,
   ProfileView, NotificationsView, StudentProfileView, TeacherProfileView,
-  ManageWidgetsView, AcademicCalendarView, StudentReportCardView, StudentTranscriptView
+  ManageWidgetsView, AcademicCalendarView, StudentReportCardView, StudentTranscriptView,
+  DevToolsView
 } from '@/components/OtherViews';
 
 export default function Page() {
@@ -60,7 +61,12 @@ export default function Page() {
     return <LoginScreen />;
   }
 
-  // 3. Render Active Workspace View Component
+  // 3. Render Developer tools in full page without the main header
+  if (currentView === 'dev-tools') {
+    return <DevToolsView />;
+  }
+
+  // 4. Render Active Workspace View Component
   const renderActiveView = () => {
     switch (currentView) {
       case 'dashboard':
@@ -145,6 +151,8 @@ export default function Page() {
         return <CollectFeesFlow />;
       case 'edit-institute':
         return <EditInstituteWizard />;
+      case 'dev-tools':
+        return <DevToolsView />;
       default:
         return <Dashboard />;
     }

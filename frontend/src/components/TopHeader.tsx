@@ -633,7 +633,12 @@ export default function TopHeader() {
               {['Toggle Developer Tools', 'Open Process Explorer'].map((action) => (
                 <div 
                   key={action}
-                  onClick={() => setShowHelpDropdown(false)}
+                  onClick={() => {
+                    setShowHelpDropdown(false);
+                    if (action === 'Toggle Developer Tools') {
+                      openTab({ id: 'dev-tools', label: 'Developer Tools', view: 'dev-tools', closable: true });
+                    }
+                  }}
                   style={{
                     padding: '5px 12px',
                     fontSize: '11.5px',

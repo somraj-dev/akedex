@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { mockCases } from '@/lib/mock-data';
+import { mockCases, mockStudents } from '@/lib/mock-data';
 import { Search, ArrowRightLeft, ShieldCheck, Clock, FileText } from 'lucide-react';
 
 export default function TransfersView() {
@@ -80,7 +80,54 @@ export default function TransfersView() {
                     <td className="font-mono text-xs" style={{ color: isSelected ? 'var(--accent-blue)' : 'var(--text-primary)' }}>
                       {c.ref}
                     </td>
-                    <td style={{ fontWeight: 600 }}>{c.subject}</td>
+                    <td style={{ fontWeight: 600 }}>
+                      {(() => {
+                        const matchedStudent = mockStudents.find(s => `${s.firstName} ${s.lastName}` === c.subject);
+                        const avatarSrc = matchedStudent ? matchedStudent.avatar : `/student_1.png`;
+                        return (
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                            <div style={{ 
+                              width: '24px', 
+                              height: '24px', 
+                              borderRadius: '50%', 
+                              overflow: 'hidden', 
+                              background: 'var(--bg-tertiary)', 
+                              display: 'flex', 
+                              alignItems: 'center', 
+                              justifyContent: 'center', 
+                              border: '1px solid var(--border-primary)',
+                              flexShrink: 0 
+                            }}>
+                              <img 
+                                src={avatarSrc} 
+                                alt={c.subject}
+                                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                onError={(e) => {
+                                  e.currentTarget.style.display = 'none';
+                                  const parent = e.currentTarget.parentElement;
+                                  if (parent) {
+                                    const placeholder = document.createElement('div');
+                                    placeholder.style.width = '100%';
+                                    placeholder.style.height = '100%';
+                                    placeholder.style.display = 'flex';
+                                    placeholder.style.alignItems = 'center';
+                                    placeholder.style.justifyContent = 'center';
+                                    placeholder.style.background = 'linear-gradient(135deg, var(--accent-blue), var(--accent-purple))';
+                                    placeholder.style.color = '#ffffff';
+                                    placeholder.style.fontSize = '9px';
+                                    placeholder.style.fontWeight = '700';
+                                    const initials = c.subject.split(' ').map((n: string) => n[0]).join('');
+                                    placeholder.innerText = initials;
+                                    parent.appendChild(placeholder);
+                                  }
+                                }}
+                              />
+                            </div>
+                            <span>{c.subject}</span>
+                          </div>
+                        );
+                      })()}
+                    </td>
                     <td>
                       <span className={`badge ${c.priority === 'HIGH' ? 'badge-critical' : 'badge-warning'}`}>
                         {c.priority}

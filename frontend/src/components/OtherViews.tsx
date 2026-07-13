@@ -560,7 +560,47 @@ export function AttendanceView() {
                   return (
                     <tr key={s.id} onClick={() => toggleStatus(s.id)} style={{ cursor: 'pointer' }}>
                       <td className="font-mono text-xs">{s.uai.slice(-5)}</td>
-                      <td style={{ fontWeight: 600 }}>{s.firstName} {s.lastName}</td>
+                      <td style={{ fontWeight: 600 }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                          <div style={{ 
+                            width: '24px', 
+                            height: '24px', 
+                            borderRadius: '50%', 
+                            overflow: 'hidden', 
+                            background: 'var(--bg-tertiary)', 
+                            display: 'flex', 
+                            alignItems: 'center', 
+                            justifyContent: 'center', 
+                            border: '1px solid var(--border-primary)',
+                            flexShrink: 0 
+                          }}>
+                            <img 
+                              src={s.avatar} 
+                              alt={`${s.firstName} ${s.lastName}`}
+                              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                              onError={(e) => {
+                                e.currentTarget.style.display = 'none';
+                                const parent = e.currentTarget.parentElement;
+                                if (parent) {
+                                  const placeholder = document.createElement('div');
+                                  placeholder.style.width = '100%';
+                                  placeholder.style.height = '100%';
+                                  placeholder.style.display = 'flex';
+                                  placeholder.style.alignItems = 'center';
+                                  placeholder.style.justifyContent = 'center';
+                                  placeholder.style.background = 'linear-gradient(135deg, var(--accent-blue), var(--accent-purple))';
+                                  placeholder.style.color = '#ffffff';
+                                  placeholder.style.fontSize = '9px';
+                                  placeholder.style.fontWeight = '700';
+                                  placeholder.innerText = `${s.firstName[0]}${s.lastName[0]}`;
+                                  parent.appendChild(placeholder);
+                                }
+                              }}
+                            />
+                          </div>
+                          <span>{s.firstName} {s.lastName}</span>
+                        </div>
+                      </td>
                       <td className="font-mono">{s.attendance}%</td>
                       <td>
                         <span className={`badge ${status === 'present' ? 'badge-active' : 'badge-critical'}`} style={{ fontSize: '9px', padding: '2px 6px' }}>
@@ -9646,6 +9686,408 @@ export function StudentTranscriptView() {
         </div>
 
       </div>
+    </div>
+  );
+}
+
+// =====================================================
+// DEV TOOLS VIEW (NEW) - Component Manager Admin Panel
+// =====================================================
+export function DevToolsView() {
+  const setView = useAppStore(s => s.setView);
+  const closeTab = useAppStore(s => s.closeTab);
+  const [selectedCompTab, setSelectedCompTab] = React.useState('Component Manager');
+  const [expandedNodes, setExpandedNodes] = React.useState<string[]>(['Administration']);
+  const [activeComps, setActiveComps] = React.useState<string[]>([
+    'Imaging',
+    'LinkManager',
+    'PortalVCRHelper',
+    'RedwoodUI',
+    'SESCrawlerExport'
+  ]);
+  const [toastMessage, setToastMessage] = React.useState<string | null>(null);
+
+  const toggleNode = (nodeName: string) => {
+    if (expandedNodes.includes(nodeName)) {
+      setExpandedNodes(expandedNodes.filter(n => n !== nodeName));
+    } else {
+      setExpandedNodes([...expandedNodes, nodeName]);
+    }
+  };
+
+  const toggleComponent = (name: string) => {
+    if (activeComps.includes(name)) {
+      setActiveComps(activeComps.filter(c => c !== name));
+    } else {
+      setActiveComps([...activeComps, name]);
+    }
+  };
+
+  const handleSave = () => {
+    setToastMessage(`Configuration saved. ${activeComps.length} active components synchronized with Acadex Server.`);
+    setTimeout(() => setToastMessage(null), 4000);
+  };
+
+  const components = [
+    {
+      id: 'Imaging',
+      title: 'Imaging',
+      desc: 'This Component acts as the interface for any IPM Documents checked into Content Server and tools such as ADF Viewer use functionality and services provided by this component'
+    },
+    {
+      id: 'IpmRepository',
+      title: 'IpmRepository',
+      desc: 'The IpmRepository component adds functionality to the content server to allow Oracle WebCenter Content: Imaging to store documents and metadata in the content server.'
+    },
+    {
+      id: 'LinkManager',
+      title: 'LinkManager',
+      desc: 'This component extracts URL links of indexed documents, evaluates, filters and parses the URLs according to a pattern engine and then stores the results in a database table. Since the link extraction happens during the indexing cycle, only the links of released documents are managed.'
+    },
+    {
+      id: 'MSOfficeHtmlConverterSupport',
+      title: 'MSOfficeHtmlConverterSupport',
+      desc: 'The MSOfficeHTMLConverter component requires the IBR to be running on MS Windows and MS Office installed with IBR. This component allows the Inbound Refinery to convert native MS Office formats (Word, Excel, Powerpoint and Visio) to HTML using the Office application.'
+    },
+    {
+      id: 'OracleDocumentsFolders',
+      title: 'OracleDocumentsFolders',
+      desc: 'This component enables Content Server to seamlessly integrate with Oracle Content and Experience Cloud. It allows user to store and retrieve documents stored in Oracle Content and Experience Cloud. It also provides the ability to copy content stored in the Content Server to Oracle Content and Experience Cloud'
+    },
+    {
+      id: 'PDFWatermark',
+      title: 'PDFWatermark',
+      desc: 'PDFWatermark enables watermarks to be applied to PDF files generated by the Inbound Refinery\'s PDFConverter component and returned to the Content Server. Existing PDF files already residing on the Content Server can also be watermarked. Dynamic watermarks are generated on-the-fly and can contain variable information.'
+    },
+    {
+      id: 'PortalVCRHelper',
+      title: 'PortalVCRHelper',
+      desc: 'PortalVCRHelper is used to integrate SiteStudio into WebCenter Portal\'s Content Presenter component. PortalVCRHelper should be enabled in order to surface SiteStudio content within WebCenter Portal.'
+    },
+    {
+      id: 'RedwoodUI',
+      title: 'RedwoodUI',
+      desc: 'This component offers a modern, configurable user interface built with Oracle Redwood design principles. RedwoodUI requires that FrameworkFolders be installed and enabled.'
+    },
+    {
+      id: 'SESCrawlerExport',
+      title: 'SESCrawlerExport',
+      desc: 'The SESCrawlerExport component adds functionality to the content server to allow it to be searched via the Oracle SES.'
+    }
+  ];
+
+  // Helper render for Tree Folders
+  const renderTreeFolder = (label: string, subItems: React.ReactNode) => {
+    const isExpanded = expandedNodes.includes(label);
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column' }}>
+        <div 
+          onClick={() => toggleNode(label)}
+          style={{ 
+            display: 'flex', 
+            alignItems: 'center', 
+            gap: '6px', 
+            cursor: 'pointer', 
+            color: '#0c3b6f', 
+            fontWeight: 'bold',
+            userSelect: 'none'
+          }}
+        >
+          <span style={{ fontSize: '11px', color: '#6b7280' }}>{isExpanded ? '➖' : '➕'}</span>
+          <span>{label}</span>
+        </div>
+        {isExpanded && (
+          <div style={{ display: 'flex', flexDirection: 'column', paddingLeft: '16px', marginTop: '4px', gap: '4px', borderLeft: '1px dotted #cbd5e1', marginLeft: '6px' }}>
+            {subItems}
+          </div>
+        )}
+      </div>
+    );
+  };
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', height: '100%', width: '100%', background: '#ffffff', fontFamily: 'Arial, sans-serif' }}>
+      
+      {/* Top Banner (Retro Admin style blue header) */}
+      <div style={{
+        height: '38px',
+        background: '#0c3b6f',
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        padding: '0 16px',
+        color: '#ffffff',
+        borderBottom: '2.5px solid #ffa500'
+      }}>
+        <span style={{ fontSize: '13px', fontWeight: 'bold', fontFamily: 'Arial, Helvetica, sans-serif' }}>Acadex Environment Developer Panel</span>
+        <div style={{ display: 'flex', gap: '14px', fontSize: '11px', color: '#e0f2fe' }}>
+          <span style={{ cursor: 'pointer' }} onClick={() => { setView('login'); closeTab('dev-tools'); }}>Logout</span>
+          <span>|</span>
+          <span style={{ cursor: 'pointer' }}>Help</span>
+          <span>|</span>
+          <span style={{ cursor: 'pointer' }} onClick={() => { setActiveComps(['Imaging', 'LinkManager', 'PortalVCRHelper', 'RedwoodUI', 'SESCrawlerExport']); setToastMessage('Settings restored to defaults.'); setTimeout(() => setToastMessage(null), 3000); }}>Refresh Page</span>
+        </div>
+      </div>
+
+      {/* Main split dashboard content */}
+      <div style={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
+        
+        {/* Left Tree Sidebar */}
+        <div style={{
+          width: '210px',
+          background: '#f4f8fb',
+          borderRight: '1px solid #cbd5e1',
+          display: 'flex',
+          flexDirection: 'column',
+          overflowY: 'auto',
+          padding: '8px'
+        }}>
+          {/* Top Quick links */}
+          <div style={{ display: 'flex', gap: '8px', marginBottom: '12px', borderBottom: '1px solid #e2e8f0', paddingBottom: '8px', fontSize: '11px', color: '#0369a1' }}>
+            <span 
+              style={{ cursor: 'pointer' }}
+              onClick={() => {
+                setView('dashboard');
+                closeTab('dev-tools');
+              }}
+            >
+              ◀ Return to Acadex
+            </span>
+            <span style={{ color: '#94a3b8' }}>|</span>
+            <span style={{ cursor: 'pointer', fontWeight: 'bold' }}>Search</span>
+          </div>
+
+          {/* Collapsible Directory node layout */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '11.5px', color: '#1e293b' }}>
+            
+            {renderTreeFolder('My Content Server', (
+              <>
+                <span style={{ cursor: 'pointer', color: '#475569' }}>📂 User Profile Settings</span>
+                <span style={{ cursor: 'pointer', color: '#475569' }}>📂 System Status Log</span>
+              </>
+            ))}
+
+            {renderTreeFolder('Browse Content', (
+              <>
+                <span style={{ cursor: 'pointer', color: '#475569' }}>📂 Core Library</span>
+                <span style={{ cursor: 'pointer', color: '#475569' }}>📂 Syllabus Folders</span>
+              </>
+            ))}
+
+            {renderTreeFolder('Search', (
+              <>
+                <span style={{ cursor: 'pointer', color: '#475569' }}>🔍 Advanced Search Builder</span>
+                <span style={{ cursor: 'pointer', color: '#475569' }}>🔍 Saved Query Logs</span>
+              </>
+            ))}
+
+            {renderTreeFolder('Content Management', (
+              <>
+                <span style={{ cursor: 'pointer', color: '#475569' }}>📂 Revision History Control</span>
+                <span style={{ cursor: 'pointer', color: '#475569' }}>📂 Metadata Schema Builder</span>
+              </>
+            ))}
+
+            {renderTreeFolder('Administration', (
+              <>
+                <span style={{ cursor: 'pointer', color: '#475569' }}>📄 Log Files Registry</span>
+                <span 
+                  onClick={() => setSelectedCompTab('Component Manager')} 
+                  style={{ 
+                    cursor: 'pointer', 
+                    fontWeight: selectedCompTab === 'Component Manager' ? 'bold' : 'normal',
+                    color: selectedCompTab === 'Component Manager' ? '#0369a1' : '#475569',
+                    backgroundColor: selectedCompTab === 'Component Manager' ? '#e2e8f0' : 'transparent',
+                    padding: '2px 4px',
+                    borderRadius: '2px'
+                  }}
+                >
+                  📝 Component Manager
+                </span>
+                <span style={{ cursor: 'pointer', color: '#475569' }}>⚙️ General Settings</span>
+                <span style={{ cursor: 'pointer', color: '#475569' }}>🔒 Security Credentials</span>
+                <span style={{ cursor: 'pointer', color: '#475569' }}>🌐 Proxy Configurations</span>
+              </>
+            ))}
+
+            {renderTreeFolder('Refinery Administration', (
+              <>
+                <span style={{ cursor: 'pointer', color: '#475569' }}>⚙️ File Queue Logs</span>
+                <span style={{ cursor: 'pointer', color: '#475569' }}>⚙️ Formats Manager</span>
+              </>
+            ))}
+
+            {renderTreeFolder('Scheduled Jobs', (
+              <>
+                <span style={{ cursor: 'pointer', color: '#475569' }}>⏱️ Active Crons</span>
+                <span style={{ cursor: 'pointer', color: '#475569' }}>⏱️ History Ledger</span>
+              </>
+            ))}
+
+            {renderTreeFolder('Admin Server', (
+              <>
+                <span style={{ cursor: 'pointer', color: '#475569' }}>🖥️ Port Mappings</span>
+                <span style={{ cursor: 'pointer', color: '#475569' }}>🖥️ Service Restarts</span>
+              </>
+            ))}
+
+            {renderTreeFolder('Environment Packager', (
+              <>
+                <span style={{ cursor: 'pointer', color: '#475569' }}>📦 Export Schema</span>
+                <span style={{ cursor: 'pointer', color: '#475569' }}>📦 Import Logs</span>
+              </>
+            ))}
+
+            {renderTreeFolder('Localization', (
+              <>
+                <span style={{ cursor: 'pointer', color: '#475569' }}>🌐 Language Packages</span>
+                <span style={{ cursor: 'pointer', color: '#475569' }}>🌐 Time Zone Offsets</span>
+              </>
+            ))}
+
+            {renderTreeFolder('SmartContent', (
+              <>
+                <span style={{ cursor: 'pointer', color: '#475569' }}>💡 AI Vector Indexes</span>
+                <span style={{ cursor: 'pointer', color: '#475569' }}>💡 Model Integrations</span>
+              </>
+            ))}          </div>
+        </div>
+
+        {/* Right Details / Component Config Panel */}
+        <div style={{ flex: 1, padding: '20px', overflowY: 'auto', maxHeight: 'calc(100vh - 38px)', background: '#f8fafc', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          
+          {/* Panel Card */}
+          <div style={{
+            background: '#ffffff',
+            border: '1px solid #cbd5e1',
+            borderRadius: '8px',
+            boxShadow: '0 1px 3px rgba(0,0,0,0.05)',
+            display: 'flex',
+            flexDirection: 'column',
+            overflow: 'hidden'
+          }}>
+            {/* Header tab */}
+            <div style={{
+              background: '#ebf2f8',
+              borderBottom: '1px solid #cbd5e1',
+              padding: '10px 16px',
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center'
+            }}>
+              <h2 style={{ fontSize: '13px', fontWeight: 'bold', color: '#0f2c59', margin: 0 }}>Component Manager - Core Application Settings</h2>
+              <button 
+                onClick={() => { setActiveComps(['Imaging', 'LinkManager', 'PortalVCRHelper', 'RedwoodUI', 'SESCrawlerExport']); }} 
+                style={{ 
+                  padding: '4px 10px', 
+                  fontSize: '11px', 
+                  background: '#ffffff', 
+                  border: '1px solid #94a3b8', 
+                  borderRadius: '4px', 
+                  cursor: 'pointer',
+                  color: '#1e293b'
+                }}
+              >
+                Refresh Settings
+              </button>
+            </div>
+
+            {/* Inner info notice */}
+            <div style={{ padding: '16px 16px 0px 16px' }}>
+              <div style={{
+                background: '#eff6ff',
+                border: '1px solid #bfdbfe',
+                color: '#1e3a8a',
+                padding: '12px 16px',
+                borderRadius: '6px',
+                fontSize: '11.5px',
+                lineHeight: '1.5'
+              }}>
+                Select or deselect the options below to activate or deactivate the respective configuration elements across this environment. After making changes, click the &ldquo;Save Changes&rdquo; button to apply settings.
+              </div>
+            </div>
+
+            {/* Checkbox component list */}
+            <div style={{ padding: '16px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
+              {components.map((comp) => {
+                const isChecked = activeComps.includes(comp.id);
+                return (
+                  <div key={comp.id} style={{ display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
+                    <input 
+                      type="checkbox" 
+                      id={`chk-${comp.id}`} 
+                      checked={isChecked}
+                      onChange={() => toggleComponent(comp.id)}
+                      style={{ marginTop: '4px', cursor: 'pointer', width: '15px', height: '15px' }}
+                    />
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
+                      <label 
+                        htmlFor={`chk-${comp.id}`} 
+                        style={{ 
+                          fontSize: '12.5px', 
+                          fontWeight: 'bold', 
+                          color: isChecked ? '#0c3b6f' : '#64748b', 
+                          cursor: 'pointer' 
+                        }}
+                      >
+                        {comp.title}
+                      </label>
+                      <p style={{ margin: 0, fontSize: '11px', color: '#475569', lineHeight: '1.4' }}>{comp.desc}</p>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Footer with actions */}
+            <div style={{
+              borderTop: '1px solid #cbd5e1',
+              padding: '12px 16px',
+              background: '#f8fafc',
+              display: 'flex',
+              justifyContent: 'flex-end',
+              gap: '8px'
+            }}>
+              <button 
+                onClick={handleSave}
+                style={{
+                  padding: '6px 14px',
+                  fontSize: '11px',
+                  fontWeight: 'bold',
+                  backgroundColor: '#0c3b6f',
+                  color: '#ffffff',
+                  border: 'none',
+                  borderRadius: '4px',
+                  cursor: 'pointer'
+                }}
+              >
+                Save Changes
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      {/* Toast Feedback */}
+      {toastMessage && (
+        <div style={{
+          position: 'fixed',
+          bottom: '24px',
+          right: '24px',
+          backgroundColor: '#1e293b',
+          color: '#ffffff',
+          padding: '10px 16px',
+          borderRadius: '6px',
+          fontSize: '11.5px',
+          boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)',
+          zIndex: 9999,
+          animation: 'slideIn 0.2s ease-out'
+        }}>
+          ✅ {toastMessage}
+        </div>
+      )}
+
     </div>
   );
 }
