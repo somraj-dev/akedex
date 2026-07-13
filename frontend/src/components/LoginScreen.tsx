@@ -8,9 +8,14 @@ export default function LoginScreen() {
   const [selectedUser, setSelectedUser] = useState('Select User...');
   const [password, setPassword] = useState('');
   const [selectedDomain, setSelectedDomain] = useState('PRODX');
+  const [mounted, setMounted] = useState(false);
 
-  const handleLoginSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const handleLoginSubmit = (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
     // Simulate login and proceed to dashboard
     login({
       id: 'usr-admin-01',
@@ -20,6 +25,10 @@ export default function LoginScreen() {
       institution: 'Delhi Public School'
     } as any);
   };
+
+  if (!mounted) {
+    return null;
+  }
 
   return (
     <div style={{
@@ -153,6 +162,7 @@ export default function LoginScreen() {
           }}>
             <button
               type="submit"
+              onClick={() => handleLoginSubmit()}
               style={{
                 width: '74px',
                 height: '22px',
