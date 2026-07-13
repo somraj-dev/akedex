@@ -7,7 +7,7 @@ function createWindow() {
     height: 900,
     minWidth: 1024,
     minHeight: 768,
-    title: "Akedex — Education Operating Environment",
+    title: "Acadex — Education Operating Environment",
     autoHideMenuBar: true,
     icon: path.join(__dirname, 'public/favicon.ico'),
     webPreferences: {
@@ -16,8 +16,13 @@ function createWindow() {
     }
   });
 
-  // Load Next.js dev server URL
-  win.loadURL('http://localhost:3000');
+  // Load Next.js dev server in dev, static files in production
+  const isDev = !app.isPackaged;
+  if (isDev) {
+    win.loadURL('http://localhost:3002');
+  } else {
+    win.loadFile(path.join(__dirname, 'out/index.html'));
+  }
 
   // Handle window closing gracefully
   win.on('closed', () => {

@@ -8,7 +8,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "electron": "electron ."
+    "electron": "electron .",
+    "package": "next build && electron-builder"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.101.0",
@@ -31,9 +32,25 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "electron": "^41.7.1",
+    "electron-builder": "^24.13.3",
     "eslint": "^9",
     "eslint-config-next": "16.2.7",
     "tailwindcss": "^4",
     "typescript": "^5"
+  },
+  "build": {
+    "appId": "com.acadex.app",
+    "productName": "Acadex",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "main.js",
+      "package.json",
+      "out/**/*"
+    ],
+    "win": {
+      "target": "nsis"
+    }
   }
 }
