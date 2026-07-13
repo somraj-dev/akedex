@@ -14,11 +14,11 @@ export default function LoginScreen() {
     // Simulate login and proceed to dashboard
     login({
       id: 'usr-admin-01',
-      username: selectedUser === 'Select User...' ? 'Administrator' : selectedUser,
+      name: selectedUser === 'Select User...' ? 'Administrator' : selectedUser,
       role: 'ADMIN',
-      fullName: 'System Administrator',
-      email: 'admin@acadex.com'
-    });
+      email: 'admin@acadex.com',
+      institution: 'Delhi Public School'
+    } as any);
   };
 
   return (
