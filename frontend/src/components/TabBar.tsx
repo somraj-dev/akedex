@@ -243,9 +243,7 @@ export default function TabBar() {
             <span>Share tab with Gemini</span>
             <span style={shortcutStyle}>&gt;</span>
           </div>
-          <div className="chrome-context-menu-item" style={menuItemStyle} onClick={() => showToast('Sending tab payload...', 'info')}>
-            <span>💻 Send to your devices</span>
-          </div>
+
 
           <hr style={dividerStyle} />
 
