@@ -62,13 +62,13 @@ export default function Page() {
   }
 
   // 3. Render Developer tools in full page without the main header
-  if (currentView === 'dev-tools') {
+  if ((currentView as any) === 'dev-tools') {
     return <DevToolsView />;
   }
 
   // 4. Render Active Workspace View Component
   const renderActiveView = () => {
-    switch (currentView) {
+    switch (currentView as any) {
       case 'dashboard':
         return <Dashboard />;
       case 'students':

@@ -13,12 +13,8 @@ on:
 
 jobs:
   build:
-    name: Build & Package Electron Desktop Installers
-    runs-on: ${{ matrix.os }}
-
-    strategy:
-      matrix:
-        os: [windows-latest, macos-latest, ubuntu-latest]
+    name: Build & Package Windows Desktop Installer
+    runs-on: windows-latest
 
     steps:
       - name: Checkout Code
@@ -46,10 +42,6 @@ jobs:
       - name: Upload Installer Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: Acadex-Desktop-${{ matrix.os }}
-          path: |
-            frontend/dist/*.exe
-            frontend/dist/*.dmg
-            frontend/dist/*.deb
-            frontend/dist/*.AppImage
+          name: Acadex-Windows-Installer
+          path: frontend/dist/*.exe
           if-no-files-found: ignore
