@@ -185,79 +185,79 @@ export default function TabBar() {
         );
       })}
 
-      {/* Chrome-style Dark Context Menu */}
+      {/* Chrome-style Bright Context Menu */}
       {contextMenu && (
         <div style={{
           position: 'fixed',
           top: `${contextMenu.y}px`,
           left: `${contextMenu.x}px`,
           width: '240px',
-          backgroundColor: '#1b222b', // Dark modern Chrome context menu background
-          border: '1px solid #2d3748',
-          boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.4), 0 8px 10px -6px rgba(0, 0, 0, 0.4)',
+          backgroundColor: '#ffffff', // Bright white context menu background
+          border: '1px solid #cbd5e1', // Light grey border
+          boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)',
           borderRadius: '6px',
           padding: '4px 0',
           zIndex: 99999,
           fontFamily: '"Segoe UI", Tahoma, Geneva, Verdana, sans-serif',
           fontSize: '12px',
-          color: '#e2e8f0',
+          color: '#1e293b', // Dark slate text
         }}>
           {/* Section 1: Window Management */}
-          <div style={menuItemStyle} onClick={() => showToast('Opened new tab to the right', 'info')}>
+          <div className="chrome-context-menu-item" style={menuItemStyle} onClick={() => showToast('Opened new tab to the right', 'info')}>
             <span>New tab to the right</span>
           </div>
-          <div style={menuItemStyle} onClick={() => showToast('Split view activated', 'info')}>
+          <div className="chrome-context-menu-item" style={menuItemStyle} onClick={() => showToast('Split view activated', 'info')}>
             <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>📑 New split view with current tab</span>
           </div>
-          <div style={menuItemStyle} onClick={() => showToast('Added tab to group', 'info')}>
+          <div className="chrome-context-menu-item" style={menuItemStyle} onClick={() => showToast('Added tab to group', 'info')}>
             <span>Add tab to new group</span>
           </div>
-          <div style={menuItemStyle} onClick={() => showToast('Moved tab to new window', 'info')}>
+          <div className="chrome-context-menu-item" style={menuItemStyle} onClick={() => showToast('Moved tab to new window', 'info')}>
             <span>Move tab to new window</span>
           </div>
 
           <hr style={dividerStyle} />
 
           {/* Section 2: Tab Actions */}
-          <div style={menuItemStyle} onClick={() => handleReload(contextMenu.tabId)}>
+          <div className="chrome-context-menu-item" style={menuItemStyle} onClick={() => handleReload(contextMenu.tabId)}>
             <span>Reload</span>
             <span style={shortcutStyle}>Ctrl+R</span>
           </div>
-          <div style={menuItemStyle} onClick={() => handleDuplicate(contextMenu.tabId)}>
+          <div className="chrome-context-menu-item" style={menuItemStyle} onClick={() => handleDuplicate(contextMenu.tabId)}>
             <span>Duplicate</span>
           </div>
-          <div style={menuItemStyle} onClick={() => showToast('Tab pinned', 'success')}>
+          <div className="chrome-context-menu-item" style={menuItemStyle} onClick={() => showToast('Tab pinned', 'success')}>
             <span>Pin</span>
           </div>
-          <div style={menuItemStyle} onClick={() => showToast('Muted site audio', 'info')}>
+          <div className="chrome-context-menu-item" style={menuItemStyle} onClick={() => showToast('Muted site audio', 'info')}>
             <span>Mute site</span>
           </div>
 
           <hr style={dividerStyle} />
 
           {/* Section 3: Extra Lists */}
-          <div style={menuItemStyle} onClick={() => showToast('Added to reading list', 'success')}>
+          <div className="chrome-context-menu-item" style={menuItemStyle} onClick={() => showToast('Added to reading list', 'success')}>
             <span>📖 Add tab to reading list</span>
           </div>
-          <div style={menuItemStyle} onClick={() => showToast('Shared tab content', 'info')}>
+          <div className="chrome-context-menu-item" style={menuItemStyle} onClick={() => showToast('Shared tab content', 'info')}>
             <span>Share tab with Gemini</span>
             <span style={shortcutStyle}>&gt;</span>
           </div>
-          <div style={menuItemStyle} onClick={() => showToast('Sending tab payload...', 'info')}>
+          <div className="chrome-context-menu-item" style={menuItemStyle} onClick={() => showToast('Sending tab payload...', 'info')}>
             <span>💻 Send to your devices</span>
           </div>
 
           <hr style={dividerStyle} />
 
           {/* Section 4: Close Operations */}
-          <div style={menuItemStyle} onClick={() => handleClose(contextMenu.tabId)}>
+          <div className="chrome-context-menu-item" style={menuItemStyle} onClick={() => handleClose(contextMenu.tabId)}>
             <span>Close</span>
             <span style={shortcutStyle}>Ctrl+W</span>
           </div>
-          <div style={menuItemStyle} onClick={() => handleCloseOthers(contextMenu.tabId)}>
+          <div className="chrome-context-menu-item" style={menuItemStyle} onClick={() => handleCloseOthers(contextMenu.tabId)}>
             <span>Close other tabs</span>
           </div>
-          <div style={menuItemStyle} onClick={() => handleCloseToRight(contextMenu.tabId)}>
+          <div className="chrome-context-menu-item" style={menuItemStyle} onClick={() => handleCloseToRight(contextMenu.tabId)}>
             <span>Close tabs to the right</span>
           </div>
         </div>
@@ -283,16 +283,16 @@ const shortcutStyle: React.CSSProperties = {
 
 const dividerStyle: React.CSSProperties = {
   border: 'none',
-  borderBottom: '1px solid #2d3748',
+  borderBottom: '1px solid #e2e8f0', // Light divider color
   margin: '4px 0',
 };
 
-// Add mouse hover dynamic color injection
+// Add mouse hover dynamic color injection for bright menu
 if (typeof document !== 'undefined') {
   const styleEl = document.createElement('style');
   styleEl.innerHTML = `
-    div[style*="position: fixed"][style*="background-color: rgb(27, 34, 43)"] > div:hover {
-      background-color: #2b3543 !important;
+    .chrome-context-menu-item:hover {
+      background-color: #f1f5f9 !important;
     }
   `;
   document.head.appendChild(styleEl);
