@@ -3821,48 +3821,162 @@ export function FinanceView() {
     case 'finance-reports':
       return <FinancialReportsSubView />;
     case 'finance-revenue':
-    default:
       return (
         <div style={{ padding: '20px', background: '#f8fafc', height: '100%', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '20px', fontFamily: 'system-ui, sans-serif' }}>
-          <div>
-            <h1 style={{ fontSize: '22px', fontWeight: 700, color: '#0f172a', margin: 0 }}>Revenue Analytics</h1>
-            <p style={{ fontSize: '13px', color: '#64748b', margin: '4px 0 0' }}>Analyze revenue streams, collection trends, and income breakdowns by category and term.</p>
-          </div>
-          <div style={{
-            background: '#ffffff',
-            border: '1px solid #e2e8f0',
-            borderRadius: '12px',
-            padding: '48px 24px',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            textAlign: 'center',
-            minHeight: '400px',
-            boxShadow: '0 1px 3px rgba(0,0,0,0.05)'
-          }}>
-            <div style={{
-              width: '56px',
-              height: '56px',
-              borderRadius: '12px',
-              background: 'rgba(59, 130, 246, 0.08)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              marginBottom: '16px',
-              color: '#2563eb',
-            }}>
-              <TrendingUp size={28} />
+          {/* Header */}
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div>
+              <h1 style={{ fontSize: '20px', fontWeight: 700, color: '#0f172a', margin: 0 }}>Revenue & Income Analytics</h1>
+              <p style={{ fontSize: '12px', color: '#64748b', margin: '4px 0 0' }}>Real-time breakdown of institutional collections, expected fees, and miscellaneous receipts.</p>
             </div>
-            <h3 style={{ fontSize: '16px', fontWeight: 700, color: '#0f172a', margin: '0 0 8px' }}>
-              Revenue Analytics Control
-            </h3>
-            <p style={{ fontSize: '13px', color: '#64748b', maxWidth: '380px', lineHeight: 1.5, margin: 0 }}>
-              This module is part of the Finance CFO Control Center. Multi-dimensional filters, projections, and breakdown charts will load here.
-            </p>
+            <div style={{ display: 'flex', gap: '8px' }}>
+              <button style={{ padding: '6px 12px', fontSize: '11px', fontWeight: 600, border: '1px solid #e2e8f0', borderRadius: '6px', background: '#ffffff', color: '#334155', cursor: 'pointer' }}>
+                📅 FY 2026-27
+              </button>
+              <button style={{ padding: '6px 12px', fontSize: '11px', fontWeight: 600, border: '1px solid #e2e8f0', borderRadius: '6px', background: '#3b82f6', color: '#ffffff', cursor: 'pointer' }}>
+                📥 Export Ledger
+              </button>
+            </div>
+          </div>
+
+          {/* Stats Grid */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '16px' }}>
+            <div style={{ background: '#ffffff', padding: '16px', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
+              <div style={{ fontSize: '11px', fontWeight: 600, color: '#64748b', textTransform: 'uppercase' }}>Total Collected Revenue</div>
+              <div style={{ fontSize: '22px', fontWeight: 700, color: '#0f172a', margin: '8px 0 4px' }}>₹4.82 Cr</div>
+              <div style={{ fontSize: '11px', color: '#10b981', fontWeight: 600 }}>↑ 12.4% vs Last Year</div>
+            </div>
+            <div style={{ background: '#ffffff', padding: '16px', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
+              <div style={{ fontSize: '11px', fontWeight: 600, color: '#64748b', textTransform: 'uppercase' }}>Academic Tuition Fees</div>
+              <div style={{ fontSize: '22px', fontWeight: 700, color: '#0f172a', margin: '8px 0 4px' }}>₹3.65 Cr</div>
+              <div style={{ fontSize: '11px', color: '#64748b' }}>75.7% of total revenue</div>
+            </div>
+            <div style={{ background: '#ffffff', padding: '16px', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
+              <div style={{ fontSize: '11px', fontWeight: 600, color: '#64748b', textTransform: 'uppercase' }}>Transport & Hostel Fees</div>
+              <div style={{ fontSize: '22px', fontWeight: 700, color: '#0f172a', margin: '8px 0 4px' }}>₹54.20 Lakh</div>
+              <div style={{ fontSize: '11px', color: '#3b82f6', fontWeight: 600 }}>98.2% Collection Target</div>
+            </div>
+            <div style={{ background: '#ffffff', padding: '16px', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
+              <div style={{ fontSize: '11px', fontWeight: 600, color: '#64748b', textTransform: 'uppercase' }}>Other Streams (Sports & Exams)</div>
+              <div style={{ fontSize: '22px', fontWeight: 700, color: '#0f172a', margin: '8px 0 4px' }}>₹62.80 Lakh</div>
+              <div style={{ fontSize: '11px', color: '#f59e0b', fontWeight: 600 }}>Target: ₹70.00 Lakh</div>
+            </div>
+          </div>
+
+          {/* SVG MoM Collection Chart */}
+          <div style={{ background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '16px' }}>
+            <h3 style={{ fontSize: '13px', fontWeight: 700, color: '#0f172a', margin: '0 0 16px' }}>Month-on-Month Fee Collection Trends (FY 2026)</h3>
+            <div style={{ height: '200px', width: '100%', position: 'relative' }}>
+              <svg width="100%" height="100%" viewBox="0 0 800 200" preserveAspectRatio="none">
+                {/* Grid Lines */}
+                <line x1="50" y1="20" x2="750" y2="20" stroke="#f1f5f9" strokeWidth="1" />
+                <line x1="50" y1="70" x2="750" y2="70" stroke="#f1f5f9" strokeWidth="1" />
+                <line x1="50" y1="120" x2="750" y2="120" stroke="#f1f5f9" strokeWidth="1" />
+                <line x1="50" y1="170" x2="750" y2="170" stroke="#f1f5f9" strokeWidth="1" />
+                
+                {/* Area chart filled path */}
+                <path
+                  d="M 50 170 L 150 130 L 250 140 L 350 90 L 450 70 L 550 50 L 650 40 L 750 35 L 750 170 Z"
+                  fill="rgba(59, 130, 246, 0.08)"
+                />
+                
+                {/* Trend line */}
+                <path
+                  d="M 50 170 L 150 130 L 250 140 L 350 90 L 450 70 L 550 50 L 650 40 L 750 35"
+                  fill="none"
+                  stroke="#3b82f6"
+                  strokeWidth="2.5"
+                  strokeLinecap="round"
+                />
+
+                {/* Data points */}
+                <circle cx="50" cy="170" r="4" fill="#ffffff" stroke="#3b82f6" strokeWidth="2" />
+                <circle cx="150" cy="130" r="4" fill="#ffffff" stroke="#3b82f6" strokeWidth="2" />
+                <circle cx="250" cy="140" r="4" fill="#ffffff" stroke="#3b82f6" strokeWidth="2" />
+                <circle cx="350" cy="90" r="4" fill="#ffffff" stroke="#3b82f6" strokeWidth="2" />
+                <circle cx="450" cy="70" r="4" fill="#ffffff" stroke="#3b82f6" strokeWidth="2" />
+                <circle cx="550" cy="50" r="4" fill="#ffffff" stroke="#3b82f6" strokeWidth="2" />
+                <circle cx="650" cy="40" r="4" fill="#ffffff" stroke="#3b82f6" strokeWidth="2" />
+                <circle cx="750" cy="35" r="4" fill="#ffffff" stroke="#3b82f6" strokeWidth="2" />
+              </svg>
+            </div>
+            {/* X Axis Labels */}
+            <div style={{ display: 'flex', justifyContent: 'space-between', padding: '4px 30px 0', fontSize: '10px', color: '#64748b', fontWeight: 600 }}>
+              <span>Apr</span>
+              <span>May</span>
+              <span>Jun</span>
+              <span>Jul</span>
+              <span>Aug</span>
+              <span>Sep</span>
+              <span>Oct</span>
+              <span>Nov/Dec</span>
+            </div>
+          </div>
+
+          {/* Detailed Allocation Table */}
+          <div style={{ background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: '12px', overflow: 'hidden' }}>
+            <div style={{ padding: '16px', borderBottom: '1px solid #e2e8f0' }}>
+              <h3 style={{ fontSize: '13px', fontWeight: 700, color: '#0f172a', margin: 0 }}>Term-wise Income Allocation Details</h3>
+            </div>
+            <table className="data-table">
+              <thead>
+                <tr>
+                  <th>Academic Term</th>
+                  <th>Fee Category</th>
+                  <th>Expected Allocation</th>
+                  <th>Total Collected</th>
+                  <th>Deficit Recovery Target</th>
+                  <th>Efficiency Rate</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style={{ fontWeight: 700 }}>Term 1 (Summer 2026)</td>
+                  <td>Tuition & Admission</td>
+                  <td>₹1.50 Cr</td>
+                  <td>₹1.48 Cr</td>
+                  <td style={{ color: '#10b981', fontWeight: 600 }}>Completed</td>
+                  <td>
+                    <span className="badge badge-active">98.6%</span>
+                  </td>
+                </tr>
+                <tr>
+                  <td style={{ fontWeight: 700 }}>Term 2 (Autumn 2026)</td>
+                  <td>Tuition & Labs</td>
+                  <td>₹1.50 Cr</td>
+                  <td>₹1.35 Cr</td>
+                  <td style={{ color: '#ef4444', fontWeight: 600 }}>₹15.00 Lakh</td>
+                  <td>
+                    <span className="badge badge-info">90.0%</span>
+                  </td>
+                </tr>
+                <tr>
+                  <td style={{ fontWeight: 700 }}>Term 3 (Winter 2026)</td>
+                  <td>Tuition & Sports</td>
+                  <td>₹1.20 Cr</td>
+                  <td>₹82.00 Lakh</td>
+                  <td style={{ color: '#ef4444', fontWeight: 600 }}>₹38.00 Lakh</td>
+                  <td>
+                    <span className="badge badge-warning">68.3%</span>
+                  </td>
+                </tr>
+                <tr>
+                  <td style={{ fontWeight: 700 }}>Yearly Subscriptions</td>
+                  <td>Hostel & Transportation</td>
+                  <td>₹80.00 Lakh</td>
+                  <td>₹78.20 Lakh</td>
+                  <td style={{ color: '#10b981', fontWeight: 600 }}>Completed</td>
+                  <td>
+                    <span className="badge badge-active">97.7%</span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
       );
+    default:
+      return <ExecutiveDashboardSubView />;
   }
 }
 
@@ -3870,46 +3984,165 @@ export function FinanceView() {
 // FACILITIES VIEW (NEW)
 // =====================================================
 export function FacilitiesView() {
-  const rooms = [
-    { name: 'Physics Laboratory 1', type: 'Laboratory', capacity: 30, status: 'IN_USE', currentClass: '11-Science' },
-    { name: 'Room 302 (Mathematics)', type: 'Classroom', capacity: 45, status: 'IN_USE', currentClass: '10-A' },
-    { name: 'Secondary Gymnasium', type: 'Sports Hall', capacity: 150, status: 'AVAILABLE', currentClass: 'Free Slot' },
-    { name: 'Institutional Auditorium', type: 'Hall', capacity: 500, status: 'MAINTENANCE', currentClass: 'N/A' }
-  ];
+  const [selectedTeacherId, setSelectedTeacherId] = useState<string | null>(mockTeachers[0]?.id || null);
+
+  const selectedTeacher = mockTeachers.find(t => t.id === selectedTeacherId);
 
   return (
-    <div style={{ padding: '16px', background: 'var(--bg-primary)', height: '100%', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+    <div style={{ padding: '16px', background: 'var(--bg-primary)', height: '100%', overflow: 'hidden', display: 'flex', flexDirection: 'column', gap: '16px' }}>
       <div>
-        <h2 style={{ fontSize: '16px', fontWeight: 700, color: 'var(--text-primary)', margin: 0 }}>Facilities & Spaces Registry</h2>
-        <p style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>Track room occupancies, maintenance cycles, and laboratory capacities.</p>
+        <h2 style={{ fontSize: '16px', fontWeight: 700, color: 'var(--text-primary)', margin: 0 }}>Faculty Directory Registry</h2>
+        <p style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>Track academic instructors, department heads, and administrative staff certifications and designations.</p>
       </div>
-      <div style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-primary)', borderRadius: '12px', overflow: 'hidden' }}>
-        <table className="data-table">
-          <thead>
-            <tr>
-              <th>Facility Space Room</th>
-              <th>Space Type</th>
-              <th>Capacity Max</th>
-              <th>Active Division occupancy</th>
-              <th>Operational Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {rooms.map((r, idx) => (
-              <tr key={idx}>
-                <td style={{ fontWeight: 700 }}>{r.name}</td>
-                <td>{r.type}</td>
-                <td className="font-mono">{r.capacity}</td>
-                <td>{r.currentClass}</td>
-                <td>
-                  <span className={`badge ${r.status === 'AVAILABLE' ? 'badge-active' : r.status === 'IN_USE' ? 'badge-info' : 'badge-warning'}`}>
-                    {r.status.replace('_', ' ')}
-                  </span>
-                </td>
+
+      {/* Split panel wrapper */}
+      <div style={{ display: 'flex', gap: '16px', flex: 1, overflow: 'hidden' }}>
+        
+        {/* Left side list table */}
+        <div style={{ flex: 1, background: 'var(--bg-secondary)', border: '1px solid var(--border-primary)', borderRadius: '12px', overflowY: 'auto' }}>
+          <table className="data-table">
+            <thead>
+              <tr>
+                <th>Ref ID</th>
+                <th>Faculty Member</th>
+                <th>Department</th>
+                <th>Subjects</th>
+                <th>Experience</th>
+                <th>Contact Info</th>
+                <th>Status</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {mockTeachers.map((t, idx) => {
+                const isSelected = t.id === selectedTeacherId;
+                return (
+                  <tr 
+                    key={idx}
+                    onClick={() => setSelectedTeacherId(t.id)}
+                    style={{ 
+                      cursor: 'pointer',
+                      backgroundColor: isSelected ? 'var(--bg-active)' : 'transparent',
+                    }}
+                  >
+                    <td className="font-mono text-xs" style={{ color: 'var(--text-tertiary)' }}>{t.uti}</td>
+                    <td>
+                      <div style={{ fontWeight: 700, color: isSelected ? 'var(--accent-primary)' : 'var(--text-primary)' }}>{t.name}</div>
+                      <div style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>{t.designation}</div>
+                    </td>
+                    <td style={{ fontWeight: 600 }}>{t.department}</td>
+                    <td>{t.subjects}</td>
+                    <td className="font-mono">{t.experience} Years</td>
+                    <td>
+                      <div style={{ fontSize: '11px' }}>✉️ {t.email}</div>
+                      <div style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>📞 {t.phone}</div>
+                    </td>
+                    <td>
+                      <span className={`badge ${t.status === 'ACTIVE' ? 'badge-active' : 'badge-warning'}`}>
+                        {t.status.replace('_', ' ')}
+                      </span>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+
+        {/* Right side information card */}
+        {selectedTeacher && (
+          <div style={{
+            width: '320px',
+            backgroundColor: 'var(--bg-secondary)',
+            border: '1px solid var(--border-primary)',
+            borderRadius: '12px',
+            display: 'flex',
+            flexDirection: 'column',
+            overflow: 'hidden',
+            padding: '16px',
+            boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
+            animation: 'slideIn 0.2s ease-out'
+          }}>
+            {/* Card Header with close button */}
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', borderBottom: '1px solid var(--border-primary)', paddingBottom: '8px' }}>
+              <span style={{ fontWeight: 'bold', fontSize: '12px', color: 'var(--text-secondary)' }}>Faculty Details</span>
+              <button 
+                onClick={() => setSelectedTeacherId(null)}
+                style={{ background: 'none', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer', fontSize: '14px', fontWeight: 'bold' }}
+              >
+                ✕
+              </button>
+            </div>
+
+            {/* Profile Avatar / Initials */}
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px', marginBottom: '20px' }}>
+              <div style={{
+                width: '64px',
+                height: '64px',
+                borderRadius: '50%',
+                backgroundColor: 'var(--accent-primary-light)',
+                color: 'var(--accent-primary)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: '24px',
+                fontWeight: 'bold',
+                border: '2px solid var(--border-primary)'
+              }}>
+                {selectedTeacher.name.split(' ').map(n => n[0]).join('')}
+              </div>
+              <div style={{ textAlign: 'center' }}>
+                <h3 style={{ margin: 0, fontSize: '15px', fontWeight: 'bold', color: 'var(--text-primary)' }}>{selectedTeacher.name}</h3>
+                <span style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>{selectedTeacher.designation}</span>
+              </div>
+              <span className={`badge ${selectedTeacher.status === 'ACTIVE' ? 'badge-active' : 'badge-warning'}`}>
+                {selectedTeacher.status.replace('_', ' ')}
+              </span>
+            </div>
+
+            {/* Teacher Details List */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', overflowY: 'auto', flex: 1, fontSize: '12px' }}>
+              <div>
+                <span style={{ display: 'block', fontSize: '10px', textTransform: 'uppercase', color: 'var(--text-tertiary)', fontWeight: 'bold', marginBottom: '2px' }}>Ref ID</span>
+                <span style={{ fontFamily: 'monospace', fontWeight: 600 }}>{selectedTeacher.uti}</span>
+              </div>
+
+              <div>
+                <span style={{ display: 'block', fontSize: '10px', textTransform: 'uppercase', color: 'var(--text-tertiary)', fontWeight: 'bold', marginBottom: '2px' }}>Department</span>
+                <span style={{ fontWeight: 600 }}>{selectedTeacher.department}</span>
+              </div>
+
+              <div>
+                <span style={{ display: 'block', fontSize: '10px', textTransform: 'uppercase', color: 'var(--text-tertiary)', fontWeight: 'bold', marginBottom: '2px' }}>Subjects Taught</span>
+                <span>{selectedTeacher.subjects}</span>
+              </div>
+
+              <div>
+                <span style={{ display: 'block', fontSize: '10px', textTransform: 'uppercase', color: 'var(--text-tertiary)', fontWeight: 'bold', marginBottom: '2px' }}>Experience</span>
+                <span>{selectedTeacher.experience} Years</span>
+              </div>
+
+              <div style={{ borderTop: '1px solid var(--border-primary)', paddingTop: '10px', marginTop: '6px' }}>
+                <span style={{ display: 'block', fontSize: '10px', textTransform: 'uppercase', color: 'var(--text-tertiary)', fontWeight: 'bold', marginBottom: '4px' }}>Contact Details</span>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                  <span>✉️ {selectedTeacher.email}</span>
+                  <span>📞 {selectedTeacher.phone}</span>
+                </div>
+              </div>
+
+              <div style={{ borderTop: '1px solid var(--border-primary)', paddingTop: '10px', marginTop: '6px' }}>
+                <span style={{ display: 'block', fontSize: '10px', textTransform: 'uppercase', color: 'var(--text-tertiary)', fontWeight: 'bold', marginBottom: '4px' }}>Administrative Actions</span>
+                <div style={{ display: 'flex', gap: '8px', marginTop: '4px' }}>
+                  <button style={{ flex: 1, fontSize: '11px', padding: '4px', border: '1px solid var(--border-primary)', borderRadius: '4px', cursor: 'pointer', backgroundColor: 'transparent' }}>
+                    Send Mail
+                  </button>
+                  <button style={{ flex: 1, fontSize: '11px', padding: '4px', border: '1px solid var(--border-primary)', borderRadius: '4px', cursor: 'pointer', backgroundColor: 'transparent' }}>
+                    Edit Profile
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

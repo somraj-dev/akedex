@@ -15,6 +15,7 @@ export default function TopHeader() {
   const [showHelpDropdown, setShowHelpDropdown] = useState(false);
   const [showAdminDropdown, setShowAdminDropdown] = useState(false);
   const [showExamDropdown, setShowExamDropdown] = useState(false);
+  const [showFinanceDropdown, setShowFinanceDropdown] = useState(false);
 
   const helpButtonRef = useRef<HTMLButtonElement>(null);
   const helpDropdownRef = useRef<HTMLDivElement>(null);
@@ -24,6 +25,9 @@ export default function TopHeader() {
 
   const examButtonRef = useRef<HTMLButtonElement>(null);
   const examDropdownRef = useRef<HTMLDivElement>(null);
+
+  const financeButtonRef = useRef<HTMLButtonElement>(null);
+  const financeDropdownRef = useRef<HTMLDivElement>(null);
 
   // Close dropdowns on click outside
   useEffect(() => {
@@ -53,6 +57,15 @@ export default function TopHeader() {
         !examButtonRef.current.contains(event.target as Node)
       ) {
         setShowExamDropdown(false);
+      }
+
+      if (
+        financeDropdownRef.current && 
+        !financeDropdownRef.current.contains(event.target as Node) &&
+        financeButtonRef.current &&
+        !financeButtonRef.current.contains(event.target as Node)
+      ) {
+        setShowFinanceDropdown(false);
       }
     }
     document.addEventListener('mousedown', handleClickOutside);
@@ -135,7 +148,7 @@ export default function TopHeader() {
         setExamsSubView('exams-dashboard');
         break;
       case 'Faculty':
-        openTab({ id: 'facilities', label: 'Faculty', view: 'facilities', closable: true });
+        openTab({ id: 'teachers', label: 'Faculty', view: 'teachers', closable: true });
         break;
       case 'Executive Dashboard':
         openTab({ id: 'finance', label: 'Executive Dashboard', view: 'finance', closable: true });
@@ -267,6 +280,39 @@ export default function TopHeader() {
               );
             }
 
+            // Render Finance button with Dropdown trigger
+            if (item === 'Finance') {
+              return (
+                <button
+                  key={item}
+                  ref={financeButtonRef}
+                  onClick={() => {
+                    setActiveL1('Finance');
+                    setShowFinanceDropdown(!showFinanceDropdown);
+                    setShowHelpDropdown(false);
+                    setShowAdminDropdown(false);
+                    setShowExamDropdown(false);
+                  }}
+                  style={{
+                    height: '100%',
+                    padding: '0 8px',
+                    background: 'none',
+                    border: 'none',
+                    color: isActive ? '#0f2c59' : '#5c6f84',
+                    fontSize: '11px',
+                    fontWeight: isActive ? 700 : 500,
+                    cursor: 'pointer',
+                    outline: 'none',
+                    display: 'flex',
+                    alignItems: 'center',
+                    transition: 'color 120ms',
+                  }}
+                >
+                  {item}
+                </button>
+              );
+            }
+
             return (
               <button
                 key={item}
@@ -275,6 +321,7 @@ export default function TopHeader() {
                   setShowHelpDropdown(false);
                   setShowAdminDropdown(false);
                   setShowExamDropdown(false);
+                  setShowFinanceDropdown(false);
                   if (item === 'Notifications') {
                     openTab({ id: 'notifications', label: 'Notifications', view: 'notifications', closable: true });
                   }
@@ -299,6 +346,55 @@ export default function TopHeader() {
             );
           })}
         </div>
+
+        {/* BRIGHT THEME DROPDOWN CARD FOR FINANCE TAB */}
+        {showFinanceDropdown && (
+          <div 
+            ref={financeDropdownRef}
+            style={{
+              position: 'absolute',
+              top: '24px',
+              left: '148px', // Align absolutely under the Finance button
+              width: '185px',
+              backgroundColor: '#ffffff',
+              border: '1px solid #cbd5e1',
+              borderRadius: '4px',
+              boxShadow: '0 4px 12px rgba(0, 0, 0, 0.08), 0 2px 4px rgba(0, 0, 0, 0.04)',
+              padding: '4px 0',
+              display: 'flex',
+              flexDirection: 'column',
+              zIndex: 999,
+            }}
+          >
+            {[
+              { label: 'Fees collection', subView: 'finance-fee-collection' },
+              { label: 'Defaulter & Recovery', subView: 'finance-defaulters' },
+              { label: 'Revenue Analytics', subView: 'finance-revenue' },
+              { label: 'Payroll', subView: 'finance-payroll' },
+              { label: 'Financial Report', subView: 'finance-reports' }
+            ].map((opt) => (
+              <div 
+                key={opt.subView}
+                onClick={() => {
+                  openTab({ id: 'finance', label: 'Executive Dashboard', view: 'finance', closable: true });
+                  setFinanceSubView(opt.subView as any);
+                  setShowFinanceDropdown(false);
+                }}
+                style={{
+                  padding: '6px 12px',
+                  fontSize: '11.5px',
+                  color: '#334155',
+                  cursor: 'pointer',
+                  transition: 'background-color 100ms',
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f1f5f9'}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+              >
+                {opt.label}
+              </div>
+            ))}
+          </div>
+        )}
 
         {/* BRIGHT THEME DROPDOWN CARD FOR EXAM TAB */}
         {showExamDropdown && (
