@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { X, Minus, Square } from 'lucide-react';
 
 import { useAppStore } from '@/lib/store';
+import { mockStudents } from '@/lib/mock-data';
 
 interface PersonSearchModalProps {
   isOpen: boolean;
@@ -12,7 +13,7 @@ interface PersonSearchModalProps {
 
 export default function PersonSearchModal({ isOpen, onClose }: PersonSearchModalProps) {
   const openTab = useAppStore(s => s.openTab);
-  const [lastName, setLastName] = useState('pat');
+  const [lastName, setLastName] = useState('');
   const [firstName, setFirstName] = useState('');
   const [birthDate, setBirthDate] = useState('');
   const [phone, setPhone] = useState('');
@@ -20,6 +21,51 @@ export default function PersonSearchModal({ isOpen, onClose }: PersonSearchModal
   const [encounterId, setEncounterId] = useState('');
   const [assumeWildcards, setAssumeWildcards] = useState(true);
   const [activeTab, setActiveTab] = useState<'Person' | 'Guarantor'>('Person');
+
+  // Search Results State
+  const [results, setResults] = useState<any[]>(mockStudents);
+  const [selectedStudentId, setSelectedStudentId] = useState<string>(mockStudents[0]?.id || '');
+  const selectedStudent = mockStudents.find(s => s.id === selectedStudentId);
+
+  const handleInputChange = (field: string, val: string) => {
+    let currentLastName = lastName;
+    let currentPhone = phone;
+    let currentPersonId = personId;
+
+    if (field === 'lastName') { setLastName(val); currentLastName = val; }
+    if (field === 'phone') { setPhone(val); currentPhone = val; }
+    if (field === 'personId') { setPersonId(val); currentPersonId = val; }
+
+    const filtered = mockStudents.filter(student => {
+      const name = `${student.firstName} ${student.lastName}`.toLowerCase();
+      const matchName = !currentLastName || name.includes(currentLastName.toLowerCase());
+      const matchRoll = !currentPersonId || student.uai.toLowerCase().includes(currentPersonId.toLowerCase()) || student.admissionNo.toLowerCase().includes(currentPersonId.toLowerCase());
+      const matchPhone = !currentPhone || student.phone.includes(currentPhone) || student.guardianPhone.includes(currentPhone);
+      return matchName && matchRoll && matchPhone;
+    });
+    setResults(filtered);
+    if (filtered.length > 0) {
+      setSelectedStudentId(filtered[0].id);
+    } else {
+      setSelectedStudentId('');
+    }
+  };
+
+  const handleSearch = () => {
+    const filtered = mockStudents.filter(student => {
+      const name = `${student.firstName} ${student.lastName}`.toLowerCase();
+      const matchName = !lastName || name.includes(lastName.toLowerCase());
+      const matchRoll = !personId || student.uai.toLowerCase().includes(personId.toLowerCase()) || student.admissionNo.toLowerCase().includes(personId.toLowerCase());
+      const matchPhone = !phone || student.phone.includes(phone) || student.guardianPhone.includes(phone);
+      return matchName && matchRoll && matchPhone;
+    });
+    setResults(filtered);
+    if (filtered.length > 0) {
+      setSelectedStudentId(filtered[0].id);
+    } else {
+      setSelectedStudentId('');
+    }
+  };
 
   // Escape key to close
   useEffect(() => {
@@ -167,7 +213,7 @@ export default function PersonSearchModal({ isOpen, onClose }: PersonSearchModal
               <input 
                 type="text" 
                 value={lastName}
-                onChange={(e) => setLastName(e.target.value)}
+                onChange={(e) => handleInputChange('lastName', e.target.value)}
                 style={{ width: '100%', padding: '4px 8px', fontSize: '12px', border: '1px solid #cbd5e1', borderRadius: '4px', outline: 'none' }}
               />
             </div>
@@ -177,7 +223,7 @@ export default function PersonSearchModal({ isOpen, onClose }: PersonSearchModal
               <input 
                 type="text" 
                 value={phone}
-                onChange={(e) => setPhone(e.target.value)}
+                onChange={(e) => handleInputChange('phone', e.target.value)}
                 style={{ width: '100%', padding: '4px 8px', fontSize: '12px', border: '1px solid #cbd5e1', borderRadius: '4px', outline: 'none' }}
               />
             </div>
@@ -186,29 +232,36 @@ export default function PersonSearchModal({ isOpen, onClose }: PersonSearchModal
               <input 
                 type="text" 
                 value={personId}
-                onChange={(e) => setPersonId(e.target.value)}
+                onChange={(e) => handleInputChange('personId', e.target.value)}
                 style={{ width: '100%', padding: '4px 8px', fontSize: '12px', border: '1px solid #cbd5e1', borderRadius: '4px', outline: 'none' }}
               />
             </div>
 
             {/* Form Buttons */}
             <div style={{ display: 'flex', gap: '8px', marginTop: '12px' }}>
-              <button style={{
-                flex: 1,
-                padding: '6px 0',
-                backgroundColor: '#ffffff',
-                border: '1px solid #cbd5e1',
-                borderRadius: '4px',
-                fontSize: '12px',
-                fontWeight: 'bold',
-                color: '#334155',
-                cursor: 'pointer',
-              }}>
+              <button 
+                onClick={handleSearch}
+                style={{
+                  flex: 1,
+                  padding: '6px 0',
+                  backgroundColor: '#ffffff',
+                  border: '1px solid #cbd5e1',
+                  borderRadius: '4px',
+                  fontSize: '12px',
+                  fontWeight: 'bold',
+                  color: '#334155',
+                  cursor: 'pointer',
+                }}
+              >
                 Search...
               </button>
               <button 
                 onClick={() => {
-                  setLastName(''); setFirstName(''); setBirthDate(''); setPhone(''); setPersonId(''); setEncounterId('');
+                  setLastName('');
+                  setPhone('');
+                  setPersonId('');
+                  setResults(mockStudents);
+                  setSelectedStudentId(mockStudents[0]?.id || '');
                 }}
                 style={{
                   padding: '6px 12px',
@@ -280,24 +333,43 @@ export default function PersonSearchModal({ isOpen, onClose }: PersonSearchModal
                   <thead>
                     <tr style={{ backgroundColor: '#f8fafc', borderBottom: '1px solid #cbd5e1' }}>
                       <th style={{ padding: '6px', fontWeight: 'bold', color: '#475569' }}>Name</th>
-                      <th style={{ padding: '6px', fontWeight: 'bold', color: '#475569' }}>MRN</th>
+                      <th style={{ padding: '6px', fontWeight: 'bold', color: '#475569' }}>Roll Number (UAI)</th>
                       <th style={{ padding: '6px', fontWeight: 'bold', color: '#475569' }}>Date of Birth</th>
                       <th style={{ padding: '6px', fontWeight: 'bold', color: '#475569' }}>Sex</th>
-                      <th style={{ padding: '6px', fontWeight: 'bold', color: '#475569' }}>Age</th>
-                      <th style={{ padding: '6px', fontWeight: 'bold', color: '#475569' }}>Account Number</th>
-                      <th style={{ padding: '6px', fontWeight: 'bold', color: '#475569' }}>Address</th>
+                      <th style={{ padding: '6px', fontWeight: 'bold', color: '#475569' }}>Class / Div</th>
+                      <th style={{ padding: '6px', fontWeight: 'bold', color: '#475569' }}>Guardian</th>
+                      <th style={{ padding: '6px', fontWeight: 'bold', color: '#475569' }}>Contact</th>
                     </tr>
                   </thead>
                   <tbody>
-                    <tr style={{ backgroundColor: '#0f2c59', color: '#ffffff' }}>
-                      <td style={{ padding: '6px' }}>Lee, David</td>
-                      <td style={{ padding: '6px', fontWeight: 'bold' }}>1000245681</td>
-                      <td style={{ padding: '6px' }}>30/09/1972</td>
-                      <td style={{ padding: '6px' }}>Male</td>
-                      <td style={{ padding: '6px' }}>52 Y</td>
-                      <td style={{ padding: '6px', color: '#94a3b8' }}>AVX-000126</td>
-                      <td style={{ padding: '6px' }}>PUL-01 / Bed 01</td>
-                    </tr>
+                    {results.map((student) => {
+                      const isSelected = student.id === selectedStudentId;
+                      return (
+                        <tr 
+                          key={student.id}
+                          onClick={() => setSelectedStudentId(student.id)}
+                          style={{ 
+                            backgroundColor: isSelected ? '#0f2c59' : 'transparent', 
+                            color: isSelected ? '#ffffff' : '#334155',
+                            borderBottom: '1px solid #cbd5e1',
+                            cursor: 'pointer'
+                          }}
+                        >
+                          <td style={{ padding: '6px' }}>{student.lastName}, {student.firstName}</td>
+                          <td style={{ padding: '6px', fontWeight: 'bold' }}>{student.uai}</td>
+                          <td style={{ padding: '6px' }}>{student.dob}</td>
+                          <td style={{ padding: '6px' }}>{student.gender}</td>
+                          <td style={{ padding: '6px' }}>{student.class}</td>
+                          <td style={{ padding: '6px' }}>{student.guardian}</td>
+                          <td style={{ padding: '6px' }}>{student.phone}</td>
+                        </tr>
+                      );
+                    })}
+                    {results.length === 0 && (
+                      <tr>
+                        <td colSpan={7} style={{ padding: '12px', textAlign: 'center', color: '#64748b' }}>No students found matching your criteria.</td>
+                      </tr>
+                    )}
                   </tbody>
                 </table>
               </div>
@@ -324,31 +396,35 @@ export default function PersonSearchModal({ isOpen, onClose }: PersonSearchModal
                 fontWeight: 'bold',
                 color: '#1e40af',
               }}>
-                Encounter
+                Academic Profile & Active Enlistments
               </div>
               <div style={{ flex: 1, overflowY: 'auto' }}>
                 <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '11px', textAlign: 'left' }}>
                   <thead>
                     <tr style={{ backgroundColor: '#f8fafc', borderBottom: '1px solid #cbd5e1' }}>
-                      <th style={{ padding: '6px', fontWeight: 'bold', color: '#475569' }}>Encounter</th>
-                      <th style={{ padding: '6px', fontWeight: 'bold', color: '#475569' }}>Facility</th>
-                      <th style={{ padding: '6px', fontWeight: 'bold', color: '#475569' }}>Encounter Type</th>
-                      <th style={{ padding: '6px', fontWeight: 'bold', color: '#475569' }}>Date of Service</th>
-                      <th style={{ padding: '6px', fontWeight: 'bold', color: '#475569' }}>Resource</th>
-                      <th style={{ padding: '6px', fontWeight: 'bold', color: '#475569' }}>Guarantor</th>
-                      <th style={{ padding: '6px', fontWeight: 'bold', color: '#475569' }}>Discharge Date</th>
+                      <th style={{ padding: '6px', fontWeight: 'bold', color: '#475569' }}>Session / Year</th>
+                      <th style={{ padding: '6px', fontWeight: 'bold', color: '#475569' }}>Affiliated School</th>
+                      <th style={{ padding: '6px', fontWeight: 'bold', color: '#475569' }}>Current Status</th>
+                      <th style={{ padding: '6px', fontWeight: 'bold', color: '#475569' }}>Avg Attendance</th>
+                      <th style={{ padding: '6px', fontWeight: 'bold', color: '#475569' }}>Guardian Contact</th>
+                      <th style={{ padding: '6px', fontWeight: 'bold', color: '#475569' }}>Date of Birth</th>
                     </tr>
                   </thead>
                   <tbody>
-                    <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
-                      <td style={{ padding: '6px', color: '#1e40af', fontWeight: 'bold', cursor: 'pointer' }}>ENC-40112</td>
-                      <td style={{ padding: '6px' }}>AxioVital Main Campus</td>
-                      <td style={{ padding: '6px' }}>Inpatient</td>
-                      <td style={{ padding: '6px' }}>28/05/2025</td>
-                      <td style={{ padding: '6px' }}>Dr. S. Reddy</td>
-                      <td style={{ padding: '6px' }}>Blue Cross / Blue Shield</td>
-                      <td style={{ padding: '6px' }}>—</td>
-                    </tr>
+                    {selectedStudent ? (
+                      <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+                        <td style={{ padding: '6px', color: '#1e40af', fontWeight: 'bold' }}>2026-27</td>
+                        <td style={{ padding: '6px' }}>{selectedStudent.institution}</td>
+                        <td style={{ padding: '6px', fontWeight: 'bold', color: selectedStudent.status === 'ACTIVE' ? '#16a34a' : '#ef4444' }}>{selectedStudent.status}</td>
+                        <td style={{ padding: '6px', fontWeight: 'bold' }}>{selectedStudent.attendance}%</td>
+                        <td style={{ padding: '6px' }}>{selectedStudent.guardianPhone}</td>
+                        <td style={{ padding: '6px' }}>{selectedStudent.dob}</td>
+                      </tr>
+                    ) : (
+                      <tr>
+                        <td colSpan={6} style={{ padding: '12px', textAlign: 'center', color: '#64748b' }}>No student selected</td>
+                      </tr>
+                    )}
                   </tbody>
                 </table>
               </div>
