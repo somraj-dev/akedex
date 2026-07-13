@@ -3,10 +3,8 @@
 import React, { useState } from 'react';
 import { useAppStore } from '@/lib/store';
 import { X } from 'lucide-react';
-import ActivationScreen from '@/components/ActivationScreen';
 import LoginScreen from '@/components/LoginScreen';
-import Sidebar from '@/components/Sidebar';
-import TopBar from '@/components/TopBar';
+import TopHeader from '@/components/TopHeader';
 import CommandBar from '@/components/CommandBar';
 import Dashboard from '@/components/Dashboard';
 import StudentExplorer from '@/components/StudentExplorer';
@@ -24,6 +22,7 @@ import ParentalAccess from '@/components/ParentalAccess';
 import TransferCenter from '@/components/TransferCenter';
 import EditInstituteWizard from '@/components/EditInstituteWizard';
 import { CollectFeesFlow } from '@/components/CollectFeesFlow';
+import PersonSearchModal from '@/components/PersonSearchModal';
 import { 
   TeachersView, DocumentsView, AttendanceView, 
   InstitutionView, AuditView, SearchView,
@@ -41,11 +40,20 @@ export default function Page() {
   } = useAppStore();
 
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
 
-  // 1. Activation Flow
-  if (!isActivated) {
-    return <ActivationScreen />;
-  }
+  // F10 search key binding
+  React.useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'F10') {
+        e.preventDefault();
+        setIsSearchOpen(prev => !prev);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
 
   // 2. Authentication Flow
   if (!isAuthenticated) {
@@ -146,151 +154,29 @@ export default function Page() {
   return (
     <div style={{
       display: 'flex',
+      flexDirection: 'column',
       width: '100vw',
       height: '100vh',
       background: 'var(--bg-primary)',
       overflow: 'hidden',
     }}>
-      {/* Sidebar Navigation */}
-      <Sidebar />
+      {/* Unified 3-Row Professional Header */}
+      <TopHeader />
 
-      {/* Main Workspace Frame */}
-      <div style={{
+      {/* Dynamic Workspace Workspace View Area */}
+      <main style={{
         flex: 1,
-        display: 'flex',
-        flexDirection: 'column',
-        height: '100%',
-        minWidth: 0,
+        width: '100%',
         overflow: 'hidden',
       }}>
-        {/* Top bar containing global search, status, clock, and profile */}
-        <TopBar />
-
-        {/* Workspace Tab Bar */}
-        <div 
-          onDoubleClick={(e) => {
-            if (e.target === e.currentTarget) {
-              openTab({ id: `search-${Date.now()}`, label: 'Search', view: 'search', closable: true });
-            }
-          }}
-          style={{
-            height: 'var(--tab-height)',
-            background: 'var(--bg-secondary)',
-            borderBottom: '1px solid var(--border-primary)',
-            display: 'flex',
-            alignItems: 'center',
-            padding: '0 24px',
-            gap: '6px',
-            overflowX: 'auto',
-            flexShrink: 0,
-            userSelect: 'none',
-          }}
-        >
-          {tabs.map((tab, idx) => {
-            const isActive = tab.id === activeTabId;
-            return (
-              <div
-                key={tab.id}
-                draggable
-                onDragStart={(e) => {
-                  setDraggedIndex(idx);
-                  e.dataTransfer.effectAllowed = 'move';
-                  e.dataTransfer.setData('text/html', e.currentTarget.outerHTML);
-                }}
-                onDragOver={(e) => {
-                  e.preventDefault();
-                  e.dataTransfer.dropEffect = 'move';
-                }}
-                onDrop={(e) => {
-                  e.preventDefault();
-                  if (draggedIndex !== null && draggedIndex !== idx) {
-                    reorderTabs(draggedIndex, idx);
-                  }
-                  setDraggedIndex(null);
-                }}
-                onDragEnd={() => setDraggedIndex(null)}
-                onClick={() => setActiveTab(tab.id)}
-                onDoubleClick={(e) => {
-                  e.stopPropagation();
-                  if (tab.closable !== false) closeTab(tab.id);
-                }}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '6px',
-                  padding: '0 12px',
-                  height: '28px',
-                  borderRadius: '4px',
-                  background: isActive ? 'var(--bg-active)' : 'transparent',
-                  color: isActive ? 'var(--accent-blue)' : 'var(--text-secondary)',
-                  border: isActive ? '1px solid var(--border-primary)' : '1px solid transparent',
-                  cursor: 'pointer',
-                  fontSize: '11px',
-                  fontWeight: isActive ? 700 : 500,
-                  transition: 'background 120ms ease, color 120ms ease, border 120ms ease',
-                  whiteSpace: 'nowrap',
-                  opacity: draggedIndex === idx ? 0.5 : 1,
-                }}
-                onMouseEnter={e => {
-                  if (!isActive) e.currentTarget.style.background = 'var(--bg-tertiary)';
-                }}
-                onMouseLeave={e => {
-                  if (!isActive) e.currentTarget.style.background = 'transparent';
-                }}
-              >
-                <span>{tab.label}</span>
-                {tab.closable !== false && (
-                  <button
-                    aria-label={`Close ${tab.label} tab`}
-                    title={`Close ${tab.label} tab`}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      closeTab(tab.id);
-                    }}
-                    style={{
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      width: '14px',
-                      height: '14px',
-                      borderRadius: '50%',
-                      border: 'none',
-                      background: 'transparent',
-                      cursor: 'pointer',
-                      color: 'var(--text-muted)',
-                      padding: 0,
-                      transition: 'all 120ms ease',
-                      marginLeft: '2px'
-                    }}
-                    onMouseEnter={e => {
-                      e.currentTarget.style.background = 'var(--accent-red-dim)';
-                      e.currentTarget.style.color = 'var(--accent-red)';
-                    }}
-                    onMouseLeave={e => {
-                      e.currentTarget.style.background = 'transparent';
-                      e.currentTarget.style.color = 'var(--text-muted)';
-                    }}
-                  >
-                    <X size={10} />
-                  </button>
-                )}
-              </div>
-            );
-          })}
-        </div>
-
-        {/* Dynamic Workspace Workspace View Area */}
-        <main style={{
-          flex: 1,
-          width: '100%',
-          overflow: 'hidden',
-        }}>
-          {renderActiveView()}
-        </main>
-      </div>
+        {renderActiveView()}
+      </main>
 
       {/* Global Command Bar Shortcut (Ctrl+K) */}
       <CommandBar />
+
+      {/* Person Search Modal (F10) */}
+      <PersonSearchModal isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
 
       {/* Global Toast Notification */}
       <Toast />

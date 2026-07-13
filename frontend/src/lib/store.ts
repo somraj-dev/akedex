@@ -182,12 +182,12 @@ interface AppState {
 }
 
 export const useAppStore = create<AppState>((set, get) => ({
-  isActivated: false,
+  isActivated: true,
   isAuthenticated: false,
   currentUser: null,
   tenantId: null,
 
-  currentView: 'activation',
+  currentView: 'login',
   sidebarCollapsed: false,
   commandBarOpen: false,
 

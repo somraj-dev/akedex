@@ -656,37 +656,565 @@ export function InstitutionView() {
 // AUDIT LOG VIEW (Already defined)
 // =====================================================
 export function AuditView() {
+  const [activeCategory, setActiveCategory] = useState('Dashboards');
+  const [activeItem, setActiveItem] = useState('Overview');
+  const [expandedCategories, setExpandedCategories] = useState<string[]>([
+    'Dashboards', 'Clinical Analytics', 'Operational Analytics', 'Financial Analytics', 'Custom Reports', 'Data Management'
+  ]);
+
+  const toggleCategory = (cat: string) => {
+    if (expandedCategories.includes(cat)) {
+      setExpandedCategories(prev => prev.filter(c => c !== cat));
+    } else {
+      setExpandedCategories(prev => [...prev, cat]);
+    }
+  };
+
+  const menuStructure = [
+    {
+      category: 'Dashboards',
+      icon: '📊',
+      items: ['Overview', 'Patient Population', 'Quality Measures', 'Operational Metrics', 'Financial Performance']
+    },
+    {
+      category: 'Clinical Analytics',
+      icon: '🩺',
+      items: ['Quality Measures', 'Chronic Conditions', 'Utilization', 'Patient Outcomes']
+    },
+    {
+      category: 'Operational Analytics',
+      icon: '⚙️',
+      items: ['Provider Productivity', 'Scheduling', 'Care Workflow', 'Resource Utilization']
+    },
+    {
+      category: 'Financial Analytics',
+      icon: '💵',
+      items: ['Payer Mix', 'Revenue Cycle', 'Cost Analysis']
+    },
+    {
+      category: 'Custom Reports',
+      icon: '📝',
+      items: ['Saved Reports', 'Report Builder', 'Scheduled Reports']
+    },
+    {
+      category: 'Data Management',
+      icon: '💾',
+      items: ['Data Extracts', 'Data Quality']
+    }
+  ];
+
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', height: '100%', background: 'var(--bg-primary)', overflow: 'hidden' }}>
-      <div style={{ padding: '12px 16px', borderBottom: '1px solid var(--border-primary)', background: 'var(--bg-secondary)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <div>
-          <h2 style={{ fontSize: '13px', fontWeight: 700, color: 'var(--text-primary)', margin: 0 }}>SYSTEM AUDIT TRAIL</h2>
-          <span style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>Immutable log of security-sensitive operations</span>
+    <div style={{
+      display: 'flex',
+      flexDirection: 'column',
+      width: '100%',
+      height: '100%',
+      backgroundColor: '#f1f5f9',
+      fontFamily: 'Arial, sans-serif',
+      color: '#334155',
+      fontSize: '11px',
+      overflow: 'hidden',
+    }}>
+      {/* Top Banner Tab Bar */}
+      <div style={{
+        height: '28px',
+        backgroundColor: '#005691', // True header blue color from screenshot
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        padding: '0 12px',
+        color: '#ffffff',
+      }}>
+        <div style={{ fontSize: '11.5px', fontWeight: 'bold' }}>Analytics</div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', fontSize: '10.5px' }}>
+          <div style={{ position: 'relative' }}>
+            <input 
+              type="text" 
+              placeholder="Search by Patient or Order..." 
+              style={{
+                backgroundColor: '#004577',
+                border: 'none',
+                borderRadius: '3px',
+                padding: '2px 6px 2px 20px',
+                fontSize: '10.5px',
+                color: '#ffffff',
+                outline: 'none',
+                width: '180px',
+              }}
+            />
+            <span style={{ position: 'absolute', left: '6px', top: '3px', color: '#94a3b8' }}>🔍</span>
+          </div>
+          <span style={{ cursor: 'pointer' }}>📅 Recent ▾</span>
+          <span style={{ cursor: 'pointer' }}>⚙️</span>
+          <span style={{ cursor: 'pointer' }}>❓</span>
+          <span style={{ backgroundColor: '#004577', padding: '1px 6px', borderRadius: '3px', fontSize: '9.5px' }}>⏱ 3 minutes ago</span>
         </div>
       </div>
-      <div style={{ flex: 1, overflowY: 'auto' }}>
-        <table className="data-table">
-          <thead>
-            <tr>
-              <th>Timestamp</th>
-              <th>Action Event</th>
-              <th>Subject Entity</th>
-              <th>Operator</th>
-              <th>IP Address</th>
-            </tr>
-          </thead>
-          <tbody>
-            {recentActivity.map((act, index) => (
-              <tr key={index}>
-                <td className="font-mono text-xs" style={{ color: 'var(--text-tertiary)' }}>{act.time}</td>
-                <td style={{ fontWeight: 600 }}>{act.action}</td>
-                <td className="font-mono text-xs">{act.subject}</td>
-                <td>{act.user}</td>
-                <td className="font-mono text-xs" style={{ color: 'var(--text-tertiary)' }}>192.168.1.{(10 + index)}</td>
-              </tr>
+
+
+      {/* Main Workspace Panels */}
+      <div style={{
+        flex: 1,
+        display: 'flex',
+        overflow: 'hidden',
+      }}>
+        {/* Left Navigation Sidebar */}
+        <div style={{
+          width: '210px',
+          borderRight: '1px solid #cbd5e1',
+          backgroundColor: '#e6ebf2', // Matching screenshot light-grey-blue background
+          display: 'flex',
+          flexDirection: 'column',
+          overflowY: 'auto',
+          flexShrink: 0,
+        }}>
+          {menuStructure.map((section) => {
+            const isExpanded = expandedCategories.includes(section.category);
+            return (
+              <div key={section.category} style={{ borderBottom: '1px solid #cbd5e1' }}>
+                {/* Header toggle */}
+                <div 
+                  onClick={() => toggleCategory(section.category)}
+                  style={{
+                    padding: '6px 10px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    cursor: 'pointer',
+                    fontWeight: 'bold',
+                    fontSize: '10.5px',
+                    color: '#0f2c59',
+                    backgroundColor: '#d3dfee', // Matching light blue toggle header
+                  }}
+                >
+                  <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    <span>{section.icon}</span>
+                    <span>{section.category}</span>
+                  </span>
+                  <span style={{ fontSize: '8px' }}>{isExpanded ? '▼' : '▶'}</span>
+                </div>
+
+                {/* Subitems */}
+                {isExpanded && (
+                  <div style={{ display: 'flex', flexDirection: 'column', backgroundColor: '#eef3f9' }}>
+                    {section.items.map((item) => {
+                      const isActive = activeCategory === section.category && activeItem === item;
+                      return (
+                        <div 
+                          key={item}
+                          onClick={() => {
+                            setActiveCategory(section.category);
+                            setActiveItem(item);
+                          }}
+                          style={{
+                            padding: '5px 16px',
+                            cursor: 'pointer',
+                            fontSize: '10.5px',
+                            backgroundColor: isActive ? '#005691' : 'transparent', // Matching header blue for active selection
+                            color: isActive ? '#ffffff' : '#334155',
+                            fontWeight: isActive ? 'bold' : 'normal',
+                          }}
+                          onMouseEnter={(e) => {
+                            if (!isActive) e.currentTarget.style.backgroundColor = '#d3dfee';
+                          }}
+                          onMouseLeave={(e) => {
+                            if (!isActive) e.currentTarget.style.backgroundColor = 'transparent';
+                          }}
+                        >
+                          {item}
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Right Main Dashboard Panel */}
+        <div style={{
+          flex: 1,
+          padding: '12px',
+          overflowY: 'auto',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '12px',
+        }}>
+          {/* Inner tab title */}
+          <div style={{ display: 'flex', borderBottom: '1px solid #cbd5e1' }}>
+            <div style={{
+              padding: '4px 12px',
+              backgroundColor: '#ffffff',
+              border: '1px solid #cbd5e1',
+              borderBottom: 'none',
+              borderRadius: '3px 3px 0 0',
+              fontWeight: 'bold',
+              fontSize: '11px',
+              color: '#005691',
+            }}>
+              Analytics Overview
+            </div>
+          </div>
+
+          {/* Filters Row */}
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            backgroundColor: '#ffffff',
+            border: '1px solid #cbd5e1',
+            borderRadius: '3px',
+            padding: '6px 10px',
+            gap: '8px',
+            flexWrap: 'wrap',
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
+              <div>
+                <span style={{ fontSize: '10.5px', fontWeight: 'bold', marginRight: '4px' }}>Date Range:</span>
+                <select style={{ fontSize: '11px', padding: '2px 4px', border: '1px solid #cbd5e1', borderRadius: '3px', outline: 'none' }}>
+                  <option>Last 30 Days</option>
+                  <option>Last 60 Days</option>
+                  <option>Last Year</option>
+                </select>
+              </div>
+              <div>
+                <span style={{ fontSize: '10.5px', fontWeight: 'bold', marginRight: '4px' }}>Facility:</span>
+                <select style={{ fontSize: '11px', padding: '2px 4px', border: '1px solid #cbd5e1', borderRadius: '3px', outline: 'none' }}>
+                  <option>All Facilities</option>
+                </select>
+              </div>
+              <div>
+                <span style={{ fontSize: '10.5px', fontWeight: 'bold', marginRight: '4px' }}>Department:</span>
+                <select style={{ fontSize: '11px', padding: '2px 4px', border: '1px solid #cbd5e1', borderRadius: '3px', outline: 'none' }}>
+                  <option>All Departments</option>
+                </select>
+              </div>
+              <div>
+                <span style={{ fontSize: '10.5px', fontWeight: 'bold', marginRight: '4px' }}>Provider:</span>
+                <select style={{ fontSize: '11px', padding: '2px 4px', border: '1px solid #cbd5e1', borderRadius: '3px', outline: 'none' }}>
+                  <option>All Providers</option>
+                </select>
+              </div>
+              <button style={{
+                backgroundColor: '#005691',
+                color: '#ffffff',
+                border: 'none',
+                borderRadius: '3px',
+                padding: '3px 12px',
+                fontSize: '11px',
+                fontWeight: 'bold',
+                cursor: 'pointer',
+              }}>
+                Apply
+              </button>
+            </div>
+
+            <button style={{
+              border: '1px solid #cbd5e1',
+              borderRadius: '4px',
+              padding: '3px 12px',
+              fontSize: '11.5px',
+              backgroundColor: '#ffffff',
+              cursor: 'pointer',
+            }}>
+              Export ▾
+            </button>
+          </div>
+
+          {/* Metric Overview Summary Cards */}
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(5, 1fr)',
+            gap: '12px',
+          }}>
+            {[
+              { title: 'Total Patients', value: '12,842', trend: '▲ 8.4%', trendColor: '#16a34a', desc: 'vs. Prior 30 Days', icon: '👥' },
+              { title: 'Encounters', value: '18,729', trend: '▲ 6.7%', trendColor: '#16a34a', desc: 'vs. Prior 30 Days', icon: '📈' },
+              { title: 'Average LOS (Days)', value: '4.6', trend: '▼ 5.2%', trendColor: '#ef4444', desc: 'vs. Prior 30 Days', icon: '📅' },
+              { title: 'Readmission Rate', value: '11.3%', trend: '▼ 1.4%', trendColor: '#16a34a', desc: 'vs. Prior 30 Days', icon: '🔄' },
+              { title: 'Mortality Rate', value: '1.2%', trend: '▲ 0.3%', trendColor: '#ef4444', desc: 'vs. Prior 30 Days', icon: '📉' }
+            ].map((card, idx) => (
+              <div 
+                key={idx}
+                style={{
+                  backgroundColor: '#ffffff',
+                  border: '1px solid #cbd5e1',
+                  borderRadius: '4px',
+                  padding: '12px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '4px',
+                  boxShadow: '0 1px 2px rgba(0,0,0,0.03)',
+                }}
+              >
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', color: '#64748b', fontWeight: 'bold' }}>
+                  <span>{card.title}</span>
+                  <span>{card.icon}</span>
+                </div>
+                <div style={{ fontSize: '20px', fontWeight: 'bold', color: '#1e293b' }}>{card.value}</div>
+                <div style={{ fontSize: '10.5px', color: '#64748b', display: 'flex', gap: '4px' }}>
+                  <span style={{ color: card.trendColor, fontWeight: 'bold' }}>{card.trend}</span>
+                  <span>{card.desc}</span>
+                </div>
+              </div>
             ))}
-          </tbody>
-        </table>
+          </div>
+
+          {/* Customize target & Trend Analysis Row */}
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: '260px 1fr',
+            gap: '16px',
+          }}>
+            {/* Customize Panel */}
+            <div style={{
+              backgroundColor: '#ffffff',
+              border: '1px solid #cbd5e1',
+              borderRadius: '4px',
+              padding: '12px',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '12px',
+            }}>
+              <div style={{ fontSize: '11.5px', fontWeight: 'bold', color: '#1e293b' }}>Customize</div>
+
+              {/* Internal selection buttons */}
+              <div style={{ display: 'flex', border: '1px solid #cbd5e1', borderRadius: '4px', overflow: 'hidden' }}>
+                {['Target', 'Metric', 'Outcome'].map((tab, idx) => (
+                  <button 
+                    key={tab}
+                    style={{
+                      flex: 1,
+                      padding: '4px 0',
+                      border: 'none',
+                      fontSize: '10.5px',
+                      backgroundColor: idx === 0 ? '#f1f5f9' : '#ffffff',
+                      fontWeight: idx === 0 ? 'bold' : 'normal',
+                      cursor: 'pointer',
+                      borderRight: idx < 2 ? '1px solid #cbd5e1' : 'none',
+                    }}
+                  >
+                    {tab}
+                  </button>
+                ))}
+              </div>
+
+              {/* Metric Dropdown */}
+              <div>
+                <label style={{ display: 'block', fontSize: '10.5px', color: '#64748b', marginBottom: '3px', fontWeight: 'bold' }}>Metric</label>
+                <select style={{ width: '100%', fontSize: '11px', padding: '4px', border: '1px solid #cbd5e1', borderRadius: '4px' }}>
+                  <option>30-Day Readmission Rate</option>
+                </select>
+              </div>
+
+              {/* Target items list */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', fontSize: '11px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <span style={{ color: '#64748b' }}>Target</span>
+                  <span style={{ fontWeight: 'bold' }}>&lt;= 12.0%</span>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <span style={{ color: '#64748b' }}>Predicted</span>
+                  <span style={{ fontWeight: 'bold' }}>10.8%</span>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <span style={{ color: '#64748b' }}>Current</span>
+                  <span style={{ fontWeight: 'bold' }}>11.3%</span>
+                </div>
+              </div>
+
+              <div style={{ height: '1px', backgroundColor: '#e2e8f0' }} />
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', fontSize: '11px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <span style={{ color: '#64748b' }}>Benchmark</span>
+                  <span>9.6%</span>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <span style={{ color: '#64748b' }}>Top Performer</span>
+                  <span>7.2%</span>
+                </div>
+              </div>
+
+              <button style={{
+                marginTop: 'auto',
+                border: '1px solid #cbd5e1',
+                borderRadius: '4px',
+                padding: '4px 0',
+                fontSize: '11px',
+                backgroundColor: '#ffffff',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '4px',
+              }}>
+                ✏️ Edit Target
+              </button>
+            </div>
+
+            {/* Trend Analysis Graph Panel */}
+            <div style={{
+              backgroundColor: '#ffffff',
+              border: '1px solid #cbd5e1',
+              borderRadius: '4px',
+              padding: '16px',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '12px',
+            }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div style={{ fontSize: '12px', fontWeight: 'bold', color: '#1e293b' }}>Trend Analysis</div>
+                <div style={{ display: 'flex', gap: '12px', fontSize: '11px' }}>
+                  <div>
+                    <span style={{ color: '#64748b', marginRight: '4px' }}>Metric:</span>
+                    <select style={{ border: 'none', borderBottom: '1px solid #cbd5e1', outline: 'none' }}>
+                      <option>30-Day Readmission Rate</option>
+                    </select>
+                  </div>
+                  <div>
+                    <span style={{ color: '#64748b', marginRight: '4px' }}>View:</span>
+                    <select style={{ border: 'none', borderBottom: '1px solid #cbd5e1', outline: 'none' }}>
+                      <option>Weekly</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              {/* Cloned Trend lines with labels */}
+              <div style={{ display: 'flex', justifyContent: 'center', gap: '16px', fontSize: '10.5px' }}>
+                <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><span style={{ display: 'inline-block', width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#0284c7' }} /> Actual</span>
+                <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><span style={{ display: 'inline-block', width: '8px', height: '1px', borderTop: '2px dashed #94a3b8' }} /> Benchmark</span>
+                <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><span style={{ display: 'inline-block', width: '8px', height: '1px', borderTop: '2px dashed #16a34a' }} /> Target</span>
+                <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><span style={{ display: 'inline-block', width: '8px', height: '1px', borderTop: '2px dashed #a855f7' }} /> TopPerformer</span>
+              </div>
+
+              {/* Inline SVG Chart for perfect cloned representation */}
+              <div style={{ flex: 1, minHeight: '180px', position: 'relative' }}>
+                <svg width="100%" height="100%" viewBox="0 0 700 200" preserveAspectRatio="none">
+                  {/* Grid Lines */}
+                  {[0, 1, 2, 3, 4].map((i) => (
+                    <line key={i} x1="40" y1={20 + i * 35} x2="680" y2={20 + i * 35} stroke="#f1f5f9" strokeWidth="1" />
+                  ))}
+
+                  {/* Y Axis Labels */}
+                  <text x="15" y="24" fill="#94a3b8" fontSize="10">25</text>
+                  <text x="15" y="59" fill="#94a3b8" fontSize="10">20</text>
+                  <text x="15" y="94" fill="#94a3b8" fontSize="10">15</text>
+                  <text x="15" y="129" fill="#94a3b8" fontSize="10">10</text>
+                  <text x="20" y="164" fill="#94a3b8" fontSize="10">5</text>
+                  <text x="20" y="199" fill="#94a3b8" fontSize="10">0</text>
+
+                  {/* Benchmark line (dashed gray) */}
+                  <line x1="40" y1="120" x2="680" y2="120" stroke="#94a3b8" strokeWidth="1.5" strokeDasharray="4" />
+
+                  {/* Target line (dashed green) */}
+                  <line x1="40" y1="100" x2="680" y2="100" stroke="#16a34a" strokeWidth="1.5" strokeDasharray="4" />
+
+                  {/* TopPerformer line (dashed purple) */}
+                  <line x1="40" y1="135" x2="680" y2="135" stroke="#a855f7" strokeWidth="1.5" strokeDasharray="4" />
+
+                  {/* Actual line (solid blue with nodes) */}
+                  <path d="M 40 85 L 120 75 L 200 95 L 280 93 L 360 102 L 440 90 L 520 98 L 600 101 L 680 115" fill="none" stroke="#0284c7" strokeWidth="2.5" />
+                  
+                  {/* Nodes */}
+                  <circle cx="40" cy="85" r="4" fill="#0284c7" />
+                  <circle cx="120" cy="75" r="4" fill="#0284c7" />
+                  <circle cx="200" cy="95" r="4" fill="#0284c7" />
+                  <circle cx="280" cy="93" r="4" fill="#0284c7" />
+                  <circle cx="360" cy="102" r="4" fill="#0284c7" />
+                  <circle cx="440" cy="90" r="4" fill="#0284c7" />
+                  <circle cx="520" cy="98" r="4" fill="#0284c7" />
+                  <circle cx="600" cy="101" r="4" fill="#0284c7" />
+                  <circle cx="680" cy="115" r="4" fill="#0284c7" />
+
+                  {/* X Axis Labels */}
+                  <text x="40" y="195" fill="#94a3b8" fontSize="9" textAnchor="middle">Apr 28</text>
+                  <text x="120" y="195" fill="#94a3b8" fontSize="9" textAnchor="middle">May 5</text>
+                  <text x="200" y="195" fill="#94a3b8" fontSize="9" textAnchor="middle">May 12</text>
+                  <text x="280" y="195" fill="#94a3b8" fontSize="9" textAnchor="middle">May 18</text>
+                  <text x="360" y="195" fill="#94a3b8" fontSize="9" textAnchor="middle">May 26</text>
+                  <text x="440" y="195" fill="#94a3b8" fontSize="9" textAnchor="middle">Jun 2</text>
+                  <text x="520" y="195" fill="#94a3b8" fontSize="9" textAnchor="middle">Jun 9</text>
+                  <text x="600" y="195" fill="#94a3b8" fontSize="9" textAnchor="middle">Jun 16</text>
+                  <text x="680" y="195" fill="#94a3b8" fontSize="9" textAnchor="middle">Jun 23</text>
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          {/* Performance by Department Grid Table */}
+          <div style={{
+            backgroundColor: '#ffffff',
+            border: '1px solid #cbd5e1',
+            borderRadius: '4px',
+            display: 'flex',
+            flexDirection: 'column',
+            overflow: 'hidden',
+          }}>
+            <div style={{
+              backgroundColor: '#f1f5f9',
+              padding: '8px 12px',
+              fontSize: '11.5px',
+              fontWeight: 'bold',
+              color: '#1e293b',
+              borderBottom: '1px solid #cbd5e1',
+            }}>
+              Performance by Department
+            </div>
+            <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '11px' }}>
+              <thead>
+                <tr style={{ backgroundColor: '#f8fafc', borderBottom: '1px solid #cbd5e1', color: '#64748b' }}>
+                  <th style={{ padding: '6px 12px', fontWeight: 'bold' }}>Department</th>
+                  <th style={{ padding: '6px 12px', fontWeight: 'bold' }}>Encounters</th>
+                  <th style={{ padding: '6px 12px', fontWeight: 'bold' }}>% of Total</th>
+                  <th style={{ padding: '6px 12px', fontWeight: 'bold' }}>Avg LOS (Days)</th>
+                  <th style={{ padding: '6px 12px', fontWeight: 'bold' }}>Readmission Rate (%)</th>
+                  <th style={{ padding: '6px 12px', fontWeight: 'bold' }}>Mortality Rate (%)</th>
+                  <th style={{ padding: '6px 12px', fontWeight: 'bold' }}>Patient Satisfaction (%)</th>
+                  <th style={{ padding: '6px 12px', fontWeight: 'bold' }}>Trend</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr style={{ borderBottom: '1px solid #e2e8f0', color: '#0f2c59', fontWeight: 'bold' }}>
+                  <td style={{ padding: '8px 12px' }}>Cardiology</td>
+                  <td style={{ padding: '8px 12px' }}>2,842</td>
+                  <td style={{ padding: '8px 12px' }}>15.2%</td>
+                  <td style={{ padding: '8px 12px' }}>3.6</td>
+                  <td style={{ padding: '8px 12px' }}>10.2%</td>
+                  <td style={{ padding: '8px 12px' }}>0.8%</td>
+                  <td style={{ padding: '8px 12px' }}>92.1%</td>
+                  <td style={{ padding: '8px 12px' }}>📈</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      {/* Bottom Status bar */}
+      <div style={{
+        height: '24px',
+        backgroundColor: '#0f2c59', // Matching the dark blue theme
+        borderTop: '1px solid #cbd5e1',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        padding: '0 12px',
+        fontSize: '10.5px',
+        color: '#94a3b8',
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+          <span>Ready</span>
+          <span>Patient: JOHN DOE (MRN: 1000245678)</span>
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+          <span>User: Acadex Admin</span>
+          <span>ACADEX OPERATING ENVIRONMENT</span>
+          <span>PROD</span>
+          <span>05/28/2025 03:45 PM</span>
+        </div>
       </div>
     </div>
   );
@@ -2929,61 +3457,348 @@ export function LibraryView() {
 // =====================================================
 export function CommunicationView() {
   const [channel, setChannel] = useState('ALL');
-  const [msg, setMsg] = useState('');
-  const [log, setLog] = useState<string[]>([]);
+  const orderRows = [
+    { patientName: 'JAMES, WILLIAM', planName: 'CBC with Differential', action: 'Order', details1: '05/28/17 08:30...', details2: 'Routine blood test', comment: 'AXIO, MD', originator: 'AXIO, MD', createDate: '05/28/2017 08:30', stopDate: '05/28/2017 08:30', stopType: 'Physician Stop', status: 'Open' },
+    { patientName: 'JAMES, WILLIAM', planName: 'Comprehensive Metabolic Panel', action: 'Order', details1: '05/28/17 08:30...', details2: 'Kidney & liver function', comment: 'AXIO, MD', originator: 'AXIO, MD', createDate: '05/28/2017 08:30', stopDate: '05/28/2017 08:30', stopType: 'Physician Stop', status: 'Open' },
+    { patientName: 'PATEL, RAHUL', planName: 'MRI Brain W/O Contrast', action: 'Order', details1: '05/28/17 09:15...', details2: 'Headache evaluation', comment: 'AXIO, MD', originator: 'AXIO, MD', createDate: '05/28/2017 09:15', stopDate: '05/28/2017 09:15', stopType: 'Physician Stop', status: 'Open' },
+    { patientName: 'PATEL, RAHUL', planName: 'Neurology Consult', action: 'Order', details1: '05/28/17 09:15...', details2: 'Neuro assessment', comment: 'AXIO, MD', originator: 'AXIO, MD', createDate: '05/28/2017 09:15', stopDate: '05/28/2017 09:15', stopType: 'Physician Stop', status: 'Open' },
+    { patientName: 'JOHNSON, MARIA', planName: 'PT Evaluation', action: 'Order', details1: '05/28/17 10:00...', details2: 'Post-op rehab', comment: 'AXIO, MD', originator: 'AXIO, MD', createDate: '05/28/2017 10:00', stopDate: '05/28/2017 10:00', stopType: 'Physician Stop', status: 'Open' },
+    { patientName: 'JOHNSON, MARIA', planName: 'Pain Management Consult', action: 'Order', details1: '05/28/17 10:00...', details2: 'Pain control', comment: 'AXIO, MD', originator: 'AXIO, MD', createDate: '05/28/2017 10:00', stopDate: '05/28/2017 10:00', stopType: 'Physician Stop', status: 'Open' },
+    { patientName: 'LEE, DAVID', planName: 'Chest X-Ray', action: 'Order', details1: '05/28/17 10:30...', details2: 'Cough and fever', comment: 'AXIO, MD', originator: 'AXIO, MD', createDate: '05/28/2017 10:30', stopDate: '05/28/2017 10:30', stopType: 'Physician Stop', status: 'Open' },
+    { patientName: 'LEE, DAVID', planName: 'Sputum Culture', action: 'Order', details1: '05/28/17 10:30...', details2: 'Infection workup', comment: 'AXIO, MD', originator: 'AXIO, MD', createDate: '05/28/2017 10:30', stopDate: '05/28/2017 10:30', stopType: 'Physician Stop', status: 'Open' },
+    { patientName: 'GARCIA, LUCIA', planName: 'Echocardiogram', action: 'Order', details1: '05/28/17 11:00...', details2: 'Cardiac evaluation', comment: 'AXIO, MD', originator: 'AXIO, MD', createDate: '05/28/2017 11:00', stopDate: '05/28/2017 11:00', stopType: 'Physician Stop', status: 'Open' },
+    { patientName: 'GARCIA, LUCIA', planName: 'Cardiology Consult', action: 'Order', details1: '05/28/17 11:00...', details2: 'Heart failure eval', comment: 'AXIO, MD', originator: 'AXIO, MD', createDate: '05/28/2017 11:00', stopDate: '05/28/2017 11:00', stopType: 'Physician Stop', status: 'Open' },
+    { patientName: 'KIM, JAMES', planName: 'Hemoglobin A1C', action: 'Order', details1: '05/28/17 11:30...', details2: 'Diabetes monitoring', comment: 'AXIO, MD', originator: 'AXIO, MD', createDate: '05/28/2017 11:30', stopDate: '05/28/2017 11:30', stopType: 'Physician Stop', status: 'Open' },
+    { patientName: 'KIM, JAMES', planName: 'Diabetes Education', action: 'Order', details1: '05/28/17 11:30...', details2: 'Patient education', comment: 'AXIO, MD', originator: 'AXIO, MD', createDate: '05/28/2017 11:30', stopDate: '05/28/2017 11:30', stopType: 'Physician Stop', status: 'Open' },
+    { patientName: 'BROWN, ELIZABETH', planName: 'Urinalysis', action: 'Order', details1: '05/28/17 12:00...', details2: 'UTI symptoms', comment: 'AXIO, MD', originator: 'AXIO, MD', createDate: '05/28/2017 12:00', stopDate: '05/28/2017 12:00', stopType: 'Physician Stop', status: 'Open' },
+    { patientName: 'BROWN, ELIZABETH', planName: 'Urine Culture', action: 'Order', details1: '05/28/17 12:00...', details2: 'Confirm infection', comment: 'AXIO, MD', originator: 'AXIO, MD', createDate: '05/28/2017 12:00', stopDate: '05/28/2017 12:00', stopType: 'Physician Stop', status: 'Open' },
+    { patientName: 'THOMAS, MICHAEL', planName: 'CT Abdomen & Pelvis', action: 'Order', details1: '05/28/17 12:30...', details2: 'Abdominal pain', comment: 'AXIO, MD', originator: 'AXIO, MD', createDate: '05/28/2017 12:30', stopDate: '05/28/2017 12:30', stopType: 'Physician Stop', status: 'Open' },
+    { patientName: 'THOMAS, MICHAEL', planName: 'Surgery Consult', action: 'Order', details1: '05/28/17 12:30...', details2: 'Surgical evaluation', comment: 'AXIO, MD', originator: 'AXIO, MD', createDate: '05/28/2017 12:30', stopDate: '05/28/2017 12:30', stopType: 'Physician Stop', status: 'Open' },
+    { patientName: 'ANDERSON, SUSAN', planName: 'Lipid Panel', action: 'Order', details1: '05/28/17 13:00...', details2: 'Cholesterol check', comment: 'AXIO, MD', originator: 'AXIO, MD', createDate: '05/28/2017 13:00', stopDate: '05/28/2017 13:00', stopType: 'Physician Stop', status: 'Open' },
+    { patientName: 'ANDERSON, SUSAN', planName: 'Nutrition Consult', action: 'Order', details1: '05/28/17 13:00...', details2: 'Dietary counseling', comment: 'AXIO, MD', originator: 'AXIO, MD', createDate: '05/28/2017 13:00', stopDate: '05/28/2017 13:00', stopType: 'Physician Stop', status: 'Open' },
+    { patientName: 'MILLER, ROBERT', planName: 'Pulmonary Function Test', action: 'Order', details1: '05/28/17 13:30...', details2: 'COPD evaluation', comment: 'AXIO, MD', originator: 'AXIO, MD', createDate: '05/28/2017 13:30', stopDate: '05/28/2017 13:30', stopType: 'Physician Stop', status: 'Open' },
+    { patientName: 'MILLER, ROBERT', planName: 'Respiratory Therapy Eval', action: 'Order', details1: '05/28/17 13:30...', details2: 'Breathing assessment', comment: 'AXIO, MD', originator: 'AXIO, MD', createDate: '05/28/2017 13:30', stopDate: '05/28/2017 13:30', stopType: 'Physician Stop', status: 'Open' },
+    { patientName: 'DAVIS, PATRICIA', planName: 'DEXA Scan', action: 'Order', details1: '05/28/17 14:00...', details2: 'Bone density', comment: 'AXIO, MD', originator: 'AXIO, MD', createDate: '05/28/2017 14:00', stopDate: '05/28/2017 14:00', stopType: 'Physician Stop', status: 'Open' },
+    { patientName: 'DAVIS, PATRICIA', planName: 'Vitamin D Level', action: 'Order', details1: '05/28/17 14:00...', details2: 'Bone health', comment: 'AXIO, MD', originator: 'AXIO, MD', createDate: '05/28/2017 14:00', stopDate: '05/28/2017 14:00', stopType: 'Physician Stop', status: 'Open' },
+    { patientName: 'WHITE, CHARLES', planName: 'Sleep Study', action: 'Order', details1: '05/28/17 14:30...', details2: 'Sleep apnea evaluation', comment: 'AXIO, MD', originator: 'AXIO, MD', createDate: '05/28/2017 14:30', stopDate: '05/28/2017 14:30', stopType: 'Physician Stop', status: 'Open' },
+    { patientName: 'WHITE, CHARLES', planName: 'ENT Consult', action: 'Order', details1: '05/28/17 14:30...', details2: 'Snoring and fatigue', comment: 'AXIO, MD', originator: 'AXIO, MD', createDate: '05/28/2017 14:30', stopDate: '05/28/2017 14:30', stopType: 'Physician Stop', status: 'Open' },
+    { patientName: 'WILSON, BETTY', planName: 'Mammogram Screening', action: 'Order', details1: '05/28/17 15:00...', details2: 'Breast cancer screening', comment: 'AXIO, MD', originator: 'AXIO, MD', createDate: '05/28/2017 15:00', stopDate: '05/28/2017 15:00', stopType: 'Physician Stop', status: 'Open' },
+    { patientName: 'WILSON, BETTY', planName: 'Ob/Gyn Annual Exam', action: 'Order', details1: '05/28/17 15:00...', details2: 'Routine exam', comment: 'AXIO, MD', originator: 'AXIO, MD', createDate: '05/28/2017 15:00', stopDate: '05/28/2017 15:00', stopType: 'Physician Stop', status: 'Open' }
+  ];
 
-  const handleBroadcast = () => {
-    if (!msg.trim()) return;
-    setLog(prev => [`[Broadcast Outbox] (${channel}) - ${msg}`, ...prev]);
-    setMsg('');
+  // Selected row state for left click highlights
+  const [selectedIndices, setSelectedIndices] = useState<number[]>([]);
+  const [lastSelectedIndex, setLastSelectedIndex] = useState<number | null>(null);
+
+  // Context Menu State
+  const [menuVisible, setMenuVisible] = useState(false);
+  const [menuX, setMenuX] = useState(0);
+  const [menuY, setMenuY] = useState(0);
+  const [hoveredSubmenu, setHoveredSubmenu] = useState(false);
+
+  const contextMenuRef = React.useRef<HTMLDivElement>(null);
+  const openTab = useAppStore(s => s.openTab);
+
+  // Close context menu on click outside
+  useEffect(() => {
+    function handleClickOutside() {
+      setMenuVisible(false);
+    }
+    document.addEventListener('click', handleClickOutside);
+    return () => document.removeEventListener('click', handleClickOutside);
+  }, []);
+
+  const handleRowClick = (index: number, e: React.MouseEvent) => {
+    if (e.shiftKey && lastSelectedIndex !== null) {
+      const start = Math.min(lastSelectedIndex, index);
+      const end = Math.max(lastSelectedIndex, index);
+      const range = Array.from({ length: end - start + 1 }, (_, i) => start + i);
+      setSelectedIndices(range);
+    } else if (e.ctrlKey || e.metaKey) {
+      if (selectedIndices.includes(index)) {
+        setSelectedIndices(prev => prev.filter(i => i !== index));
+      } else {
+        setSelectedIndices(prev => [...prev, index]);
+      }
+      setLastSelectedIndex(index);
+    } else {
+      setSelectedIndices([index]);
+      setLastSelectedIndex(index);
+    }
+  };
+
+  const handleRowContextMenu = (index: number, e: React.MouseEvent) => {
+    e.preventDefault();
+    if (!selectedIndices.includes(index)) {
+      setSelectedIndices([index]);
+      setLastSelectedIndex(index);
+    }
+    setMenuX(e.clientX);
+    setMenuY(e.clientY);
+    setMenuVisible(true);
   };
 
   return (
-    <div style={{ padding: '16px', background: 'var(--bg-primary)', height: '100%', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '16px' }}>
-      <div>
-        <h2 style={{ fontSize: '16px', fontWeight: 700, color: 'var(--text-primary)', margin: 0 }}>Communication & Dispatch Center</h2>
-        <p style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>Broadcast announcements to parents, students, or institutional staff networks.</p>
-      </div>
+    <div style={{
+      width: '100%',
+      height: '100%',
+      backgroundColor: '#ffffff',
+      fontFamily: 'Arial, sans-serif',
+      display: 'flex',
+      flexDirection: 'column',
+      fontSize: '12px',
+      color: '#000000',
+      position: 'relative',
+    }}>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1.5fr 1fr', gap: '16px' }}>
-        {/* Composer */}
-        <div style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-primary)', borderRadius: '12px', padding: '16px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
-          <h3 style={{ fontSize: '12px', fontWeight: 700, color: 'var(--text-primary)', margin: 0 }}>COMPOSE BROADCAST</h3>
-          <div>
-            <label style={{ display: 'block', fontSize: '10px', color: 'var(--text-tertiary)', textTransform: 'uppercase', marginBottom: '4px' }}>Target Channel</label>
-            <select value={channel} onChange={e => setChannel(e.target.value)} className="input-field" style={{ width: '100%', height: '36px' }}>
-              <option value="ALL">All Network Node (Everyone)</option>
-              <option value="FACULTY">Faculty & Staff Nodes</option>
-              <option value="STUDENTS">Student Identities</option>
-              <option value="PARENTS">Primary Guardians</option>
-            </select>
-          </div>
-          <div>
-            <label style={{ display: 'block', fontSize: '10px', color: 'var(--text-tertiary)', textTransform: 'uppercase', marginBottom: '4px' }}>Message Body</label>
-            <textarea 
-              value={msg} 
-              onChange={e => setMsg(e.target.value)} 
-              placeholder="Enter message dispatch details..." 
-              className="input-field" 
-              style={{ width: '100%', height: '100px', resize: 'none', padding: '10px' }}
-            />
-          </div>
-          <button onClick={handleBroadcast} className="btn btn-primary" style={{ gap: '6px', alignSelf: 'flex-end' }}><Send size={14} /> Send Broadcast</button>
+      {/* Toolbar row */}
+      <div style={{
+        height: '32px',
+        borderBottom: '1px solid #cbd5e1',
+        backgroundColor: '#f8fafc',
+        display: 'flex',
+        alignItems: 'center',
+        padding: '0 8px',
+        gap: '16px',
+        color: '#475569',
+        fontSize: '11px',
+      }}>
+        {/* Communicate dropdown */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '3px', cursor: 'pointer' }}>
+          <span>📢 Communicate</span>
+          <span style={{ fontSize: '9px' }}>▼</span>
         </div>
 
-        {/* Dispatch Log */}
-        <div style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-primary)', borderRadius: '12px', padding: '16px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
-          <h3 style={{ fontSize: '12px', fontWeight: 700, color: 'var(--text-primary)', margin: 0 }}>DISPATCHED OUTBOX</h3>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', overflowY: 'auto', flex: 1, maxHeight: '220px' }}>
-            {log.map((item, idx) => (
-              <div key={idx} style={{ padding: '8px', background: 'var(--bg-primary)', border: '1px solid var(--border-primary)', borderRadius: '6px', fontSize: '10px', fontFamily: 'var(--font-mono)' }}>
-                {item}
+        <div style={{ width: '1px', height: '14px', backgroundColor: '#cbd5e1' }} />
+
+        {/* Buttons */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '4px', cursor: 'pointer' }}>
+          <span>📂 Open</span>
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '4px', cursor: 'pointer' }}>
+          <span>📖 Message Journal</span>
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '4px', cursor: 'pointer' }}>
+          <span>📝 Forward Only</span>
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '4px', cursor: 'pointer' }}>
+          <span>👤 Select Student</span>
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '4px', cursor: 'pointer' }}>
+          <span>☑ Select All</span>
+        </div>
+      </div>
+
+      {/* Grid container */}
+      <div style={{
+        flex: 1,
+        overflow: 'auto',
+      }}>
+        <table style={{
+          width: '100%',
+          borderCollapse: 'collapse',
+          textAlign: 'left',
+          fontSize: '11.5px',
+          userSelect: 'none',
+        }}>
+          <thead>
+            <tr style={{
+              backgroundColor: '#f8fafc',
+              borderBottom: '1.5px solid #cbd5e1',
+            }}>
+              <th style={{ padding: '6px 8px', fontWeight: 'bold', color: '#475569', borderRight: '1px solid #e2e8f0' }}>Student Name</th>
+              <th style={{ padding: '6px 8px', fontWeight: 'bold', color: '#475569', borderRight: '1px solid #e2e8f0' }}>Order/Plan Name</th>
+              <th style={{ padding: '6px 8px', fontWeight: 'bold', color: '#475569', borderRight: '1px solid #e2e8f0' }}>Order Action</th>
+              <th style={{ padding: '6px 8px', fontWeight: 'bold', color: '#475569', borderRight: '1px solid #e2e8f0' }}>Details</th>
+              <th style={{ padding: '6px 8px', fontWeight: 'bold', color: '#475569', borderRight: '1px solid #e2e8f0' }}>Details</th>
+              <th style={{ padding: '6px 8px', fontWeight: 'bold', color: '#475569', borderRight: '1px solid #e2e8f0' }}>Order Comment</th>
+              <th style={{ padding: '6px 8px', fontWeight: 'bold', color: '#475569', borderRight: '1px solid #e2e8f0' }}>Originator Name</th>
+              <th style={{ padding: '6px 8px', fontWeight: 'bold', color: '#475569', borderRight: '1px solid #e2e8f0' }}>Create Date</th>
+              <th style={{ padding: '6px 8px', fontWeight: 'bold', color: '#475569', borderRight: '1px solid #e2e8f0' }}>Stop Date</th>
+              <th style={{ padding: '6px 8px', fontWeight: 'bold', color: '#475569', borderRight: '1px solid #e2e8f0' }}>Stop Type</th>
+              <th style={{ padding: '6px 8px', fontWeight: 'bold', color: '#475569' }}>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {orderRows.map((row, idx) => {
+              const isSelected = selectedIndices.includes(idx);
+              return (
+                <tr 
+                  key={idx}
+                  onClick={(e) => handleRowClick(idx, e)}
+                  onContextMenu={(e) => handleRowContextMenu(idx, e)}
+                  style={{
+                    backgroundColor: isSelected ? '#3b82f6' : (idx % 2 === 0 ? '#ffffff' : '#f8fafc'),
+                    color: isSelected ? '#ffffff' : '#000000',
+                    borderBottom: '1px solid #e2e8f0',
+                    cursor: 'default',
+                  }}
+                >
+                  <td style={{ padding: '5px 8px', fontWeight: 'bold', borderRight: '1px solid #e2e8f0' }}>{row.patientName}</td>
+                  <td style={{ padding: '5px 8px', borderRight: '1px solid #e2e8f0' }}>{row.planName}</td>
+                  <td style={{ padding: '5px 8px', borderRight: '1px solid #e2e8f0' }}>{row.action}</td>
+                  <td style={{ padding: '5px 8px', fontFamily: 'monospace', color: isSelected ? '#e2e8f0' : '#475569', borderRight: '1px solid #e2e8f0' }}>{row.details1}</td>
+                  <td style={{ padding: '5px 8px', color: isSelected ? '#ffffff' : '#334155', borderRight: '1px solid #e2e8f0' }}>{row.details2}</td>
+                  <td style={{ padding: '5px 8px', borderRight: '1px solid #e2e8f0' }}>{row.comment}</td>
+                  <td style={{ padding: '5px 8px', borderRight: '1px solid #e2e8f0' }}>{row.originator}</td>
+                  <td style={{ padding: '5px 8px', borderRight: '1px solid #e2e8f0' }}>{row.createDate}</td>
+                  <td style={{ padding: '5px 8px', borderRight: '1px solid #e2e8f0' }}>{row.stopDate}</td>
+                  <td style={{ padding: '5px 8px', borderRight: '1px solid #e2e8f0' }}>{row.stopType}</td>
+                  <td style={{ padding: '5px 8px', fontWeight: 'bold', color: isSelected ? '#ffffff' : '#16a34a' }}>{row.status}</td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+
+      {menuVisible && (
+        <div 
+          ref={contextMenuRef}
+          style={{
+            position: 'fixed',
+            top: `${menuY}px`,
+            left: `${menuX}px`,
+            width: '210px',
+            backgroundColor: '#f1f5f9',
+            border: '1px solid #94a3b8',
+            boxShadow: '4px 4px 10px rgba(0,0,0,0.18)',
+            padding: '3px 0',
+            display: 'flex',
+            flexDirection: 'column',
+            zIndex: 9999,
+            fontFamily: 'Arial, sans-serif',
+            fontSize: '11px',
+            color: '#1e293b',
+          }}
+          onClick={(e) => e.stopPropagation()}
+        >
+          <div 
+            style={{ padding: '4px 14px', cursor: 'pointer' }}
+            onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = '#3b82f6'; e.currentTarget.style.color = '#ffffff'; }}
+            onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = '#1e293b'; }}
+          >
+            Student Snapshot...
+          </div>
+          <div 
+            style={{ padding: '4px 14px', cursor: 'pointer' }}
+            onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = '#3b82f6'; e.currentTarget.style.color = '#ffffff'; }}
+            onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = '#1e293b'; }}
+          >
+            Staff Information...
+          </div>
+          <div 
+            style={{ padding: '4px 14px', cursor: 'pointer' }}
+            onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = '#3b82f6'; e.currentTarget.style.color = '#ffffff'; }}
+            onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = '#1e293b'; }}
+          >
+            Class List...
+          </div>
+
+          <div style={{ height: '1px', backgroundColor: '#cbd5e1', margin: '4px 0' }} />
+
+          <div 
+            style={{ padding: '4px 14px', cursor: 'pointer' }}
+            onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = '#3b82f6'; e.currentTarget.style.color = '#ffffff'; }}
+            onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = '#1e293b'; }}
+          >
+            Inactivate Relationship...
+          </div>
+          <div 
+            style={{ padding: '4px 14px', cursor: 'pointer' }}
+            onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = '#3b82f6'; e.currentTarget.style.color = '#ffffff'; }}
+            onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = '#1e293b'; }}
+          >
+            Add/View Sticky Notes...
+          </div>
+
+          <div style={{ height: '1px', backgroundColor: '#cbd5e1', margin: '4px 0' }} />
+
+          <div 
+            style={{ padding: '4px 14px', cursor: 'pointer' }}
+            onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = '#3b82f6'; e.currentTarget.style.color = '#ffffff'; }}
+            onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = '#1e293b'; }}
+          >
+            Sort...
+          </div>
+          <div 
+            style={{ padding: '4px 14px', cursor: 'pointer' }}
+            onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = '#3b82f6'; e.currentTarget.style.color = '#ffffff'; }}
+            onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = '#1e293b'; }}
+          >
+            Hide
+          </div>
+          <div 
+            style={{ padding: '4px 14px', cursor: 'pointer' }}
+            onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = '#3b82f6'; e.currentTarget.style.color = '#ffffff'; }}
+            onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = '#1e293b'; }}
+          >
+            Customize Columns...
+          </div>
+
+          <div style={{ height: '1px', backgroundColor: '#cbd5e1', margin: '4px 0' }} />
+
+          <div 
+            style={{ padding: '4px 14px', cursor: 'pointer', position: 'relative', display: 'flex', justifyContent: 'space-between' }}
+            onMouseEnter={() => setHoveredSubmenu(true)}
+            onMouseLeave={() => setHoveredSubmenu(false)}
+          >
+            <span>Add to a Student List</span>
+            <span>▶</span>
+
+            {hoveredSubmenu && (
+              <div style={{
+                position: 'absolute',
+                top: 0,
+                left: '208px',
+                width: '100px',
+                backgroundColor: '#f1f5f9',
+                border: '1px solid #94a3b8',
+                boxShadow: '4px 4px 10px rgba(0,0,0,0.18)',
+                padding: '3px 0',
+              }}>
+                <div 
+                  onClick={() => { setMenuVisible(false); }}
+                  style={{ padding: '4px 12px', color: '#1e293b', backgroundColor: 'transparent' }}
+                  onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = '#3b82f6'; e.currentTarget.style.color = '#ffffff'; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = '#1e293b'; }}
+                >
+                  My List
+                </div>
               </div>
-            ))}
-            {log.length === 0 && <div style={{ fontSize: '11px', color: 'var(--text-muted)', textAlign: 'center', padding: '24px' }}>No messages sent yet.</div>}
+            )}
+          </div>
+
+          <div 
+            style={{ padding: '4px 14px', cursor: 'pointer' }}
+            onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = '#3b82f6'; e.currentTarget.style.color = '#ffffff'; }}
+            onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = '#1e293b'; }}
+          >
+            Copy <span style={{ float: 'right', opacity: 0.6 }}>Ctrl+C</span>
+          </div>
+          <div 
+            style={{ padding: '4px 14px', cursor: 'pointer' }}
+            onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = '#3b82f6'; e.currentTarget.style.color = '#ffffff'; }}
+            onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = '#1e293b'; }}
+          >
+            Paste <span style={{ float: 'right', opacity: 0.6 }}>Ctrl+V</span>
+          </div>
+
+          <div style={{ height: '1px', backgroundColor: '#cbd5e1', margin: '4px 0' }} />
+
+          <div 
+            onClick={() => {
+              setMenuVisible(false);
+              openTab({ id: 'students', label: 'Student Explorer', view: 'students', closable: false });
+            }}
+            style={{ padding: '4px 14px', cursor: 'pointer', fontWeight: 'bold' }}
+            onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = '#3b82f6'; e.currentTarget.style.color = '#ffffff'; }}
+            onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = '#1e293b'; }}
+          >
+            Open Student Profile
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }
