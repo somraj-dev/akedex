@@ -235,18 +235,6 @@ export default function TabBar() {
 
           <hr style={dividerStyle} />
 
-          {/* Section 3: Extra Lists */}
-          <div className="chrome-context-menu-item" style={menuItemStyle} onClick={() => showToast('Added to reading list', 'success')}>
-            <span>📖 Add tab to reading list</span>
-          </div>
-          <div className="chrome-context-menu-item" style={menuItemStyle} onClick={() => showToast('Shared tab content', 'info')}>
-            <span>Share tab with Gemini</span>
-            <span style={shortcutStyle}>&gt;</span>
-          </div>
-
-
-          <hr style={dividerStyle} />
-
           {/* Section 4: Close Operations */}
           <div className="chrome-context-menu-item" style={menuItemStyle} onClick={() => handleClose(contextMenu.tabId)}>
             <span>Close</span>
