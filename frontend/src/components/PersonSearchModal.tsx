@@ -171,15 +171,7 @@ export default function PersonSearchModal({ isOpen, onClose }: PersonSearchModal
                 style={{ width: '100%', padding: '4px 8px', fontSize: '12px', border: '1px solid #cbd5e1', borderRadius: '4px', outline: 'none' }}
               />
             </div>
-            <div>
-              <label style={{ fontSize: '11px', fontWeight: 'bold', color: '#475569', display: 'block', marginBottom: '3px' }}>First Name</label>
-              <input 
-                type="text" 
-                value={firstName}
-                onChange={(e) => setFirstName(e.target.value)}
-                style={{ width: '100%', padding: '4px 8px', fontSize: '12px', border: '1px solid #cbd5e1', borderRadius: '4px', outline: 'none' }}
-              />
-            </div>
+
             <div>
               <label style={{ fontSize: '11px', fontWeight: 'bold', color: '#475569', display: 'block', marginBottom: '3px' }}>Any Phone Number</label>
               <input 
