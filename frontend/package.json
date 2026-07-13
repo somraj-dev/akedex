@@ -9,7 +9,8 @@
     "start": "next start",
     "lint": "eslint",
     "electron": "electron .",
-    "package": "next build && electron-builder"
+    "package": "next build && electron-builder",
+    "dev:desktop": "node run-dev-desktop.js"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.101.0",
