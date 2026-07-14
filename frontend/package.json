@@ -9,7 +9,7 @@
     "start": "next start",
     "lint": "eslint",
     "electron": "electron .",
-    "package": "next build && electron-builder",
+    "package": "next build && node post-export.js && electron-builder",
     "dev:desktop": "node run-dev-desktop.js"
   },
   "dependencies": {
