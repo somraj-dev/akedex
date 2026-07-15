@@ -36,6 +36,7 @@ import {
 } from '@/components/OtherViews';
 
 export default function Page() {
+  const [mounted, setMounted] = useState(false);
   const { 
     isActivated, isAuthenticated, currentView, 
     tabs, activeTabId, setActiveTab, closeTab, reorderTabs, openTab 
@@ -43,6 +44,11 @@ export default function Page() {
 
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+
+  // Client-side mount guard to prevent hydration mismatch
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // F10 search key binding
   React.useEffect(() => {
@@ -56,6 +62,24 @@ export default function Page() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
+  // 1. Show nothing until client-side hydration completes
+  if (!mounted) {
+    return (
+      <div style={{
+        width: '100vw',
+        height: '100vh',
+        backgroundColor: '#005a84',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        color: '#ffffff',
+        fontFamily: 'Arial, sans-serif',
+        fontSize: '18px',
+      }}>
+        Loading Acadex Environment...
+      </div>
+    );
+  }
 
   // 2. Authentication Flow
   if (!isAuthenticated) {
