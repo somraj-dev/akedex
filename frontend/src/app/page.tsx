@@ -35,34 +35,14 @@ import {
   DevToolsView
 } from '@/components/OtherViews';
 
+// ─── Shell: handles client-side mounting before accessing Zustand ───
 export default function Page() {
   const [mounted, setMounted] = useState(false);
-  const { 
-    isActivated, isAuthenticated, currentView, 
-    tabs, activeTabId, setActiveTab, closeTab, reorderTabs, openTab 
-  } = useAppStore();
 
-  const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
-  const [isSearchOpen, setIsSearchOpen] = useState(false);
-
-  // Client-side mount guard to prevent hydration mismatch
   React.useEffect(() => {
     setMounted(true);
   }, []);
 
-  // F10 search key binding
-  React.useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'F10') {
-        e.preventDefault();
-        setIsSearchOpen(prev => !prev);
-      }
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, []);
-
-  // 1. Show nothing until client-side hydration completes
   if (!mounted) {
     return (
       <div style={{
@@ -81,17 +61,43 @@ export default function Page() {
     );
   }
 
-  // 2. Authentication Flow
+  // Only render AppContent AFTER client-side hydration completes
+  return <AppContent />;
+}
+
+// ─── App Content: safely accesses Zustand store (client-only) ───
+function AppContent() {
+  const { 
+    isActivated, isAuthenticated, currentView, 
+    tabs, activeTabId, setActiveTab, closeTab, reorderTabs, openTab 
+  } = useAppStore();
+
+  const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+
+  // F10 search key binding
+  React.useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'F10') {
+        e.preventDefault();
+        setIsSearchOpen(prev => !prev);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
+  // 1. Authentication Flow
   if (!isAuthenticated) {
     return <LoginScreen />;
   }
 
-  // 3. Render Developer tools in full page without the main header
+  // 2. Render Developer tools in full page without the main header
   if ((currentView as any) === 'dev-tools') {
     return <DevToolsView />;
   }
 
-  // 4. Render Active Workspace View Component
+  // 3. Render Active Workspace View Component
   const renderActiveView = () => {
     switch (currentView as any) {
       case 'dashboard':
