@@ -1,10 +1,25 @@
 const { app, BrowserWindow } = require('electron');
 const path = require('path');
+const fs = require('fs');
 
-// Fix GPU cache creation errors that cause white screen on Windows
+// ─── Fix GPU cache creation errors that cause white screen on Windows ───
+// Must be called before app.whenReady()
 app.disableHardwareAcceleration();
 app.commandLine.appendSwitch('disable-gpu');
 app.commandLine.appendSwitch('disable-software-rasterizer');
+app.commandLine.appendSwitch('no-sandbox');
+
+// Set a clean user data path to avoid permission conflicts with GPU cache
+const userDataPath = path.join(app.getPath('appData'), 'Acadex');
+app.setPath('userData', userDataPath);
+
+// Clear GPU cache on startup to prevent stale locks
+const gpuCacheDir = path.join(userDataPath, 'GPUCache');
+try {
+  if (fs.existsSync(gpuCacheDir)) {
+    fs.rmSync(gpuCacheDir, { recursive: true, force: true });
+  }
+} catch (e) { /* ignore if locked */ }
 
 function createWindow() {
   const win = new BrowserWindow({
@@ -21,6 +36,8 @@ function createWindow() {
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: true,
+      // Disable webgl to avoid GPU issues
+      webgl: false,
     }
   });
 
@@ -28,8 +45,6 @@ function createWindow() {
   const isDev = !app.isPackaged;
   if (isDev) {
     win.loadURL('http://localhost:3002');
-    // Open DevTools in dev mode to debug white screen issues
-    win.webContents.openDevTools({ mode: 'detach' });
   } else {
     win.loadFile(path.join(__dirname, 'out/index.html'));
   }
@@ -39,12 +54,25 @@ function createWindow() {
     win.show();
   });
 
-  // Fallback: show window after 8 seconds even if load event doesn't fire
+  // Handle load failures gracefully — retry after delay
+  win.webContents.on('did-fail-load', (event, errorCode, errorDescription) => {
+    console.error(`Failed to load: ${errorDescription} (${errorCode})`);
+    // Retry loading after 2 seconds
+    setTimeout(() => {
+      if (isDev) {
+        win.loadURL('http://localhost:3002');
+      } else {
+        win.loadFile(path.join(__dirname, 'out/index.html'));
+      }
+    }, 2000);
+  });
+
+  // Fallback: show window after 10 seconds even if load event doesn't fire
   setTimeout(() => {
     if (!win.isVisible()) {
       win.show();
     }
-  }, 8000);
+  }, 10000);
 
   // Handle window closing gracefully
   win.on('closed', () => {
